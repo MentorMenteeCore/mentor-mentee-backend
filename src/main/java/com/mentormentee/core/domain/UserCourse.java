@@ -9,7 +9,7 @@ import lombok.Setter;
 public class UserCourse {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_course_id")
     private Long id;
 

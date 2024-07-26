@@ -3,6 +3,7 @@ import com.mentormentee.core.domain.Course;
 import com.mentormentee.core.domain.Review;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.domain.UserCourse;
+import com.mentormentee.core.exception.UserNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -20,7 +21,11 @@ public class UserRepository {
     private final EntityManager em;
 
     public Long save(User user) {
-        em.persist(user);
+        if (user.getId() == null) {
+            em.persist(user);
+        }else {
+            em.merge(user);
+        }
         return user.getId();
     }
 
@@ -28,8 +33,11 @@ public class UserRepository {
         return em.find(User.class, id);
     }
 
+    /**
+     * Join fetch를 함으로써 쿼리 두방 날릴꺼 한방으로 줄임.
+     */
     public List<User> findAll() {
-        return em.createQuery("select u from User u", User.class)
+        return em.createQuery("select u from User u join fetch u.department d", User.class)
                 .getResultList();
     }
 
@@ -77,6 +85,17 @@ public class UserRepository {
         }
 
         return usersList;
+    }
+
+    public Long findByUserEmail(String email) {
+            User email1 = em.createQuery("select u from User u where u.email = :email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+            return email1.getId();
+    }
+
+    public void deleteUser(Long userId) {
+            em.createQuery("delete from User u where u.id = :userId").setParameter("userId", userId).executeUpdate();
     }
 
 }

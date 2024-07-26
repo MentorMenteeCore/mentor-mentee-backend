@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Course {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
     private Long id;
 
@@ -23,9 +23,6 @@ public class Course {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    /**
-     *
-     */
     @OneToMany(mappedBy = "course")
     private List<UserCourse> userCourse = new ArrayList<>();
 
