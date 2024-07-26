@@ -3,15 +3,16 @@ package com.mentormentee.core.service;
 import com.mentormentee.core.domain.College;
 import com.mentormentee.core.domain.Department;
 import com.mentormentee.core.domain.User;
+import com.mentormentee.core.dto.DepartmentDto;
+import com.mentormentee.core.dto.UserEmailDto;
+import com.mentormentee.core.dto.UserInformDto;
+import com.mentormentee.core.exception.UserNotFoundException;
 import com.mentormentee.core.repository.DepartmentRepository;
 import com.mentormentee.core.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,19 +42,58 @@ public class UserService {
         Optional<User> byEmail = userRepository.findByEmail(email);
         return byEmail.isPresent();
     }
-<<<<<<< HEAD
-=======
 
-    /**
-     * 컨트롤러에서 단과대 이름 받아오면
-     * 리포지토리에 가서 Departments 리스트 뽑아옴.
-     */
-    public List<Department> findDepartmentsByCollege(String college) {
-        List<Department> departmentByCollege = departmentRepository.findDepartmentByCollege(college);
-        return departmentByCollege;
+
+    public UserInformDto getUserinformation(Long id) {
+
+        User user = userRepository.findById(id);
+        UserInformDto userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), user.getDepartment().getDepartmentName(), user.getYearInUni(), user.getUserProfilePicture());
+        return userInformDto;
+
     }
 
->>>>>>> 3d4cb52 (새 기능 구현)
+    @Transactional
+    public Long updateUserInformationService(Long id, UserInformDto userInformation) {
+
+        User user = userRepository.findById(id);
+
+        if (userInformation.getUserDepartment() != null) {
+            Department departmentByName = departmentRepository.findDepartmentByName(userInformation.getUserDepartment());
+            user.setDepartment(departmentByName);
+        }
+        if (userInformation.getUserNickname() != null) {
+            user.setNickName(userInformation.getUserNickname());
+        }
+        if (userInformation.getYearInUni() != user.getYearInUni()) {
+            user.setYearInUni(userInformation.getYearInUni());
+        }
+        if (userInformation.getUserEmail() != null) {
+            user.setEmail(userInformation.getUserEmail());
+        }
+        if (userInformation.getUserImageUrl() != null) {
+            user.setUserProfilePicture(userInformation.getUserImageUrl());
+        }
+
+        Long save = userRepository.save(user);
+
+        return save;
+
+    }
+
+    /**
+     * 유저의 이메일을 통해 유저를 찾고 유저가 존재하면
+     * 유저를 삭제
+     */
+    @Transactional
+    public Long deleteUserByEmail(UserEmailDto userEmailDto) {
+
+           String email = userEmailDto.getEmail();
+           Long userId = userRepository.findByUserEmail(email);
+           if (userId != null) {
+               userRepository.deleteUser(userId);
+           }
+        return userId;
+    }
 }
 
 
