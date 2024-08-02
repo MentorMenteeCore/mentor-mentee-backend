@@ -1,17 +1,40 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/core
+    url: jdbc:h2:tcp://localhost/~/test
     username: sa
     password:
     driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
+        default_batch_fetch_size: 100
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: bdcgy222
+  password: wnkaqhouwyfletkm
+  properties:
+    mail:
+      smtp:
+        auth: true
+        ssl:
+          enable: true
+        starttls:
+          enable: true
+          required: true
+        connectiontimeout: 5000
+        timeout: 5000
+        writetimeout: 5000
 
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.orm.jdbc.bind: trace
+
+jwt:
+  secret: Q4NSl604sgyHJj1qwEkR3ycUeR4uUAt7WJraD7EN3O9DVM4yyYuHxMEbSF4XXyY13eqgB0F7Bq4Hfjwinappdoiajwfppgkwnssjwidakkdppgnwkkksiwjfppskwndop
