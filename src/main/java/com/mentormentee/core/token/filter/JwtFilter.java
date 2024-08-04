@@ -58,12 +58,15 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         }catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e){
-            log.error(e.getMessage());
+//            log.error(e.getMessage());
             handleException(response, e);
         }
 
     }
 
+    /**
+     * 만약 사용자가 토큰이 없거나
+     */
     private void handleException(HttpServletResponse response, Exception e) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
@@ -71,15 +74,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String message;
         if (e instanceof ExpiredJwtException) {
-            message = "Expired JWT token.";
+            message = "토큰이 만료되었습니다.";
         } else if (e instanceof MalformedJwtException) {
-            message = "Invalid JWT token.";
+            message = "토큰이 유효하지 않습니다.";
         } else if (e instanceof UnsupportedJwtException) {
             message = "Unsupported JWT token.";
         } else if (e instanceof IllegalArgumentException) {
             message = "JWT token compact of handler are invalid.";
         } else {
-            message = "Invalid JWT signature.";
+            message = "토큰이 유효하지 않습니다.";
         }
 
         String json = String.format("{\"error\": \"%s\"}", message);

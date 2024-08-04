@@ -31,11 +31,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
-                // 기본 로그인 폼 사용 방지
+                // 기본 로그인 폼 사용 방지(기본설정)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                // csrf 에러 방지
+                // csrf 에러 방지(기본 설정)
                 .csrf(AbstractHttpConfigurer::disable)
-                // 인증 url 설정
+                // 인증 url 설정(기본 설정)
                 .authorizeHttpRequests(authorize -> authorize
                         // 유저 로그인 이전에 이루어지는 요청 (회원가입, 로그인, 이메일 발송, 처음 학과 나열 페이지) 등과 같은 api는 인증하지 않기 위해 permitAll 적용
                         .requestMatchers("/api/user/sign-up", "/api/user/login", "/api/email/**", "/api/refresh", "/swagger-ui/**", "/v3/api-docs/**", "api/college/*").permitAll()
@@ -43,6 +43,8 @@ public class SecurityConfig {
 
                 )
                 //필터체인의 전역 예외처리. 토큰이 없거나 인가권한 없는 사용자가 오면 예외 발생.
+                //모든 필터 전후에 실행됨.
+                //필터에서 예외처리한다면 전역 예외처리보다 우선순위를 가진다
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(unauthorizedEntryPoint())
                         .accessDeniedHandler(accessDeniedHandler())
@@ -61,7 +63,7 @@ public class SecurityConfig {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            String json = "{\"error\": \"Unauthorized\"}";
+            String json = "{\"error\": \"접근 권한이 없습니다.\"}";
             response.getWriter().write(json);
         };
     }

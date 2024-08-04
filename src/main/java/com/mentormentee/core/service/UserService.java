@@ -2,6 +2,7 @@ package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.*;
 import com.mentormentee.core.dto.*;
+import com.mentormentee.core.exception.DuplicatedUerEmailException;
 import com.mentormentee.core.exception.UserNotFoundException;
 import com.mentormentee.core.repository.DepartmentRepository;
 import com.mentormentee.core.repository.UserRepository;
@@ -48,7 +49,7 @@ public class UserService {
         // 이메일 중복시 예외
         userRepository.findByEmail(email)
                 .ifPresent(x -> {
-                    throw new IllegalStateException("이미 존재하는 유저입니다.");
+                    throw new DuplicatedUerEmailException("이미 존재하는 이메일입니다.");
                 });
 
         //의사소통 방식은 Remote를 디폴트로 설정.
@@ -102,6 +103,7 @@ public class UserService {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
+
         UserInformDto userInformDto;
 
         if(user.getDepartment() == null) {
@@ -120,6 +122,20 @@ public class UserService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
 
+        /**
+         * 모든 필드가 null이면 예외를 터뜨린다.
+         */
+        if(userInformation.getUserDepartment() == null&&
+            userInformation.getUserEmail()==null&&
+            userInformation.getUserNickname()==null&&
+            userInformation.getUserImageUrl()==null&&
+            userInformation.getYearInUni()==0) {
+            throw new IllegalArgumentException("업데이트 할 정보가 없습니다");
+        }
+
+        /**
+         * 유저가 수정한 부분만 DB에 Patch mapping 해준다.
+         */
         if (userInformation.getUserDepartment() != null) {
             Department departmentByName = departmentRepository.findDepartmentByName(userInformation.getUserDepartment());
             user.setDepartment(departmentByName);
@@ -146,10 +162,24 @@ public class UserService {
     /**
      * 유저의 이메일을 통해 유저를 찾고 유저가 존재하면
      * 유저를 삭제
+     *
+     * 2024-08-04 예외 추가 : 만약 사용자가 이상한 이메일을 클릭하고
+     *                      호기심에 회원탈퇴 버튼을 눌렀다면 우리는
+     *                      Exception을 터뜨려 주어야 한다.
      */
     @Transactional
-    public Long deleteUserByEmail() {
+    public Long deleteUserByEmail(String email) {
         String userEmail = JwtUtils.getUserEmail();
+        Optional<User> byEmail = userRepository.findByEmail(email);
+
+        //사용자가 호기심에 막 쳐버리고 버튼 클릭 -> 예외터짐
+        if (byEmail.isEmpty() || userEmail != byEmail.get().getEmail()) {
+            throw new IllegalArgumentException("유저의 이메일이 적합하지 않습니다.");
+        }
+
+
+
+
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
         userRepository.deleteUser(user.getId());
