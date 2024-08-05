@@ -1,5 +1,9 @@
 package com.mentormentee.core.service;
 
+<<<<<<< HEAD
+=======
+import com.mentormentee.core.domain.CollegeName;
+>>>>>>> origin/rapgodd-login-joining-verifying-with-email
 import com.mentormentee.core.domain.Department;
 import com.mentormentee.core.dto.DepartmentDto;
 import com.mentormentee.core.repository.DepartmentRepository;
@@ -20,7 +24,11 @@ public class DepartmentService {
      * 컨트롤러에서 단과대 이름 받아오면
      * 리포지토리에 가서 Departments 리스트 뽑아옴.
      */
+<<<<<<< HEAD
     public List<DepartmentDto> findDepartmentsByCollege(String college) {
+=======
+    public List<DepartmentDto> findDepartmentsByCollege(CollegeName college) {
+>>>>>>> origin/rapgodd-login-joining-verifying-with-email
         List<DepartmentDto> departmentByCollege = departmentRepository.findDepartmentByCollege(college);
         return departmentByCollege;
     }

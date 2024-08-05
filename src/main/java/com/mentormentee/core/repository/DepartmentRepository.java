@@ -1,6 +1,7 @@
 package com.mentormentee.core.repository;
 
 import com.mentormentee.core.domain.College;
+import com.mentormentee.core.domain.CollegeName;
 import com.mentormentee.core.domain.Department;
 import com.mentormentee.core.dto.DepartmentDto;
 import jakarta.persistence.EntityManager;
@@ -25,7 +26,11 @@ public class DepartmentRepository {
      * @param : 학부이름 ex) 공과대학, 경영대학, 의과대학
      * @return : 학과 목록
      */
+<<<<<<< HEAD
     public List<DepartmentDto> findDepartmentByCollege(String college) {
+=======
+    public List<DepartmentDto> findDepartmentByCollege(CollegeName college) {
+>>>>>>> origin/rapgodd-login-joining-verifying-with-email
         List<Department> departmentList = em.createQuery("select d from Department d where d.college.collegeName = :college", Department.class)
                 .setParameter("college", college)
                 .getResultList();

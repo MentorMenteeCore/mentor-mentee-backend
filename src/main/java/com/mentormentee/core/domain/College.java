@@ -16,6 +16,8 @@ public class College {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "college_id")
     private Long id;
-    private String collegeName;
+
+    @Enumerated(EnumType.STRING)
+    private CollegeName collegeName;
 
 }
