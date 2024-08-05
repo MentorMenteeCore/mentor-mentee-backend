@@ -2,6 +2,7 @@ package com.mentormentee.core.controller;
 
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.*;
+import com.mentormentee.core.exception.ExceptionResponse;
 import com.mentormentee.core.exception.UserNotFoundException;
 import com.mentormentee.core.service.UserService;
 import com.mentormentee.core.token.dto.AuthToken;
@@ -9,7 +10,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,6 +78,24 @@ public class UserController {
         if (l == null) {
             throw new UserNotFoundException("USER NOT FOUND");
         }
+        return ResponseEntity.ok(new ResponseCode(200));
+    }
+
+    /**
+     * 유저가 비밀번호를 변경하기 버튼을 누르면 실행되는 API 입니다.
+     */
+    @PatchMapping("/user/password")
+    public ResponseEntity<?> updateUserPasswordController(@Valid @RequestBody PasswordUpdateDto passwordUpdateDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String defaultMessage = bindingResult.getFieldError().getDefaultMessage();
+            ExceptionResponse exceptionResponse = new ExceptionResponse();
+            exceptionResponse.setMessage(defaultMessage);
+            exceptionResponse.setDetails("/user/password");
+            exceptionResponse.setTimestamp(new Date());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+        }
+        userService.updatePassword(passwordUpdateDto);
         return ResponseEntity.ok(new ResponseCode(200));
     }
 
