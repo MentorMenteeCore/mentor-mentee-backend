@@ -33,9 +33,12 @@ dependencies {
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 	//Json이 Proxy객체를 가져오지 않게 하기 위한 hibernate5 추가.
-<<<<<<< HEAD
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.core:jackson-core'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
-=======
+
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 
 	//mail
@@ -51,7 +54,7 @@ dependencies {
 
 
 	testImplementation 'org.springframework.security:spring-security-test'
->>>>>>> origin/rapgodd-login-joining-verifying-with-email
+
 
 
 	compileOnly 'org.projectlombok:lombok'

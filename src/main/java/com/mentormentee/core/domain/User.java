@@ -1,13 +1,5 @@
 package com.mentormentee.core.domain;
 
-<<<<<<< HEAD
-import com.mentormentee.core.dto.UserInformDto;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.time.LocalTime;
-=======
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
->>>>>>> origin/rapgodd-login-joining-verifying-with-email
 
 @Entity
 @Getter @Setter
@@ -44,10 +35,7 @@ User implements UserDetails {
     private Role userRole;
 
     private String email;
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/rapgodd-login-joining-verifying-with-email
     private LocalTime availableStartTime;
     private LocalTime availableEndTime;
 
@@ -59,12 +47,9 @@ User implements UserDetails {
     private int yearInUni;
     private String userProfilePicture;
 
-<<<<<<< HEAD
-=======
     // 리프래시 토큰 필드 추가
     private String refreshToken;
 
->>>>>>> origin/rapgodd-login-joining-verifying-with-email
     /**
      * 회원정보 페이지를 보면 학과,학년,이미지를 가져오기 때문에
      * 이를 연관관계로 적는다.
@@ -72,8 +57,6 @@ User implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
-<<<<<<< HEAD
-=======
 
 
 //    public void changeDepartment(UserInformDto userDepartment) {
@@ -98,10 +81,6 @@ User implements UserDetails {
     public String getUsername() {
         return email;
     }
->>>>>>> origin/rapgodd-login-joining-verifying-with-email
 
 
-//    public void changeDepartment(UserInformDto userDepartment) {
-//        this.department.getDepartmentName() = userDepartment.getUserDepartment();
-//    }
 }

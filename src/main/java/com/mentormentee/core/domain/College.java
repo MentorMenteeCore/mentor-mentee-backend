@@ -19,5 +19,4 @@ public class College {
 
     @Enumerated(EnumType.STRING)
     private CollegeName collegeName;
-
 }

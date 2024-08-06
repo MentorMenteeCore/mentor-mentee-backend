@@ -13,9 +13,6 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         default_batch_fetch_size: 100
-<<<<<<< HEAD
-=======
-    open-in-view: false
 
 mail:
   host: smtp.gmail.com
@@ -34,7 +31,6 @@ mail:
         connectiontimeout: 5000
         timeout: 5000
         writetimeout: 5000
->>>>>>> origin/rapgodd-login-joining-verifying-with-email
 
 logging.level:
   org.hibernate.SQL: debug

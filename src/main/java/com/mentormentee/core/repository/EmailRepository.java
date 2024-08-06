@@ -14,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailRepository {
+
     private final EntityManager em;
 
     // 유저 이메일을 이용하여 이메일 세션 조회

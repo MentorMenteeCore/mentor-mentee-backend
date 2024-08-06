@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * 과목
  */
+
 public class Course {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +31,8 @@ public class Course {
     private int credit;
     private String professor;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "course_year")
+    private CourseYear courseYear; // 학년 정보
 }
+

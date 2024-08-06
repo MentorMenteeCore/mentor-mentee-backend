@@ -26,11 +26,7 @@ public class DepartmentRepository {
      * @param : 학부이름 ex) 공과대학, 경영대학, 의과대학
      * @return : 학과 목록
      */
-<<<<<<< HEAD
-    public List<DepartmentDto> findDepartmentByCollege(String college) {
-=======
     public List<DepartmentDto> findDepartmentByCollege(CollegeName college) {
->>>>>>> origin/rapgodd-login-joining-verifying-with-email
         List<Department> departmentList = em.createQuery("select d from Department d where d.college.collegeName = :college", Department.class)
                 .setParameter("college", college)
                 .getResultList();
@@ -48,6 +44,10 @@ public class DepartmentRepository {
                 .setParameter("DepartmentName", DepartmentName)
                 .getSingleResult();
         return departmentName;
+    }
+
+    public Optional<Department> findById(Long departmentId) {
+        return Optional.ofNullable(em.find(Department.class, departmentId));
     }
 
 }

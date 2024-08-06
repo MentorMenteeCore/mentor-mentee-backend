@@ -40,7 +40,7 @@ public class JwtUtils {
         String accessToken = Jwts.builder()
                 // subject = 토큰 제목으로 주로 식별자를 사용하기 때문에 email로 지정
                 .setSubject(email)
-                // clain = 내용으로 ROLE을 삽입.
+                // clain = 내용으로 권한을 삽입했습니다.
                 .claim("role", roles)
                 // 발급 시간
                 .setIssuedAt(new Date(System.currentTimeMillis()))
