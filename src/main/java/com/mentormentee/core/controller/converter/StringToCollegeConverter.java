@@ -1,6 +1,5 @@
 package com.mentormentee.core.controller.converter;
 
-import com.mentormentee.core.domain.College;
 import com.mentormentee.core.domain.CollegeName;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

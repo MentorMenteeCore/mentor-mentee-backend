@@ -15,6 +15,6 @@ public class Transaction {
     @Column(name = "transaction_id")
     private Long id;
     private LocalDateTime dateTime;
-    private int transactionAmount;
-    private int cieatStock;
+    private int transactionAmount;//거래 횟수
+    private int cieatStock;//내가 보유한 씨앗 양 잔액
 }

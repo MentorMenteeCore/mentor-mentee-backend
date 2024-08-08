@@ -29,12 +29,9 @@ public class DepartmentController {
 
     @GetMapping("/college/{college}")
     public List<DepartmentDto> CollegeAndDepartments(@PathVariable CollegeName college) {
-            List<DepartmentDto> departmentsOfCollege = departmentService.findDepartmentsByCollege(college);
-            return departmentsOfCollege;
+        List<DepartmentDto> departmentsOfCollege = departmentService.findDepartmentsByCollege(college);
+        return departmentsOfCollege;
     }
 
-
-
-
-
 }
+

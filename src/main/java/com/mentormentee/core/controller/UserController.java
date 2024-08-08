@@ -73,8 +73,8 @@ public class UserController {
      * 그 이후 있으면 아이디 삭제 처리.
      */
     @DeleteMapping("/user")
-    public ResponseEntity<?> deleteUserController(@RequestParam String useremail) {
-        Long l = userService.deleteUserByEmail(useremail);
+    public ResponseEntity<?> deleteUserController() {
+        Long l = userService.deleteUserByEmail();
         if (l == null) {
             throw new UserNotFoundException("USER NOT FOUND");
         }

@@ -46,4 +46,8 @@ public class DepartmentRepository {
         return departmentName;
     }
 
+    public Optional<Department> findById(Long departmentId) {
+        return Optional.ofNullable(em.find(Department.class, departmentId));
+    }
+
 }
