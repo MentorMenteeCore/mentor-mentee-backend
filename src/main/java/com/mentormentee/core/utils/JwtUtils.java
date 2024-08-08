@@ -114,6 +114,7 @@ public class JwtUtils {
 
         return email;
     }
+
     public static String getAccessToken(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

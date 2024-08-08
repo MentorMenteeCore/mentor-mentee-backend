@@ -1,4 +1,4 @@
-/*package com.mentormentee.core;
+package com.mentormentee.core;
 
 import com.mentormentee.core.domain.*;
 import com.mentormentee.core.service.UserService;
@@ -94,12 +94,12 @@ public class InitDb {
             em.persist(user3);
 
             Course course1 = createCourse(
-                    "디지털공학", 3, "최준성", CourseYear.sophomore, department7
+                    "디지털공학", 3, "최준성", CourseYear.SOPHOMORE, department7
             );
             em.persist(course1);
 
             Course course2 = createCourse(
-                    "공학수학1", 3, "심동규", CourseYear.sophomore, department7
+                    "공학수학1", 3, "심동규", CourseYear.SOPHOMORE, department7
             );
             em.persist(course2);
 
@@ -183,4 +183,4 @@ public class InitDb {
         }
     }
 
-}*/
+}

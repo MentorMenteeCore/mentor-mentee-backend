@@ -66,10 +66,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public AuthToken login(LoginRequestDto loginRequestDto){
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
-
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         // 자격 증명 확인
         // 여기서 CustomUserDetailService의 loadUser메서드가 실행되고 비밀번호 검증까지 완료
@@ -137,9 +137,9 @@ public class UserService {
             user.setUserProfilePicture(userInformation.getUserImageUrl());
         }
 
-        Long save = userRepository.save(user);
+//        Long save = userRepository.save(user);
 
-        return save;
+        return user.getId();
 
     }
 

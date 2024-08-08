@@ -111,7 +111,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Claims claims = JwtUtils.parseClaims(accessToken);
         String userId = claims.getSubject();//userEmail
 
-        //여기서 토큰 id 값이 db에 있는지 확인
+        //여기서 토큰 에서 추출한 이메일이 db에 있는지 확인
         UserDetails userDetails = customUserDetailService.loadUserByUsername(userId);
         String findUserId = userDetails.getUsername();
         UserDetails principal = new User(findUserId , "", userDetails.getAuthorities());//유저의 이름과 유저의 역할 담아서
