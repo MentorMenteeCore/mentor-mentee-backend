@@ -29,13 +29,15 @@ public enum GradeStatus {
         return priority;
     }
 
+    //UserCourse 엔티티에서 gradeStatus가 문자열로 저장된다.
+    //따라서, enum 변환을 위해 CourseMentorDto의 MentorDto 클래스에서 문자열을 GradeaStatus enum으로 변환하고, 성적의 우선순위를 반환하는 데 사용
     public static GradeStatus fromString(String text) {
         for (GradeStatus status : GradeStatus.values()) {
             if (status.displayValue.equalsIgnoreCase(text)) {
                 return status;
             }
         }
-        throw new IllegalArgumentException("No enum constant " + text);
+        throw new IllegalArgumentException("잘못된 입력입니다" + text);
     }
 }
 

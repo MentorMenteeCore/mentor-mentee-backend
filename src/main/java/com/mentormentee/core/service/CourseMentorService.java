@@ -40,12 +40,16 @@ public class CourseMentorService {
 
         //사용자 거래 내역 조회
         for (UserCourse userCourse : userCourses) {
-            List<UserTransaction> transactions = userTransactionRepository.findByUser(userCourse.getUser().getId());
-            int cieatStock = transactions.stream().mapToInt(transaction -> transaction.getTransaction().getCieatStock()).sum();  //cieatamount 총합 계산
+            List<UserTransaction> transactions = userTransactionRepository.findByUser(userCourse.getUser().getId());  //멘토 역할을 가진 사용자의id에 맞는 transaction 조회
+
+            int cieatStock = transactions.stream()
+                    .max(Comparator.comparing(UserTransaction::getId))//transactionid가 가장 높은 거래 조회
+                    .map(transaction -> transaction.getTransaction().getCieatStock()) ////transactionid가 가장 높은 거래의 cieatStock 가져오기
+                    .orElse(0);  //거래가 없을 경우 기본값을 0으로 반환
             int cieatGrade = transactions.stream().mapToInt(transaction -> transaction.getTransaction().getTransactionAmount()).sum();  //UserTransaction 엔티티의 TransactionAmount에 따라 cieatgrade 계산
 
-            userCieatStockMap.put(userCourse.getUser().getId(), cieatStock);
-            userCieatGradeMap.put(userCourse.getUser().getId(), cieatGrade);
+            userCieatStockMap.put(userCourse.getUser().getId(), cieatStock);  //사용자ID와 cieatStock값을 map에 저장
+            userCieatGradeMap.put(userCourse.getUser().getId(), cieatGrade);  ////사용자ID와 cieatGrade값을 map에 저장
         }
 
         //MentorDto 변환
@@ -53,7 +57,7 @@ public class CourseMentorService {
                 .map(userCourse -> {
                     User user = userCourse.getUser();
                     Course course = userCourse.getCourse();
-                    int cieatStock = userCieatStockMap.getOrDefault(user.getId(), 0);  //사용자 ID에 해당하는 cieatstock 조회
+                    int cieatStock = userCieatStockMap.getOrDefault(user.getId(), 0);  //사용자 ID에 해당하는 cieatstock 조회, 사용자 ID가 Map에 존재하지 않을 경우 기본값(0)을 반환
                     int cieatGrade = userCieatGradeMap.getOrDefault(user.getId(), 0);  //사용자 ID에 해당하는 cieatgrade 조회
                     return new CourseMentorDto.MentorDto(user, course, userCourse, cieatStock, cieatGrade);
                 })
@@ -62,8 +66,8 @@ public class CourseMentorService {
 
         //페이징 처리
         int start = (int) pageable.getOffset();
-        int end = Math.min(start + pageable.getPageSize(), mentorDtos.size());
-        List<CourseMentorDto.MentorDto> pagedMentors = mentorDtos.subList(start, end);
+        int end = Math.min(start + pageable.getPageSize(), mentorDtos.size());  //페이지 끝 위치 계산
+        List<CourseMentorDto.MentorDto> pagedMentors = mentorDtos.subList(start, end);  //mentorDtos 리스트에서 start 인덱스부터 end 인덱스까지의 서브리스트를 추출
 
         return new CourseMentorDto(selectedCourse == null ? null : selectedCourse.getCourseName(), pagedMentors, mentorDtos.size());
     }
@@ -75,7 +79,7 @@ public class CourseMentorService {
         } else {
             try {
                 return CourseYear.fromString(selectedYear.toLowerCase());
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {  //예외 발생 시 사용자의 학년을 기준으로 CourseYear 반환
                 return CourseYear.fromInt(userYearInUni);
             }
         }

@@ -24,7 +24,7 @@ public enum CourseYear {
                 return courseYear;
             }
         }
-        throw new IllegalArgumentException("Invalid year in university: " + yearInUni);
+        throw new IllegalArgumentException("잘못된 학년입니다: " + yearInUni);
     }
 
     public String toLowerCaseString() {
@@ -39,7 +39,7 @@ public enum CourseYear {
                 return courseYear;
             }
         }
-        throw new IllegalArgumentException("Invalid course year string: " + yearString);
+        throw new IllegalArgumentException("잘못된 입력입니다: " + yearString);
     }
 }
 

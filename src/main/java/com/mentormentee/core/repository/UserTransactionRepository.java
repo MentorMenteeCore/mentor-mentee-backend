@@ -11,9 +11,11 @@ import java.util.List;
 @Repository
 public interface UserTransactionRepository extends JpaRepository<UserTransaction, Long> {
 
-    //transaction 내역 가져오기
-    @Query("select ut from UserTransaction ut join ut.transaction t where ut.user.id = :userId")
+    
+    //entitygrpah 어노테이션 사용
+    @Query("select ut from UserTransaction ut join fetch ut.transaction where ut.user.id = :userId")
     List<UserTransaction> findByUser(@Param("userId") Long userId);
 }
+
 
 

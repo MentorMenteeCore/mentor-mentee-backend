@@ -1,5 +1,6 @@
 package com.mentormentee.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mentormentee.core.domain.Course;
 import com.mentormentee.core.domain.GradeStatus;
@@ -42,6 +43,8 @@ public class CourseMentorDto {
             this.cieatGrade = cieatGrade;
         }
 
+
+        @JsonIgnore
         //gradeStatus 문자열을 enum으로 변환한 후, 우선순위 반환
         public int getGradeStatusPriority() {
             return GradeStatus.fromString(this.gradeStatus).getPriority();
