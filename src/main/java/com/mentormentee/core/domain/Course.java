@@ -34,5 +34,6 @@ public class Course {
     @Enumerated(EnumType.STRING)
     @Column(name = "course_year")
     private CourseYear courseYear; // 학년 정보
+
 }
 

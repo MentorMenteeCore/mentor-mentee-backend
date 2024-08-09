@@ -29,10 +29,13 @@ public class CourseMentorService {
         CourseYear courseYear = determineCourseYear(selectedYear, userYearInUni);  //선택된 학년 또는 사용자의 학년을 기준으로 과목 학년 결정
 
         List<Course> courses = courseMentorRepository.findCoursesByDepartmentAndYear(departmentId, courseYear);
+
+        // 코스 ㄱㄴㄷ순 정렬
         courses.sort((c1, c2) -> new CourseNameComparator().compare(c1.getCourseName(), c2.getCourseName()));
 
-        Course selectedCourse = courseId != null ? courseMentorRepository.findById(courseId) : (courses.isEmpty() ? null : courses.get(0));  //목록의 첫 번째 과목 자동 선택
+        Course selectedCourse = courseId != null ? courseMentorRepository.findById(courseId) : (courses.isEmpty() ? null : courses.get(0));
 
+        // 특정 과목을 수강한 멘토들 다 불러옴
         List<UserCourse> userCourses = selectedCourse == null ? Collections.emptyList() : courseMentorRepository.findUserCoursesByCourse(selectedCourse.getId());  //선택된 과목을 수강한 사용자의 과목정보 조회
 
         Map<Long, Integer> userCieatStockMap = new HashMap<>();  //사용자ID와 cieatstock 매핑
@@ -62,7 +65,7 @@ public class CourseMentorService {
                     return new CourseMentorDto.MentorDto(user, course, userCourse, cieatStock, cieatGrade);
                 })
                 .sorted(new MentorComparator(sortBy))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());//배열 기준에따라 배열
 
         //페이징 처리
         int start = (int) pageable.getOffset();

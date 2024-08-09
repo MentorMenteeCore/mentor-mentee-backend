@@ -63,6 +63,11 @@ User implements UserDetails {
 //        this.department.getDepartmentName() = userDepartment.getUserDepartment();
 //    }
 
+    public User updatePassword(String newPassword) {
+        this.password = newPassword;
+        return this;
+    }
+
     // 비밀번호 암호화 로직
     public User hashPassword(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(this.password);
@@ -81,6 +86,7 @@ User implements UserDetails {
     public String getUsername() {
         return email;
     }
+
 
 
 }

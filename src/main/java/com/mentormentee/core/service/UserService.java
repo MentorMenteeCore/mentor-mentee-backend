@@ -61,15 +61,18 @@ public class UserService {
                 .waysOfCommunication(WaysOfCommunication.REMOTE)
                 .build();
 
-        user.hashPassword(passwordEncoder);
+        /**
+         * 유저 비번이 암호화 되지 않은 비번일때 이거를 암호화
+         */
+        user.hashPassword(passwordEncoder);//이렇게 하면 비밀번호를 암호화 한다.
 
         return userRepository.save(user);
     }
 
+    @Transactional
     public AuthToken login(LoginRequestDto loginRequestDto){
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
-
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         // 자격 증명 확인
         // 여기서 CustomUserDetailService의 loadUser메서드가 실행되고 비밀번호 검증까지 완료
@@ -137,9 +140,9 @@ public class UserService {
             user.setUserProfilePicture(userInformation.getUserImageUrl());
         }
 
-        Long save = userRepository.save(user);
+//        Long save = userRepository.save(user);
 
-        return save;
+        return user.getId();
 
     }
 
@@ -156,7 +159,42 @@ public class UserService {
         return user.getId();
     }
 
+    /**
+     * 유저 비밀번호 변경을 위한 프로세스
+     * 1. 기존비밀번호랑 입력비밀번호가 같은지 확인
+     * 2. 변경할 비밀번호랑 한번 더 입력한 비밀번호가 같은지 확인
+     * 3. 1번과 2번을 통과하면 userRepository에서 변경된 비번과 함께 save 하면 된다.
+     */
+    @Transactional
+    public void updatePassword(PasswordUpdateDto passwordUpdateDto) {
 
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
+
+        String newPassword = passwordUpdateDto.getNewPassword();
+        String confirmPassword = passwordUpdateDto.getConfirmPassword();
+        String oldPassword = passwordUpdateDto.getOldPassword();
+
+        // 1. 기존 비밀번호롸 입력 비밀번호가 같은지 확인.
+        if(!passwordEncoder.matches(oldPassword,user.getPassword())){
+            throw new IllegalArgumentException("입력한 비밀번호가 기존 비밀번호와 같지 않습니다.");
+        }
+
+        // 2. 새로운 비밀번호와 한번더 비밀번호가 같은지 확인.
+        if(!newPassword.equals(confirmPassword)){
+            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+        }
+        //3. 변경할 비밀번호가 기존 비밀번호랑 같은 경우.
+        if(newPassword.equals(oldPassword)){
+            throw new IllegalArgumentException("기존 비밀번호랑 다른 비밀번호를 입력해 주세요.");
+        }
+
+        // 1번 2번 3번 통과 -> 저장(merge)
+        User newPasswordUser = user.updatePassword(newPassword);
+        newPasswordUser.hashPassword(passwordEncoder);
+        userRepository.save(newPasswordUser);
+
+    }
 }
 
 
