@@ -75,6 +75,8 @@ public class InitDb {
                     FACETOFACE, 2, "www.exampleProfilePicture1.com",
                     department5, "sampleRefreshToken1"
             );
+            user1.hashPassword(passwordEncoder);
+
             em.persist(user1);
 
             User user2 = createUser(
@@ -83,6 +85,7 @@ public class InitDb {
                     FACETOFACE, 2, "www.exampleProfilePicture2.com",
                     department7, "sampleRefreshToken2"
             );
+            user2.hashPassword(passwordEncoder);
             em.persist(user2);
 
             User user3 = createUser(
@@ -91,6 +94,7 @@ public class InitDb {
                     FACETOFACE, 2, "www.exampleProfilePicture3.com",
                     department7, "sampleRefreshToken3"
             );
+            user3.hashPassword(passwordEncoder);
             em.persist(user3);
 
             Course course1 = createCourse(
