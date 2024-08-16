@@ -73,29 +73,40 @@ public class InitDb {
                     "choegiyeon", "choegi", ROLE_MENTEE, "choegi@example.com",
                     "password123", LocalTime.of(9, 0), LocalTime.of(17, 0),
                     FACETOFACE, 2, "www.exampleProfilePicture1.com",
-                    department5, "sampleRefreshToken1"
+                    department5, "sampleRefreshToken1","최:최기연은 기:기발한 연:연구중"
             );
             user1.hashPassword(passwordEncoder);
 
             em.persist(user1);
 
             User user2 = createUser(
-                    "csuser1", "cs1", ROLE_MENTOR, "cs1@example.com",
+                    "박대팔", "그럼제가선배맘에탕탕", ROLE_MENTEE, "cs1@example.com",
                     "password1234", LocalTime.of(9, 0), LocalTime.of(18, 0),
                     FACETOFACE, 2, "www.exampleProfilePicture2.com",
-                    department7, "sampleRefreshToken2"
+                    department7, "sampleRefreshToken2","선배 탕후루도 같이"
             );
             user2.hashPassword(passwordEncoder);
             em.persist(user2);
 
             User user3 = createUser(
-                    "csuser2", "cs2", ROLE_MENTOR, "cs2@example.com",
+                    "최금평", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
                     "password12345", LocalTime.of(9, 0), LocalTime.of(18, 0),
                     FACETOFACE, 2, "www.exampleProfilePicture3.com",
-                    department7, "sampleRefreshToken3"
+                    department7, "sampleRefreshToken3","저는 충북대 컴공을 전공중인 멘토입니다. 어서 저에게 연락을 주세요!"
             );
             user3.hashPassword(passwordEncoder);
             em.persist(user3);
+
+            PreferredTeachingMethod preferredTeachingMethod1  = createTeachingMethod("자기주도_학습_야자_싫어");
+            em.persist(preferredTeachingMethod1);
+
+            PreferredTeachingMethod preferredTeachingMethod2  = createTeachingMethod("교수님과_함께하는_수업");
+            em.persist(preferredTeachingMethod2);
+
+            UserPreferredTeachingMethod userTeachingMethod1 = createUserTeachingMethod(user2, preferredTeachingMethod1);
+            em.persist(userTeachingMethod1);
+            UserPreferredTeachingMethod userTeachingMethod2 = createUserTeachingMethod(user2, preferredTeachingMethod2);
+            em.persist(userTeachingMethod2);
 
             Course course1 = createCourse(
                     "디지털공학", 3, "최준성", CourseYear.SOPHOMORE, department7
@@ -134,7 +145,7 @@ public class InitDb {
 
 
 
-        private static User createUser(String userName, String nickName, Role userRole, String email, String password, LocalTime availableStartTime, LocalTime availableEndTime, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken) {
+        private static User createUser(String userName, String nickName, Role userRole, String email, String password, LocalTime availableStartTime, LocalTime availableEndTime, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken, String selfIntro) {
             User user = new User();
             user.setUserName(userName);
             user.setNickName(nickName);
@@ -148,6 +159,7 @@ public class InitDb {
             user.setUserProfilePicture(userProfilePicture);
             user.setDepartment(department);
             user.setRefreshToken(refreshToken);
+            user.setSelfIntroduction(selfIntro);
             return user;
         }
 
@@ -159,6 +171,27 @@ public class InitDb {
             department.setDepartmentImageUrl(departmentImage);
             return department;
         }
+
+        /**
+         *테스트 하기 편하게 초기 데이터 집어넣습니다.
+         */
+        private static PreferredTeachingMethod createTeachingMethod(String teachingMethod) {
+
+            PreferredTeachingMethod preferredTeachingMethod = new PreferredTeachingMethod();
+            preferredTeachingMethod.createMethod(teachingMethod);
+            return preferredTeachingMethod;
+
+        }
+
+        private static UserPreferredTeachingMethod createUserTeachingMethod(User user, PreferredTeachingMethod userTeachingMethod) {
+
+            UserPreferredTeachingMethod UserPreferredTeachingMethod = new UserPreferredTeachingMethod();
+
+            UserPreferredTeachingMethod.createUserMethod(user, userTeachingMethod);
+
+            return UserPreferredTeachingMethod;
+        }
+
 
 
         private static College createCollege(CollegeName collegeName) {

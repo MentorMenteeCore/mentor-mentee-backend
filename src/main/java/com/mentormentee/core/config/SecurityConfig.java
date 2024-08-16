@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 
-@EnableWebSecurity
+@EnableWebSecurity(debug=true)
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // 유저 로그인 이전에 이루어지는 요청 (회원가입, 로그인, 이메일 발송, 처음 학과 나열 페이지) 등과 같은 api는 인증하지 않기 위해 permitAll 적용
                         .requestMatchers("/api/user/sign-up", "/api/user/login", "/api/email/**", "/api/refresh", "/swagger-ui/**", "/v3/api-docs/**", "api/college/*").permitAll()
+                        .requestMatchers("/api/user/mentee").hasRole("MENTEE")
                         .anyRequest().authenticated()
 
                 )

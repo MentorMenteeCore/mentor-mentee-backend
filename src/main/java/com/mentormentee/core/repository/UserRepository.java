@@ -47,7 +47,9 @@ public class UserRepository {
      */
     public Optional<User> findByEmail(String email) {
         try{
-            User existingUser = em.createQuery("select u from User u where u.email = :email", User.class)
+            User existingUser = em.createQuery("select u from User u " +
+                            "left join fetch u.department d " +
+                            "where u.email = :email", User.class)
                     .setParameter("email", email).getSingleResult();
             return Optional.ofNullable(existingUser);
         } catch (Exception e) {
