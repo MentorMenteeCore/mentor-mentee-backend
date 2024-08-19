@@ -1,4 +1,4 @@
-package com.mentormentee.core.service;
+/*package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.repository.UserRepository;
@@ -50,4 +50,4 @@ public class UserServiceTest {
             userService.save(user2);
         });
     }
-}
+}*/

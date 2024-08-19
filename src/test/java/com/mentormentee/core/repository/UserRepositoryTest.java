@@ -21,9 +21,9 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UserRepositoryTest {
-    /**
+    /*
      * 이건 JPA가 내가 의도한 대로 한 멘토의 리뷰들만 가져 오는지 확인하는 테스트 코드입니다.
-     */
+    */
 
     @PersistenceContext
     private EntityManager em;
@@ -39,17 +39,17 @@ public class UserRepositoryTest {
         User user = new User();
         user.setUserName("기연");
         user.setEmail("hello@mentormentee.com");
-        user.setUserRole(Role.MENTOR);
+        user.setUserRole(Role.ROLE_MENTOR);
 
         User user1 = new User();
         user1.setUserName("나멘티");
         user1.setEmail("hello@mentee.com");
-        user1.setUserRole(Role.MENTEE);
+        user1.setUserRole(Role.ROLE_MENTEE);
 
         User user2 = new User();
         user1.setUserName("악플맨");
         user1.setEmail("hello@badguy.com");
-        user1.setUserRole(Role.MENTEE);
+        user1.setUserRole(Role.ROLE_MENTEE);
         em.persist(user);
         em.persist(user1);
         em.persist(user2);

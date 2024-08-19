@@ -27,6 +27,7 @@ public class CourseMentorDto {
     @Getter
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public static class MentorDto {
+        private Long userId;  // userId 추가
         private String nickName;
         private String courseName;
         private String gradeStatus;
@@ -35,6 +36,7 @@ public class CourseMentorDto {
         private int cieatGrade;
 
         public MentorDto(User user, Course course, UserCourse userCourse, int cieatStock, int cieatGrade) {
+            this.userId = user.getId();
             this.nickName = user.getNickName();
             this.courseName = course.getCourseName();
             this.gradeStatus = userCourse.getGradeStatus().getDisplayValue();
@@ -43,14 +45,13 @@ public class CourseMentorDto {
             this.cieatGrade = cieatGrade;
         }
 
-
         @JsonIgnore
-        //gradeStatus 문자열을 enum으로 변환한 후, 우선순위 반환
         public int getGradeStatusPriority() {
             return GradeStatus.fromString(this.gradeStatus).getPriority();
         }
     }
 }
+
 
 
 

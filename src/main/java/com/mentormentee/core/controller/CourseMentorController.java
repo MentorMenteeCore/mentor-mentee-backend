@@ -15,7 +15,7 @@ public class CourseMentorController {
 
     private final CourseMentorService courseMentorService;
 
-    @GetMapping("/courseMentors/{departmentId}")
+    @GetMapping("/coursementors/{departmentId}")
     public CourseMentorDto getCourseMentorDetails(
             @PathVariable Long departmentId,
             @RequestParam(required = false) String selectedYear,
