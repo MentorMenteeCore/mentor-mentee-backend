@@ -1,6 +1,7 @@
 package com.mentormentee.core.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -50,6 +52,20 @@ User implements UserDetails {
     // 리프래시 토큰 필드 추가
     private String refreshToken;
 
+    //유저가 수강하는 과목들 추가.
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<UserCourse> userCourse = new ArrayList<>();
+
+    //자기소개
+    private String selfIntroduction;
+
+    //선호하는 수업 방식
+    //해시태그로 여러개 있을 수 있음
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserPreferredTeachingMethod> userPreferredTeachingMethodList = new ArrayList<>();
+
     /**
      * 회원정보 페이지를 보면 학과,학년,이미지를 가져오기 때문에
      * 이를 연관관계로 적는다.
@@ -59,9 +75,6 @@ User implements UserDetails {
     private Department department;
 
 
-//    public void changeDepartment(UserInformDto userDepartment) {
-//        this.department.getDepartmentName() = userDepartment.getUserDepartment();
-//    }
 
     public User updatePassword(String newPassword) {
         this.password = newPassword;

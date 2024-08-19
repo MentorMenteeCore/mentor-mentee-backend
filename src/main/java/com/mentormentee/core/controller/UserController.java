@@ -8,6 +8,9 @@ import com.mentormentee.core.service.UserService;
 import com.mentormentee.core.token.dto.AuthToken;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -97,6 +100,29 @@ public class UserController {
         }
         userService.updatePassword(passwordUpdateDto);
         return ResponseEntity.ok(new ResponseCode(200));
+    }
+
+    /**
+     * 멘티가 자기 정보를 보고싶을때
+     * 실행되는 API입니다.
+     */
+//    @GetMapping("/user/mentee")
+//    public MenteeInformationDto getMenteeController(@Qualifier("coursePage") Pageable coursePage,
+//                                                 @Qualifier("teachingMethod") Pageable teachingMethod) {
+//
+//        MenteeInformationDto menteeInformation = userService.getMenteeInformation(coursePage, teachingMethod);
+//
+//        return menteeInformation;
+//    }
+
+    @GetMapping("/user/mentee")
+    public MenteeInformationDto getMenteeController(@RequestParam(defaultValue = "0", name = "coursePage") int coursePage,
+                                                    @RequestParam(defaultValue = "0", name = "courseSize") int courseSize) {
+        Pageable coursePageable = PageRequest.of(coursePage, courseSize);
+
+        MenteeInformationDto menteeInformation = userService.getMenteeInformation(coursePageable);
+
+        return menteeInformation;
     }
 
 }

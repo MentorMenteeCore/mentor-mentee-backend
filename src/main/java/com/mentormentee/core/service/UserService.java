@@ -2,14 +2,15 @@ package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.*;
 import com.mentormentee.core.dto.*;
-import com.mentormentee.core.exception.UserNotFoundException;
-import com.mentormentee.core.repository.DepartmentRepository;
-import com.mentormentee.core.repository.UserRepository;
+import com.mentormentee.core.repository.*;
 
+import com.mentormentee.core.repository.PreferredTeachingMethodRepository;
 import com.mentormentee.core.token.dto.AuthToken;
 import com.mentormentee.core.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -20,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,6 +31,8 @@ public class UserService {
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
+    private final MenteeCoursesRepository menteeCoursesRepository;
 
     /**
      * 회원 저장
@@ -99,7 +100,7 @@ public class UserService {
         return authToken;
     }
 
-
+    @Transactional(readOnly = true)
     public UserInformDto getUserinformation() {
         // 헤더에서 유저정보를 가져오기 위해 JwtUtils.getUserEmail 사용함
         String userEmail = JwtUtils.getUserEmail();
@@ -194,6 +195,45 @@ public class UserService {
         newPasswordUser.hashPassword(passwordEncoder);
         userRepository.save(newPasswordUser);
 
+    }
+
+    /**
+     * 멘티가 자기 정보 보고싶으면
+     * 실행되는 메서드 입니다.
+     */
+    public MenteeInformationDto getMenteeInformation(Pageable coursePage) {
+
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
+
+        /**
+         * 여기서 이제 이수 교과목들, 선호하는 수업방식들 가져옵니다
+         */
+        Page<CourseNameOnly> coursesByUser = menteeCoursesRepository.findCoursesByUser(user, coursePage);
+        List<PreferredTeachingMethodOnly> TeachingMethod = preferredTeachingMethodRepository.findUserPreferredTeachingMethodByUser(user);
+
+        /**
+         * 그 페이지에서 좀 뽑아올거 있어서 뽑아올게요
+         */
+        int totalPages = coursesByUser.getTotalPages();
+        int number = coursesByUser.getNumber();
+        boolean last = coursesByUser.isLast();
+
+        /**
+         * 이제 Page에서 List로 바꿀게요
+         */
+        List<CourseNameOnly> courseList = coursesByUser.getContent();
+
+        /**
+         * 자 이제 DTO에 담을게요
+         */
+        MenteeInformationDto menteeInformationDto
+                = new MenteeInformationDto(totalPages,number,last,user.getNickName(),user.getUserProfilePicture(),user.getSelfIntroduction(),courseList,TeachingMethod);
+
+        /**
+         * 이 Dto 컨트롤러로 보내서 API로 보내도록 하겠습니다
+         */
+        return menteeInformationDto;
     }
 }
 
