@@ -27,4 +27,8 @@ public class UserCourse {
     @Enumerated(EnumType.STRING)
     private IsMajor isMajor;
 
+    public void connectUserAndUsercourse(User user) {
+        this.user = user;
+        user.getUserCourse().add(this);
+    }
 }

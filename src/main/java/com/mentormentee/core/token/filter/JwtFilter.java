@@ -29,7 +29,8 @@ import java.util.Date;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+public class
+JwtFilter extends OncePerRequestFilter {
     
     private final CustomUserDetailService customUserDetailService;
 
@@ -44,14 +45,6 @@ public class JwtFilter extends OncePerRequestFilter {
             // 여기서 http header에 들어가 있는 토큰을 검증하고 사용자가 인증된 사용자면
             // 스프링 내부에 있는 security context holder 세션에 삽입
             // 이를 이용해서 api를 사용하고, 유저 정보를 가져올 수 있다
-
-
-
-//        if(token != null && JwtUtils.validateToken(token)){
-//            Authentication authentication = this.getAuthentication(token);//authentication안에 토큰값들 있음
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//        }
-//        filterChain.doFilter(request, response);
         try{
             if (token != null && JwtUtils.validateToken(token)) {
                 Authentication authentication = this.getAuthentication(token);

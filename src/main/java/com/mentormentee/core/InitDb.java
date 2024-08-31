@@ -73,14 +73,14 @@ public class InitDb {
                     "choegiyeon", "choegi", ROLE_MENTEE, "choegi@example.com",
                     "password123", LocalTime.of(9, 0), LocalTime.of(17, 0),
                     FACETOFACE, 2, "www.exampleProfilePicture1.com",
-                    department5, "sampleRefreshToken1","최:최기연은 기:기발한 연:연구중"
+                    department5, "sampleRefreshToken1","최기연입니다. 충북대 학생 입니다. 안녕하세요! "
             );
             user1.hashPassword(passwordEncoder);
 
             em.persist(user1);
 
             User user2 = createUser(
-                    "박대팔", "그럼제가선배맘에탕탕", ROLE_MENTEE, "cs1@example.com",
+                    "박상현", "나는야박상", ROLE_MENTEE, "cs1@example.com",
                     "password1234", LocalTime.of(9, 0), LocalTime.of(18, 0),
                     FACETOFACE, 2, "www.exampleProfilePicture2.com",
                     department7, "sampleRefreshToken2","선배 탕후루도 같이"
@@ -89,7 +89,7 @@ public class InitDb {
             em.persist(user2);
 
             User user3 = createUser(
-                    "최금평", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
+                    "최기연", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
                     "password12345", LocalTime.of(9, 0), LocalTime.of(18, 0),
                     FACETOFACE, 2, "www.exampleProfilePicture3.com",
                     department7, "sampleRefreshToken3","저는 충북대 컴공을 전공중인 멘토입니다. 어서 저에게 연락을 주세요!"
@@ -103,10 +103,26 @@ public class InitDb {
             PreferredTeachingMethod preferredTeachingMethod2  = createTeachingMethod("교수님과_함께하는_수업");
             em.persist(preferredTeachingMethod2);
 
+            PreferredTeachingMethod preferredTeachingMethod3  = createTeachingMethod("멘토와 줌으로");
+            em.persist(preferredTeachingMethod3);
+
+            PreferredTeachingMethod preferredTeachingMethod4  = createTeachingMethod("커뮤니케이션 중요");
+            em.persist(preferredTeachingMethod4);
+
+            PreferredTeachingMethod preferredTeachingMethod5  = createTeachingMethod("카톡 중요");
+            em.persist(preferredTeachingMethod5);
+
             UserPreferredTeachingMethod userTeachingMethod1 = createUserTeachingMethod(user2, preferredTeachingMethod1);
             em.persist(userTeachingMethod1);
             UserPreferredTeachingMethod userTeachingMethod2 = createUserTeachingMethod(user2, preferredTeachingMethod2);
             em.persist(userTeachingMethod2);
+
+            UserPreferredTeachingMethod userTeachingMethod3 = createUserTeachingMethod(user3, preferredTeachingMethod3);
+            em.persist(userTeachingMethod3);
+            UserPreferredTeachingMethod userTeachingMethod4 = createUserTeachingMethod(user3, preferredTeachingMethod4);
+            em.persist(userTeachingMethod4);
+            UserPreferredTeachingMethod userTeachingMethod5 = createUserTeachingMethod(user3, preferredTeachingMethod5);
+            em.persist(userTeachingMethod5);
 
             Course course1 = createCourse(
                     "디지털공학", 3, "최준성", CourseYear.SOPHOMORE, department7
@@ -117,6 +133,16 @@ public class InitDb {
                     "공학수학1", 3, "심동규", CourseYear.SOPHOMORE, department7
             );
             em.persist(course2);
+
+            Course course3 = createCourse(
+                    "영어수업", 3, "심동규", CourseYear.SOPHOMORE, department7
+            );
+            em.persist(course3);
+
+            Course course4 = createCourse(
+                    "공학수학2", 3, "심동규", CourseYear.SOPHOMORE, department7
+            );
+            em.persist(course4);
 
             UserCourse usercourse1 = createUserCourse(
                     user2, course2, GradeStatus.APLUS, IsMajor.MAJOR
@@ -136,7 +162,16 @@ public class InitDb {
             UserCourse usercourse4 = createUserCourse(
                     user2, course1, GradeStatus.APLUS, IsMajor.MAJOR
             );
+
             em.persist(usercourse4);
+            UserCourse usercourse5 = createUserCourse(
+                    user3, course3, GradeStatus.APLUS, IsMajor.MAJOR
+            );
+            em.persist(usercourse5);
+            UserCourse usercourse6 = createUserCourse(
+                    user3, course4, GradeStatus.APLUS, IsMajor.MAJOR
+            );
+            em.persist(usercourse6);
 
 
 

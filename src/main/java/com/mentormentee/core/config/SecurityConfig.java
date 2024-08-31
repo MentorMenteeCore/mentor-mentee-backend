@@ -2,6 +2,7 @@ package com.mentormentee.core.config;
 
 import com.mentormentee.core.service.CustomUserDetailService;
 import com.mentormentee.core.token.filter.JwtFilter;
+
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,8 +18,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
-
-@EnableWebSecurity(debug=true)
+@EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -31,7 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
-                // 기본 로그인 폼 사용 방지
+                // username, password 헤더 로그인 방식 해제 (BasicAuthenticationFilter 비활성화)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 // csrf 에러 방지
                 .csrf(AbstractHttpConfigurer::disable)
@@ -39,7 +40,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // 유저 로그인 이전에 이루어지는 요청 (회원가입, 로그인, 이메일 발송, 처음 학과 나열 페이지) 등과 같은 api는 인증하지 않기 위해 permitAll 적용
                         .requestMatchers("/api/user/sign-up", "/api/user/login", "/api/email/**", "/api/refresh", "/swagger-ui/**", "/v3/api-docs/**", "api/college/*").permitAll()
-                        .requestMatchers("/api/user/mentee").hasRole("MENTEE")
                         .anyRequest().authenticated()
 
                 )

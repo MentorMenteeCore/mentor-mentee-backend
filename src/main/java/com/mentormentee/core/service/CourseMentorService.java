@@ -36,7 +36,7 @@ public class CourseMentorService {
         Course selectedCourse = courseId != null ? courseMentorRepository.findById(courseId) : (courses.isEmpty() ? null : courses.get(0));
 
         // 특정 과목을 수강한 멘토들 다 불러옴
-        List<UserCourse> userCourses = selectedCourse == null ? Collections.emptyList() : courseMentorRepository.findUserCoursesByCourse(selectedCourse.getId());  //선택된 과목을 수강한 사용자의 과목정보 조회
+        List<UserCourse> userCourses = selectedCourse == null ? Collections.emptyList() : courseMentorRepository.findUserCoursesByCourse(selectedCourse.getId());  //선택된 과목을 수강한 멘토의 과목정보 조회
 
         Map<Long, Integer> userCieatStockMap = new HashMap<>();  //사용자ID와 cieatstock 매핑
         Map<Long, Integer> userCieatGradeMap = new HashMap<>();  //사용자ID와 cieatgrade매핑
