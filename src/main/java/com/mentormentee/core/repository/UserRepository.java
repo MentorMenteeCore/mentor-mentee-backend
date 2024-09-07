@@ -43,7 +43,6 @@ public class UserRepository {
 
     /**
      * 이메일 중복 확인
-     * ispresent()사용하기 위해 Optional
      */
     public Optional<User> findByEmail(String email) {
         try{

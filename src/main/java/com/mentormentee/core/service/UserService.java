@@ -80,7 +80,6 @@ public class UserService {
         // Authentication Manager로 Authentication Token넘겨서 인증 수행.
         Authentication authenticate = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        // 인증이 완료되면 해당 authenticate 객체에서 role을 뽑음
         Collection<? extends GrantedAuthority> authorities = authenticate.getAuthorities();
         List<String> roles = authorities.stream()
                 .map(GrantedAuthority::getAuthority)

@@ -4,12 +4,14 @@ package com.mentormentee.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.sql.Clob;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +38,7 @@ User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role userRole;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     private LocalTime availableStartTime;
@@ -58,6 +61,7 @@ User implements UserDetails {
     private List<UserCourse> userCourse = new ArrayList<>();
 
     //자기소개
+    @Lob
     private String selfIntroduction;
 
     //선호하는 수업 방식
