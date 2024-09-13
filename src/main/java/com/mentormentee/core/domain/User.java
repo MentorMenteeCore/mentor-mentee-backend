@@ -100,6 +100,19 @@ User implements UserDetails {
         return email;
     }
 
-
+    public void createUser(String userName, String nickName, Role userRole, String email, String password, LocalTime availableStartTime, LocalTime availableEndTime, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken, String selfIntro) {
+        this.userName = userName;
+        this.userRole = userRole;
+        this.email = email;
+        this.password = password;
+        this.availableStartTime = availableStartTime;
+        this.availableEndTime = availableEndTime;
+        this.waysOfCommunication = waysOfCommunication;
+        this.nickName = nickName;
+        this.userProfilePicture = userProfilePicture;
+        this.department = department;
+        this.refreshToken = refreshToken;
+        this.selfIntroduction = selfIntro;
+    }
 
 }

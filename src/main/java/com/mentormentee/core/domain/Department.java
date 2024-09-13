@@ -19,4 +19,13 @@ public class Department {
     @Column(name = "department_image_url")
     private String departmentImageUrl;
     private String departmentName;
+
+    public void createDepartment(String departmentName, String departmentImage, College college) {
+
+        this.departmentName = departmentName;
+        this.college = college;
+        this.departmentImageUrl = departmentImage;
+
+    }
+
 }
