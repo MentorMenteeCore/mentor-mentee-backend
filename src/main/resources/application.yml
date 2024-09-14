@@ -28,7 +28,7 @@ jwt:
 
 spring:
   profiles:
-    active: prod
+    active: local
 
 ---
 spring:

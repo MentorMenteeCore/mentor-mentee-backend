@@ -29,6 +29,19 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
+
+    /**
+     * 가독성과 유지 보수성을 높이기 위해 따로 URL을 배열로 뽑음
+     * 아래의 url은 로그인이 필요없는 url이다.
+     */
+    private static final String[] PERMIT_URLS = {   "/api/user/sign-up",
+                                                    "/api/user/login",
+                                                    "/api/email/**",
+                                                    "/api/refresh",
+                                                    "/swagger-ui/**",
+                                                    "/v3/api-docs/**",
+                                                    "/api/college/*"    };
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -60,7 +73,7 @@ public class SecurityConfig {
                 // 인증 url 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // 유저 로그인 이전에 이루어지는 요청 (회원가입, 로그인, 이메일 발송, 처음 학과 나열 페이지) 등과 같은 api는 인증하지 않기 위해 permitAll 적용
-                        .requestMatchers("/api/user/sign-up", "/api/user/login", "/api/email/**", "/api/refresh", "/swagger-ui/**", "/v3/api-docs/**", "/api/college/*").permitAll()
+                        .requestMatchers(PERMIT_URLS).permitAll()
                         .anyRequest().authenticated()
 
                 )
