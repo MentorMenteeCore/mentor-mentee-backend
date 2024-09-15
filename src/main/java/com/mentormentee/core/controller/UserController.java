@@ -72,14 +72,16 @@ public class UserController {
     }
 
     /**
-     * UserEmailDto로 이메일 받은 다음에 그 이메일을 서비스에 보내서 기존 DB에 있는지 확인
+     * 이메일을 가지고 있는 유저가 DB에 있는지 확인
      * 그 이후 있으면 아이디 삭제 처리.
      */
     @DeleteMapping("/user")
-    public ResponseEntity<?> deleteUserController() {
-        Long l = userService.deleteUserByEmail();
-        if (l == null) {
-            throw new UserNotFoundException("USER NOT FOUND");
+    public ResponseEntity<?> deleteUserController(@RequestBody UserInformDto userInformation) {
+        try {
+            String userEmail = userInformation.getUserEmail();
+            userService.deleteUserByEmail(userEmail);
+        }catch (IllegalStateException illegalStateException){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseCode(404));
         }
         return ResponseEntity.ok(new ResponseCode(200));
     }

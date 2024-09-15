@@ -54,7 +54,7 @@ User implements UserDetails {
 
     //유저가 수강하는 과목들 추가.
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<UserCourse> userCourse = new ArrayList<>();
 
     //자기소개
@@ -63,7 +63,7 @@ User implements UserDetails {
     //선호하는 수업 방식
     //해시태그로 여러개 있을 수 있음
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserPreferredTeachingMethod> userPreferredTeachingMethodList = new ArrayList<>();
 
     /**

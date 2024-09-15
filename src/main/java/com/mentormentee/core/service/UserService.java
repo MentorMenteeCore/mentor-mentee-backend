@@ -33,6 +33,7 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
+    private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
 
     /**
      * 회원 저장
@@ -152,12 +153,17 @@ public class UserService {
      * 유저를 삭제
      */
     @Transactional
-    public Long deleteUserByEmail() {
+    public void deleteUserByEmail(String userTypingEmail) {
         String userEmail = JwtUtils.getUserEmail();
+        if(!userTypingEmail.equals(userEmail)){
+            throw new IllegalArgumentException("유저의 이메일이 적합하지 않습니다.");
+        }
+
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
+        userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUserId(user.getId());
+        menteeCoursesRepository.deleteByUserId(user.getId());
         userRepository.deleteUser(user.getId());
-        return user.getId();
     }
 
     /**

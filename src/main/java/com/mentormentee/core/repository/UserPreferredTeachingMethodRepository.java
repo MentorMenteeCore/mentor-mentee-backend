@@ -6,8 +6,10 @@ import com.mentormentee.core.domain.UserPreferredTeachingMethod;
 import com.mentormentee.core.dto.PreferredTeachingMethodDto;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +23,12 @@ public interface UserPreferredTeachingMethodRepository extends JpaRepository<Use
     List<PreferredTeachingMethodDto> findTeachingMethodsByUser(@Param("user") User user);
 
     void deletePreferredTeachingMethodsByUser(@Param("user") User user);
+
+    @Modifying
+    @Transactional
+    @Query("delete FROM UserPreferredTeachingMethod upm" +
+            " WHERE upm.user.id = :userId")
+    void deletePreferredTeachingMethodsByUserId(@Param("userId") Long userId);
 
 
 }
