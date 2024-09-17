@@ -1,16 +1,13 @@
 package com.mentormentee.core.controller;
 
-import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.ExceptionResponse;
-import com.mentormentee.core.exception.UserNotFoundException;
+import com.mentormentee.core.exception.exceptionCollection.UserNotFoundException;
+import com.mentormentee.core.exception.exceptionCollection.UserNotMatchedException;
 import com.mentormentee.core.service.UserService;
 import com.mentormentee.core.token.dto.AuthToken;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -66,7 +63,7 @@ public class UserController {
     public ResponseEntity<?> updateUserInformationController(@Valid @RequestBody UserInformDto userInformation) {
         Long updateduser = userService.updateUserInformationService(userInformation);
         if (updateduser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("유저의 정보가 존재하지 않습니다.");
+            throw new UserNotFoundException();
         }
         return ResponseEntity.ok(new ResponseCode(200));
     }
@@ -80,8 +77,8 @@ public class UserController {
         try {
             String userEmail = userInformation.getUserEmail();
             userService.deleteUserByEmail(userEmail);
-        }catch (IllegalStateException illegalStateException){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseCode(404));
+        }catch (Exception e){
+            throw new UserNotMatchedException();
         }
         return ResponseEntity.ok(new ResponseCode(200));
     }

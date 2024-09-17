@@ -2,6 +2,7 @@ package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.*;
 import com.mentormentee.core.dto.*;
+import com.mentormentee.core.exception.exceptionCollection.*;
 import com.mentormentee.core.repository.*;
 
 import com.mentormentee.core.repository.PreferredTeachingMethodRepository;
@@ -123,7 +124,7 @@ public class UserService {
     public Long updateUserInformationService(UserInformDto userInformation) {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new JWTClaimException());
 
         if (userInformation.getUserDepartment() != null) {
             Department departmentByName = departmentRepository.findDepartmentByName(userInformation.getUserDepartment());
@@ -142,8 +143,6 @@ public class UserService {
             user.setUserProfilePicture(userInformation.getUserImageUrl());
         }
 
-//        Long save = userRepository.save(user);
-
         return user.getId();
 
     }
@@ -156,11 +155,11 @@ public class UserService {
     public void deleteUserByEmail(String userTypingEmail) {
         String userEmail = JwtUtils.getUserEmail();
         if(!userTypingEmail.equals(userEmail)){
-            throw new IllegalArgumentException("유저의 이메일이 적합하지 않습니다.");
+            throw new UserNotMatchedException();
         }
 
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new JWTClaimException());
         userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUserId(user.getId());
         menteeCoursesRepository.deleteByUserId(user.getId());
         userRepository.deleteUser(user.getId());
@@ -176,7 +175,7 @@ public class UserService {
     public void updatePassword(PasswordUpdateDto passwordUpdateDto) {
 
         String userEmail = JwtUtils.getUserEmail();
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new JWTClaimException());
 
         String newPassword = passwordUpdateDto.getNewPassword();
         String confirmPassword = passwordUpdateDto.getConfirmPassword();
@@ -184,16 +183,16 @@ public class UserService {
 
         // 1. 기존 비밀번호롸 입력 비밀번호가 같은지 확인.
         if(!passwordEncoder.matches(oldPassword,user.getPassword())){
-            throw new IllegalArgumentException("입력한 비밀번호가 기존 비밀번호와 같지 않습니다.");
+            throw new NewAndOldPasswordNotMatchedException();
         }
 
         // 2. 새로운 비밀번호와 한번더 비밀번호가 같은지 확인.
         if(!newPassword.equals(confirmPassword)){
-            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+            throw new NewPasswordNotMatchedException();
         }
         //3. 변경할 비밀번호가 기존 비밀번호랑 같은 경우.
         if(newPassword.equals(oldPassword)){
-            throw new IllegalArgumentException("기존 비밀번호랑 다른 비밀번호를 입력해 주세요.");
+            throw new EnteredExistedPasswordException();
         }
 
         // 1번 2번 3번 통과 -> 저장(merge)

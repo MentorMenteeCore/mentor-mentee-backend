@@ -1,6 +1,7 @@
 package com.mentormentee.core.controller.converter;
 
 import com.mentormentee.core.domain.CollegeName;
+import com.mentormentee.core.exception.exceptionCollection.IllegalArgumentException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class StringToCollegeConverter implements Converter<String, CollegeName> 
             System.out.println(source);
             return CollegeName.valueOf(source.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("잘못된 URL 경로 접속 시도: " + source);
+            throw new IllegalArgumentException();
         }
     }
 }

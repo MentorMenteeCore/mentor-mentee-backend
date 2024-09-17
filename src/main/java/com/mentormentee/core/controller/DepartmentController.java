@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class DepartmentController {
 
-
     /**
      * 대상: 모든 사람(로그인 할 필요 없음.)
      *

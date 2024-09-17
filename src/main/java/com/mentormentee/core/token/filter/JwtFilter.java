@@ -1,7 +1,6 @@
 package com.mentormentee.core.token.filter;
 
 
-import com.mentormentee.core.exception.UnauthorizedException;
 import com.mentormentee.core.service.CustomUserDetailService;
 import com.mentormentee.core.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
@@ -19,13 +18,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 
 @Slf4j
 @RequiredArgsConstructor

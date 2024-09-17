@@ -2,6 +2,7 @@ package com.mentormentee.core.utils;
 
 
 
+import com.mentormentee.core.exception.exceptionCollection.JWTAuthorizationException;
 import com.mentormentee.core.token.dto.AuthToken;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -123,7 +124,7 @@ public class JwtUtils {
             token = authorizationHeader.substring(7);
         }
         else {
-            throw new RuntimeException("access token 불일치");
+            throw new JWTAuthorizationException();
         }
 
         return token;
