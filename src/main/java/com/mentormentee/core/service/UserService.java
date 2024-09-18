@@ -107,7 +107,7 @@ public class UserService {
         // 헤더에서 유저정보를 가져오기 위해 JwtUtils.getUserEmail 사용함
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new JWTClaimException());
         UserInformDto userInformDto;
 
         if(user.getDepartment() == null) {
