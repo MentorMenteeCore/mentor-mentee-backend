@@ -1,16 +1,13 @@
 package com.mentormentee.core.controller;
 
-import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.ExceptionResponse;
-import com.mentormentee.core.exception.UserNotFoundException;
+import com.mentormentee.core.exception.exceptionCollection.UserNotFoundException;
+import com.mentormentee.core.exception.exceptionCollection.UserNotMatchedException;
 import com.mentormentee.core.service.UserService;
 import com.mentormentee.core.token.dto.AuthToken;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -66,20 +63,22 @@ public class UserController {
     public ResponseEntity<?> updateUserInformationController(@Valid @RequestBody UserInformDto userInformation) {
         Long updateduser = userService.updateUserInformationService(userInformation);
         if (updateduser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("유저의 정보가 존재하지 않습니다.");
+            throw new UserNotFoundException();
         }
         return ResponseEntity.ok(new ResponseCode(200));
     }
 
     /**
-     * UserEmailDto로 이메일 받은 다음에 그 이메일을 서비스에 보내서 기존 DB에 있는지 확인
+     * 이메일을 가지고 있는 유저가 DB에 있는지 확인
      * 그 이후 있으면 아이디 삭제 처리.
      */
     @DeleteMapping("/user")
-    public ResponseEntity<?> deleteUserController() {
-        Long l = userService.deleteUserByEmail();
-        if (l == null) {
-            throw new UserNotFoundException("USER NOT FOUND");
+    public ResponseEntity<?> deleteUserController(@RequestBody UserInformDto userInformation) {
+        try {
+            String userEmail = userInformation.getUserEmail();
+            userService.deleteUserByEmail(userEmail);
+        }catch (Exception e){
+            throw new UserNotMatchedException();
         }
         return ResponseEntity.ok(new ResponseCode(200));
     }

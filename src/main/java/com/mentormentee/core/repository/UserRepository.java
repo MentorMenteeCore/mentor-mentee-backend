@@ -1,12 +1,8 @@
 package com.mentormentee.core.repository;
-import com.mentormentee.core.domain.Course;
 import com.mentormentee.core.domain.Review;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.domain.UserCourse;
-import com.mentormentee.core.exception.UserNotFoundException;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

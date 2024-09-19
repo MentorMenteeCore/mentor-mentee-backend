@@ -31,4 +31,11 @@ public class UserCourse {
         this.user = user;
         user.getUserCourse().add(this);
     }
+
+    public void createUserCourse(User user, Course course, GradeStatus gradeStatus, IsMajor isMajor) {
+        this.user=user;
+        this.course=course;
+        this.gradeStatus=gradeStatus;
+        this.isMajor=isMajor;
+    }
 }

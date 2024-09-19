@@ -2,9 +2,12 @@ package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.*;
 import com.mentormentee.core.dto.*;
+import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.CourseMentorRepository;
+import com.mentormentee.core.repository.UserRepository;
 import com.mentormentee.core.repository.UserTransactionRepository;
 import com.mentormentee.core.utils.CourseNameComparator;
+import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.MentorComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,11 +23,11 @@ import java.util.stream.Collectors;
 public class CourseMentorService {
 
     private final CourseMentorRepository courseMentorRepository;
-    private final UserService userService;
     private final UserTransactionRepository userTransactionRepository;
+    private final UserRepository userRepository;
 
     public CourseMentorDto getCourseMentorDetails(Long departmentId, String selectedYear, Long courseId, String sortBy, Pageable pageable) {
-        UserInformDto userInformDto = userService.getUserinformation(); //사용자 학년 정보 가져오기
+        UserInformDto userInformDto = getUserinforDto();
         int userYearInUni = userInformDto.getYearInUni();
         CourseYear courseYear = determineCourseYear(selectedYear, userYearInUni);  //선택된 학년 또는 사용자의 학년을 기준으로 과목 학년 결정
 
@@ -72,7 +75,29 @@ public class CourseMentorService {
         return new CourseMentorDto(selectedCourse == null ? null : selectedCourse.getCourseName(), pagedMentors, mentorDtos.size());
     }
 
-    //처음에 자동으로 사용자의 학년에 맞추어 과목 조회
+    /**
+     * 서비스 레이어에서 동일 계층 bean을 참조하는 부분
+     * 순환참조가 일어날 것을 예방하기 위해
+     * 서비스 레이어 참조부분을 없에고
+     * 리포지토리를 참조하도록 바꾸었습니다
+     * - 2024-09-18 최기연 -
+     */
+    private UserInformDto getUserinforDto() {
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new JWTClaimException());
+        UserInformDto userInformDto;
+
+        if(user.getDepartment() == null) {
+            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), null, user.getYearInUni(), user.getUserProfilePicture());
+        }
+        else{
+            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), user.getDepartment().getDepartmentName(), user.getYearInUni(), user.getUserProfilePicture());
+        }
+        return userInformDto;
+
+    }
+
     private CourseYear determineCourseYear(String selectedYear, int userYearInUni) {
         if (selectedYear == null || selectedYear.isEmpty()) {
             return CourseYear.fromInt(userYearInUni);

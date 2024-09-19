@@ -30,8 +30,7 @@ public class EmailService {
 
     // 인증시간 3분
     private final Long AUTH_CODE_EXPIRATION_TIME = 3 * 60 * 1000L;
-    public EmailSendResponseDto sendEmail(EmailSendRequestDto emailSendRequestDto){
-        String email = emailSendRequestDto.getEmail();
+    public EmailSendResponseDto sendEmail(String email){
         String code = createCode();
         Optional<EmailSession> emailSessionOptional = emailRepository.findByUserEmail(email);
         LocalDateTime now = LocalDateTime.now();
@@ -86,9 +85,7 @@ public class EmailService {
         }
     }
 
-    public boolean verifiedCode(EmailVerifyRequestDto emailVerifyRequestDto){
-        String email = emailVerifyRequestDto.getEmail();
-        String code = emailVerifyRequestDto.getCode();
+    public boolean verifiedCode(String code, String email){
         LocalDateTime now = LocalDateTime.now();
 
         // 먼저 이메일 세션에 존재하는 이메일을 찾는다

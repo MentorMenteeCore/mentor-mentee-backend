@@ -5,6 +5,7 @@ import com.mentormentee.core.dto.CourseNameDto;
 import com.mentormentee.core.dto.MenteeInformationDto;
 import com.mentormentee.core.dto.PreferredTeachingMethodDto;
 import com.mentormentee.core.dto.UpdateMenteeInformDto;
+import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.*;
 import com.mentormentee.core.utils.JwtUtils;
 import jakarta.persistence.EntityManager;
@@ -41,7 +42,7 @@ public class MenteeService {
     public MenteeInformationDto getMenteeInformation(Pageable coursePage) {
 
         String userEmail = JwtUtils.getUserEmail();
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new JWTClaimException());
 
         /**
          * 여기서 이제 이수 교과목들, 선호하는 수업방식들 가져옵니다
@@ -78,7 +79,7 @@ public class MenteeService {
     public void updateMenteeInformation(UpdateMenteeInformDto updateMenteeInformationDto) {
 
         String userEmail = JwtUtils.getUserEmail();
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new JWTClaimException());
 
         // menteeImageUrl 업데이트
         if (updateMenteeInformationDto.getMenteeImageUrl() != null &&

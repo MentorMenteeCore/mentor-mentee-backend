@@ -19,4 +19,8 @@ public class College {
 
     @Enumerated(EnumType.STRING)
     private CollegeName collegeName;
+
+    public void createCollege(CollegeName collegeName) {
+        this.collegeName=collegeName;
+    }
 }

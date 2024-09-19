@@ -33,4 +33,5 @@ public class UserPreferredTeachingMethod {
         this.user = user;
         this.preferredTeachingMethod = userTeachingMethod;
     }
+
 }

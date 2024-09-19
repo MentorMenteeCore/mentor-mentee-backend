@@ -29,6 +29,19 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
+
+    /**
+     * 가독성과 유지 보수성을 높이기 위해 따로 URL을 배열로 뽑음
+     * 아래의 url은 로그인이 필요없는 url이다.
+     */
+    private static final String[] PERMIT_URLS = {   "/api/user/sign-up",
+                                                    "/api/user/login",
+                                                    "/api/email/**",
+                                                    "/api/refresh",
+                                                    "/swagger-ui/**",
+                                                    "/v3/api-docs/**",
+                                                    "/api/college/*"    };
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -44,9 +57,9 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
                         config.setAllowCredentials(true);//인증정보 받을건지
-                        config.setAllowedOrigins(Collections.singletonList("*"));//상대방 url
-                        config.setAllowedHeaders(Collections.singletonList("*"));//어떤 졸휴의 http 헤더 받을건지 . *이면 다 받을 수 있다는거
-                        config.setAllowedMethods(Collections.singletonList("*"));// get , post, patch 뭐 받을건지. *이면 다 받을 수 있다는거
+                        config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));//상대방 url
+                        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));//어떤 졸휴의 http 헤더 받을건지 . *이면 다 받을 수 있다는거
+                        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));// get , post, patch 뭐 받을건지. *이면 다 받을 수 있다는거
                         config.setExposedHeaders(Arrays.asList("Authorization"));// 우리가 JWT 토큰을 해더에 담아서 보낼때 그 해더 이름을 적음으로써 브라우저에서 볼 수 있게 해달라는 것이다.
                         config.setMaxAge(3600L);
                         return config;
@@ -60,7 +73,7 @@ public class SecurityConfig {
                 // 인증 url 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // 유저 로그인 이전에 이루어지는 요청 (회원가입, 로그인, 이메일 발송, 처음 학과 나열 페이지) 등과 같은 api는 인증하지 않기 위해 permitAll 적용
-                        .requestMatchers("/api/user/sign-up", "/api/user/login", "/api/email/**", "/api/refresh", "/swagger-ui/**", "/v3/api-docs/**", "/api/college/*").permitAll()
+                        .requestMatchers(PERMIT_URLS).permitAll()
                         .anyRequest().authenticated()
 
                 )

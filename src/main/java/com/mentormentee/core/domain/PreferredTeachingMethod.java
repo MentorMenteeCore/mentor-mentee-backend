@@ -23,4 +23,8 @@ public class PreferredTeachingMethod {
     public void createMethod(String teachingMethod) {
         this.teachingMethod = teachingMethod;
     }
+
+    public void createTeachingMethod(String teachingMethod) {
+        this.createMethod(teachingMethod);
+    }
 }

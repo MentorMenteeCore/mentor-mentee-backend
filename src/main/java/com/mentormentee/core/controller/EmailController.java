@@ -21,10 +21,13 @@ public class EmailController {
 
     @PostMapping("/email/send")
     private ResponseEntity<EmailSendResponseDto> sendEmail(@RequestBody EmailSendRequestDto emailSendRequestDto){
-        return ResponseEntity.ok(emailService.sendEmail(emailSendRequestDto));
+        String email = emailSendRequestDto.getEmail();
+        return ResponseEntity.ok(emailService.sendEmail(email));
     }
     @PostMapping("/email/verify")
     private ResponseEntity<Boolean> verifyCode(@RequestBody EmailVerifyRequestDto emailVerifyRequestDto){
-        return ResponseEntity.ok(emailService.verifiedCode(emailVerifyRequestDto));
+        String code = emailVerifyRequestDto.getCode();
+        String email = emailVerifyRequestDto.getEmail();
+        return ResponseEntity.ok(emailService.verifiedCode(code,email));
     }
 }

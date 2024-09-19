@@ -21,8 +21,7 @@ public class ChatRoom {
 
     private LocalDateTime createDate;
 
-    @Enumerated
-    private ReadOrNot readOrNot;
+    private boolean readOrNot;
 
 
 

@@ -35,5 +35,14 @@ public class Course {
     @Column(name = "course_year")
     private CourseYear courseYear; // 학년 정보
 
+
+    public void createCourse(String courseName, int credit, String professor, CourseYear courseYear, Department department) {
+        this.courseName=courseName;
+        this.credit=credit;
+        this.professor=professor;
+        this.courseYear=courseYear;
+        this.department=department;
+    }
+
 }
 

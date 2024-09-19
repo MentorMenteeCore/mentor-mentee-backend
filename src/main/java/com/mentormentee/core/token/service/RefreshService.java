@@ -3,6 +3,7 @@ package com.mentormentee.core.token.service;
 
 import com.mentormentee.core.domain.Role;
 import com.mentormentee.core.domain.User;
+import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.UserRepository;
 import com.mentormentee.core.token.dto.AuthToken;
 import com.mentormentee.core.token.dto.RefreshDto;
@@ -32,7 +33,7 @@ public class RefreshService {
         String email = JwtUtils.getUserEmailFromRefreshToken(refreshToken);
 
         User findUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new JWTClaimException());
 
         Role role = findUser.getUserRole();
         List<String> roles = new ArrayList<>();
