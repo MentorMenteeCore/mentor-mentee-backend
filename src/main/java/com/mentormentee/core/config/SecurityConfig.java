@@ -57,9 +57,9 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
                         config.setAllowCredentials(true);//인증정보 받을건지
-                        config.setAllowedOrigins(Collections.singletonList("*"));//상대방 url
-                        config.setAllowedHeaders(Collections.singletonList("*"));//어떤 졸휴의 http 헤더 받을건지 . *이면 다 받을 수 있다는거
-                        config.setAllowedMethods(Collections.singletonList("*"));// get , post, patch 뭐 받을건지. *이면 다 받을 수 있다는거
+                        config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));//상대방 url
+                        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));//어떤 졸휴의 http 헤더 받을건지 . *이면 다 받을 수 있다는거
+                        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));// get , post, patch 뭐 받을건지. *이면 다 받을 수 있다는거
                         config.setExposedHeaders(Arrays.asList("Authorization"));// 우리가 JWT 토큰을 해더에 담아서 보낼때 그 해더 이름을 적음으로써 브라우저에서 볼 수 있게 해달라는 것이다.
                         config.setMaxAge(3600L);
                         return config;
