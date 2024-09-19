@@ -1,8 +1,6 @@
 package com.mentormentee.core.dto;
 
-import com.mentormentee.core.domain.Review;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 @Getter

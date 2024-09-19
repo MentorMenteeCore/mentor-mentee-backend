@@ -35,5 +35,9 @@ public class Course {
     @Column(name = "course_year")
     private CourseYear courseYear; // 학년 정보
 
+    public void changeCourseInfo(String newCourseName, int newCredit) {
+        this.courseName = newCourseName;
+        this.credit = newCredit;
+    }
 }
 

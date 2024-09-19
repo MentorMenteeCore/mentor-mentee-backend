@@ -27,10 +27,8 @@ public class MentorComparator implements Comparator<CourseMentorDto.MentorDto> {
                 return compareByNickname(m1, m2);
             case "gradestatus":
                 return compareByGradeStatus(m1, m2);
-            case "cieatStock":
-                return compareByCieatStock(m1, m2);
-            case "cieatGrade":
-                return compareByCieatGrade(m1, m2);
+            case "yearinuni":
+                return compareByYearInUni(m1, m2);
             default:
                 throw new IllegalArgumentException("Invalid sort criterion: " + sortBy);
         }
@@ -44,14 +42,11 @@ public class MentorComparator implements Comparator<CourseMentorDto.MentorDto> {
         return Integer.compare(m1.getGradeStatusPriority(), m2.getGradeStatusPriority());
     }
 
-    private int compareByCieatStock(CourseMentorDto.MentorDto m1, CourseMentorDto.MentorDto m2) {
-        return Integer.compare(m2.getCieatStock(), m1.getCieatStock());
-    }
-
-    private int compareByCieatGrade(CourseMentorDto.MentorDto m1, CourseMentorDto.MentorDto m2) {
-        return Integer.compare(m2.getCieatGrade(), m1.getCieatGrade());
+    private int compareByYearInUni(CourseMentorDto.MentorDto m1, CourseMentorDto.MentorDto m2) {
+        return Integer.compare(m1.getYearInUni(), m2.getYearInUni());
     }
 }
+
 
 
 

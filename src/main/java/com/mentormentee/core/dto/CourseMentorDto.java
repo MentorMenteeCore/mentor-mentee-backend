@@ -1,39 +1,52 @@
 package com.mentormentee.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mentormentee.core.domain.Course;
 import com.mentormentee.core.domain.GradeStatus;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.domain.UserCourse;
-import lombok.Data;
 import lombok.Getter;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 @Getter
 public class CourseMentorDto {
     private String courseName;
     private List<MentorDto> mentors;
+    private int totalMentors;
+    private List<CourseDto> courseDtoList;
+    private int totalPages;
+    private int currentPageNum;
+    private boolean lastPageOrNot;
 
-
-    public CourseMentorDto(String courseName, List<MentorDto> mentors, int totalMentors) {
+    public CourseMentorDto(String courseName, List<MentorDto> mentors, int totalMentors, List<CourseDto> courseDtoList, int totalPages, int currentPageNum, boolean lastPageOrNot) {
         this.courseName = courseName;
         this.mentors = mentors;
+        this.totalMentors = totalMentors;
+        this.courseDtoList = courseDtoList;
+        this.totalPages = totalPages;
+        this.currentPageNum = currentPageNum;
+        this.lastPageOrNot = lastPageOrNot;
     }
 
     @Getter
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    public static class CourseDto {
+        private Long courseId;
+        private String courseName;
+
+        public CourseDto(Course course) {
+            this.courseId = course.getId();
+            this.courseName = course.getCourseName();
+        }
+    }
+
+    @Getter
     public static class MentorDto {
-        private Long userId;  // userId 추가
+        private Long userId;
         private String nickName;
         private String courseName;
         private String gradeStatus;
         private int yearInUni;
-        private int cieatStock;
-        private int cieatGrade;
 
         public MentorDto(User user, Course course, UserCourse userCourse, int cieatStock, int cieatGrade) {
             this.userId = user.getId();
@@ -41,8 +54,6 @@ public class CourseMentorDto {
             this.courseName = course.getCourseName();
             this.gradeStatus = userCourse.getGradeStatus().getDisplayValue();
             this.yearInUni = user.getYearInUni();
-            this.cieatStock = cieatStock;
-            this.cieatGrade = cieatGrade;
         }
 
         @JsonIgnore
@@ -51,6 +62,9 @@ public class CourseMentorDto {
         }
     }
 }
+
+
+
 
 
 

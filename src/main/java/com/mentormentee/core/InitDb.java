@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -71,29 +72,29 @@ public class InitDb {
                         em.persist(department7);
 
                         User user1 = createUser(
-                                "choegiyeon", "choegi", ROLE_MENTEE, "choegi@example.com",
-                                "password123", LocalTime.of(9, 0), LocalTime.of(17, 0),
-                                FACETOFACE, 2, "www.exampleProfilePicture1.com",
-                                department5, "sampleRefreshToken1","최:최기연은 기:기발한 연:연구중"
+                                "choegiyeon", "choegi", ROLE_MENTOR, "choegi@example.com",
+                                "password123",
+                                FACETOFACE, 1, "www.exampleProfilePicture1.com",
+                                department7, "sampleRefreshToken1"
                         );
                         user1.hashPassword(passwordEncoder);
 
                         em.persist(user1);
 
                         User user2 = createUser(
-                                "박대팔", "그럼제가선배맘에탕탕", ROLE_MENTEE, "cs1@example.com",
-                                "password1234", LocalTime.of(9, 0), LocalTime.of(18, 0),
-                                FACETOFACE, 2, "www.exampleProfilePicture2.com",
-                                department7, "sampleRefreshToken2","선배 탕후루도 같이"
+                                "박대팔", "그럼제가선배맘에탕탕", ROLE_MENTOR, "cs1@example.com",
+                                "password1234",
+                                FACETOFACE, 3, "www.exampleProfilePicture2.com",
+                                department7, "sampleRefreshToken2"
                         );
                         user2.hashPassword(passwordEncoder);
                         em.persist(user2);
 
                         User user3 = createUser(
                                 "최금평", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
-                                "password12345", LocalTime.of(9, 0), LocalTime.of(18, 0),
+                                "password12345",
                                 FACETOFACE, 2, "www.exampleProfilePicture3.com",
-                                department7, "sampleRefreshToken3","저는 충북대 컴공을 전공중인 멘토입니다. 어서 저에게 연락을 주세요!"
+                                department7, "sampleRefreshToken3"
                         );
                         user3.hashPassword(passwordEncoder);
                         em.persist(user3);
@@ -119,28 +120,54 @@ public class InitDb {
                         );
                         em.persist(course2);
 
+                        Course course3 = createCourse(
+                                "공학수학2", 3, "김남석", CourseYear.SOPHOMORE, department7
+                        );
+                        em.persist(course3);
+
                         UserCourse usercourse1 = createUserCourse(
-                                user2, course2, GradeStatus.APLUS, IsMajor.MAJOR
+                                user1, course2, GradeStatus.APLUS
                         );
                         em.persist(usercourse1);
 
                         UserCourse usercourse2 = createUserCourse(
-                                user3, course2, GradeStatus.A, IsMajor.MAJOR
+                                user2, course2, GradeStatus.B
                         );
                         em.persist(usercourse2);
 
                         UserCourse usercourse3 = createUserCourse(
-                                user1, course2, GradeStatus.B, IsMajor.MAJOR
+                                user3, course2, GradeStatus.A
                         );
                         em.persist(usercourse3);
 
                         UserCourse usercourse4 = createUserCourse(
-                                user2, course1, GradeStatus.APLUS, IsMajor.MAJOR
+                                user3, course1, GradeStatus.APLUS
                         );
                         em.persist(usercourse4);
 
+                        UserCourse usercourse5 = createUserCourse(
+                                user3, course3, GradeStatus.B
+                        );
+                        em.persist(usercourse5);
+
+
+                        UserCourse usercourse6= createUserCourse(
+                                user2, course1, GradeStatus.APLUS
+                        );
+                        em.persist(usercourse6);
+
+
+
+
+
                         Review review1 = createReview(3, LocalDateTime.of(2024, 8, 8, 0, 0), user2, user3, "좋았습니다");
                         em.persist(review1);
+
+                        AvailableTime availableTime1 = createAvailableTime(user3, DayOfWeek.MONDAY, LocalTime.of(9, 0), LocalTime.of(18, 0));
+                        AvailableTime availableTime2 = createAvailableTime(user3, DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(17, 0));
+
+                        em.persist(availableTime1);
+                        em.persist(availableTime2);
 
 
 
@@ -148,21 +175,19 @@ public class InitDb {
 
 
 
-                private static User createUser(String userName, String nickName, Role userRole, String email, String password, LocalTime availableStartTime, LocalTime availableEndTime, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken, String selfIntro) {
+                private static User createUser(String userName, String nickName, Role userRole, String email, String password, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken) {
                         User user = new User();
                         user.setUserName(userName);
                         user.setNickName(nickName);
                         user.setUserRole(userRole);
                         user.setEmail(email);
                         user.setPassword(password);
-                        user.setAvailableStartTime(availableStartTime);
-                        user.setAvailableEndTime(availableEndTime);
                         user.setWaysOfCommunication(waysOfCommunication);
                         user.setYearInUni(yearInUni);
                         user.setUserProfilePicture(userProfilePicture);
                         user.setDepartment(department);
                         user.setRefreshToken(refreshToken);
-                        user.setSelfIntroduction(selfIntro);
+
                         return user;
                 }
 
@@ -213,12 +238,11 @@ public class InitDb {
                         return course;
                 }
 
-                private static UserCourse createUserCourse(User user, Course course, GradeStatus gradeStatus, IsMajor isMajor) {
+                private static UserCourse createUserCourse(User user, Course course, GradeStatus gradeStatus) {
                         UserCourse userCourse = new UserCourse();
                         userCourse.setUser(user);
                         userCourse.setCourse(course);
                         userCourse.setGradeStatus(gradeStatus);
-                        userCourse.setIsMajor(isMajor);
                         return userCourse;
                 }
 
@@ -231,6 +255,16 @@ public class InitDb {
                         review.setComment(comment);
                         return review;
                 }
+
+                private static AvailableTime createAvailableTime(User user, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
+                        AvailableTime availableTime = new AvailableTime();
+                        availableTime.setUser(user);
+                        availableTime.setDayOfWeek(dayOfWeek);
+                        availableTime.setAvailableStartTime(startTime);
+                        availableTime.setAvailableEndTime(endTime);
+                        return availableTime;
+                }
+
         }
 
 }
