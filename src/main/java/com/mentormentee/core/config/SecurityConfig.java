@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -73,6 +74,7 @@ public class SecurityConfig {
                 // 인증 url 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // 유저 로그인 이전에 이루어지는 요청 (회원가입, 로그인, 이메일 발송, 처음 학과 나열 페이지) 등과 같은 api는 인증하지 않기 위해 permitAll 적용
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(PERMIT_URLS).permitAll()
                         .anyRequest().authenticated()
 
