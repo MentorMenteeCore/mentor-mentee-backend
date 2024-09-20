@@ -40,7 +40,7 @@ public class DepartmentRepository {
      * department이름 가지고 department를 찾아낸다.
      */
     public Department findDepartmentByName(String DepartmentName) {
-        Department departmentName = em.createQuery("Select d from Department d where d.departmentName = :DepartmentName", Department.class)
+        Department departmentName = em.createQuery("Select d from Department d join fetch d.college c where d.departmentName = :DepartmentName", Department.class)
                 .setParameter("DepartmentName", DepartmentName)
                 .getSingleResult();
         return departmentName;

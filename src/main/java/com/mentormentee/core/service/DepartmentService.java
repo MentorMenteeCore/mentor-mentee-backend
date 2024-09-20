@@ -3,6 +3,7 @@ package com.mentormentee.core.service;
 import com.mentormentee.core.domain.CollegeName;
 import com.mentormentee.core.domain.Department;
 import com.mentormentee.core.dto.DepartmentDto;
+import com.mentormentee.core.dto.SearchDto;
 import com.mentormentee.core.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,20 @@ public class DepartmentService {
         return departmentByCollege;
     }
 
+    /**
+     * 학과 이름을 가지고 연관된 Image URL과
+     * 단과대 이름을 반환합니다.
+     */
+    public SearchDto findDepartmentAndCollege(String departmentName) {
+        Department departmentByName = departmentRepository.findDepartmentByName(departmentName);
 
+        CollegeName collegeName = departmentByName.getCollege().getCollegeName();
+        String collegeKoreanName = collegeName.getCollegeKoreanName();
+        String searchedDepartmentName = departmentByName.getDepartmentName();
+        String imageUrl = departmentByName.getDepartmentImageUrl();
 
+        SearchDto searchDto = new SearchDto(imageUrl,searchedDepartmentName,collegeKoreanName);
+        return searchDto;
+
+    }
 }
