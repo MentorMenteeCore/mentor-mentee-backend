@@ -75,12 +75,8 @@ public class SecurityConfig {
                 // 인증 url 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // 유저 로그인 이전에 이루어지는 요청 (회원가입, 로그인, 이메일 발송, 처음 학과 나열 페이지) 등과 같은 api는 인증하지 않기 위해 permitAll 적용
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(PERMIT_URLS).permitAll()
-                        .requestMatchers(CorsUtils::isPreFlightRequest)
-                        .permitAll()
                         .anyRequest().authenticated()
-
                 )
                 //필터체인의 전역 예외처리. 토큰이 없거나 인가권한 없는 사용자가 오면 예외 발생.
                 .exceptionHandling(exceptionHandling -> exceptionHandling
