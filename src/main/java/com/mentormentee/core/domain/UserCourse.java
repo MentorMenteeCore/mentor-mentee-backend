@@ -54,4 +54,8 @@ public class UserCourse {
         return Objects.hash(course, user);
     }
 
+    public void connectUserAndUsercourse(User user) {
+        this.user = user;
+        user.getUserCourse().add(this);
+    }
 }

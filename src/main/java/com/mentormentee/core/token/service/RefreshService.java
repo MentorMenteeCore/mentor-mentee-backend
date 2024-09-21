@@ -46,7 +46,4 @@ public class RefreshService {
 
         return newAuthToken;
     }
-
-
-
 }
