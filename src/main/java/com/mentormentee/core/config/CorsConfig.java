@@ -17,8 +17,8 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:5173" // front 포트 주소
                 )
-                .allowedMethods("*")
-                .allowedHeaders("*")
+                .allowedMethods("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("Authorization", "Content-Type", "Accept", "Access-Control-Request-Method", "Access-Control-Request-Headers")
                 .allowCredentials(true)
                 .maxAge(MAX_AGE_SECS);
     }
