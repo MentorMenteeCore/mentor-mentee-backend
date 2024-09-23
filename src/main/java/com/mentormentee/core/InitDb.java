@@ -113,45 +113,45 @@ public class InitDb {
             );
             user3.hashPassword(passwordEncoder);
             em.persist(user3);
-
-            PreferredTeachingMethod preferredTeachingMethod1 = new PreferredTeachingMethod();
-            preferredTeachingMethod1.createTeachingMethod("자기주도_학습_야자_싫어");
-            em.persist(preferredTeachingMethod1);
-
-            PreferredTeachingMethod preferredTeachingMethod2 = new PreferredTeachingMethod();
-            preferredTeachingMethod2.createTeachingMethod("교수님과_함께하는_수업");
-            em.persist(preferredTeachingMethod2);
-
-            PreferredTeachingMethod preferredTeachingMethod3 = new PreferredTeachingMethod();
-            preferredTeachingMethod3.createTeachingMethod("멘토와 줌으로");
-            em.persist(preferredTeachingMethod3);
-
-            PreferredTeachingMethod preferredTeachingMethod4 = new PreferredTeachingMethod();
-            preferredTeachingMethod4.createTeachingMethod("커뮤니케이션 중요");
-            em.persist(preferredTeachingMethod4);
-
-            PreferredTeachingMethod preferredTeachingMethod5 = new PreferredTeachingMethod();
-            preferredTeachingMethod5.createTeachingMethod("카톡 중요");
-            em.persist(preferredTeachingMethod5);
+//
+//            PreferredTeachingMethod preferredTeachingMethod1 = new PreferredTeachingMethod();
+//            preferredTeachingMethod1.createTeachingMethod("자기주도_학습_야자_싫어");
+//            em.persist(preferredTeachingMethod1);
+//
+//            PreferredTeachingMethod preferredTeachingMethod2 = new PreferredTeachingMethod();
+//            preferredTeachingMethod2.createTeachingMethod("교수님과_함께하는_수업");
+//            em.persist(preferredTeachingMethod2);
+//
+//            PreferredTeachingMethod preferredTeachingMethod3 = new PreferredTeachingMethod();
+//            preferredTeachingMethod3.createTeachingMethod("멘토와 줌으로");
+//            em.persist(preferredTeachingMethod3);
+//
+//            PreferredTeachingMethod preferredTeachingMethod4 = new PreferredTeachingMethod();
+//            preferredTeachingMethod4.createTeachingMethod("커뮤니케이션 중요");
+//            em.persist(preferredTeachingMethod4);
+//
+//            PreferredTeachingMethod preferredTeachingMethod5 = new PreferredTeachingMethod();
+//            preferredTeachingMethod5.createTeachingMethod("카톡 중요");
+//            em.persist(preferredTeachingMethod5);
 
             UserPreferredTeachingMethod userPreferredTeachingMethod1 = new UserPreferredTeachingMethod();
-            userPreferredTeachingMethod1.createUserMethod(user2,preferredTeachingMethod1);
+            userPreferredTeachingMethod1.createUserMethod(user2,"자기주도_학습_야자_싫어");
             em.persist(userPreferredTeachingMethod1);
 
             UserPreferredTeachingMethod userPreferredTeachingMethod2 = new UserPreferredTeachingMethod();
-            userPreferredTeachingMethod2.createUserMethod(user2,preferredTeachingMethod2);
+            userPreferredTeachingMethod2.createUserMethod(user2,"교수님과_함께하는_수업");
             em.persist(userPreferredTeachingMethod2);
 
             UserPreferredTeachingMethod userPreferredTeachingMethod3 = new UserPreferredTeachingMethod();
-            userPreferredTeachingMethod3.createUserMethod(user3,preferredTeachingMethod3);
+            userPreferredTeachingMethod3.createUserMethod(user3,"멘토와 줌으로");
             em.persist(userPreferredTeachingMethod3);
 
             UserPreferredTeachingMethod userPreferredTeachingMethod4 = new UserPreferredTeachingMethod();
-            userPreferredTeachingMethod4.createUserMethod(user3,preferredTeachingMethod4);
+            userPreferredTeachingMethod4.createUserMethod(user3,"커뮤니케이션 중요");
             em.persist(userPreferredTeachingMethod4);
 
             UserPreferredTeachingMethod userPreferredTeachingMethod5 = new UserPreferredTeachingMethod();
-            userPreferredTeachingMethod5.createUserMethod(user3,preferredTeachingMethod5);
+            userPreferredTeachingMethod5.createUserMethod(user3,"카톡 중요");
             em.persist(userPreferredTeachingMethod5);
 
             Course course1 = new Course();

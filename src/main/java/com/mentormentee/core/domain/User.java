@@ -113,6 +113,7 @@ User implements UserDetails {
         this.department = department;
         this.refreshToken = refreshToken;
         this.selfIntroduction = selfIntro;
+        this.yearInUni = yearInUni;
     }
 
 }

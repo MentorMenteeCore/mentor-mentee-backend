@@ -5,7 +5,7 @@ import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.exceptionCollection.*;
 import com.mentormentee.core.repository.*;
 
-import com.mentormentee.core.repository.PreferredTeachingMethodRepository;
+//import com.mentormentee.core.repository.PreferredTeachingMethodRepository;
 import com.mentormentee.core.token.dto.AuthToken;
 import com.mentormentee.core.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class UserService {
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
+//    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
 

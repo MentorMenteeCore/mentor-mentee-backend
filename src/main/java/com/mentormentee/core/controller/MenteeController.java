@@ -35,6 +35,7 @@ public class MenteeController {
     @PatchMapping("/user/mentee")
     public ResponseEntity<?> updateMenteeController(@RequestBody UpdateMenteeInformDto menteeInformationDto) {
 
+
         menteeService.updateMenteeInformation(menteeInformationDto);
 
         return ResponseEntity.ok(new ResponseCode(200));
