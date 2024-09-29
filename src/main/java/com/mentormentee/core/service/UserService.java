@@ -151,7 +151,6 @@ public class UserService {
      * 유저의 이메일을 통해 유저를 찾고 유저가 존재하면
      * 유저를 삭제
      */
-    @Transactional
     public void deleteUserByEmail(String userTypingEmail) {
         String userEmail = JwtUtils.getUserEmail();
         if(!userTypingEmail.equals(userEmail)){

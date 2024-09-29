@@ -1,6 +1,7 @@
 package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.User;
+import com.mentormentee.core.exception.exceptionCollection.IllegalArgumentException;
 import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new JWTClaimException());
+                .orElseThrow(() -> new IllegalArgumentException());
         return user;
     }
 }
