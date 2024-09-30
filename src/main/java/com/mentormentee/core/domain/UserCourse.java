@@ -9,7 +9,7 @@ import lombok.Setter;
 public class UserCourse {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_course_id")
     private Long id;
 
@@ -27,4 +27,15 @@ public class UserCourse {
     @Enumerated(EnumType.STRING)
     private IsMajor isMajor;
 
+    public void connectUserAndUsercourse(User user) {
+        this.user = user;
+        user.getUserCourse().add(this);
+    }
+
+    public void createUserCourse(User user, Course course, GradeStatus gradeStatus, IsMajor isMajor) {
+        this.user=user;
+        this.course=course;
+        this.gradeStatus=gradeStatus;
+        this.isMajor=isMajor;
+    }
 }
