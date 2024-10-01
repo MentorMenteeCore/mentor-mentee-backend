@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -199,6 +200,18 @@ public class UserService {
         newPasswordUser.hashPassword(passwordEncoder);
         userRepository.save(newPasswordUser);
 
+    }
+
+    /**
+     * 유저의 역할을 바꾸는 메서드입니다
+     * 유저가 멘토이면 멘티로
+     * 멘티면 멘토로 전환이 가능합니다.
+     */
+    @Transactional
+    public void changeRole() {
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(()-> new JWTClaimException());
+        user.changeRole();
     }
 }
 

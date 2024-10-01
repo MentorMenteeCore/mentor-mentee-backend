@@ -116,4 +116,11 @@ User implements UserDetails {
         this.yearInUni = yearInUni;
     }
 
+    public void changeRole() {
+        if(userRole.equals(Role.ROLE_MENTEE)){
+            this.userRole = Role.ROLE_MENTOR;
+        }else {
+            this.userRole = Role.ROLE_MENTEE;
+        }
+    }
 }

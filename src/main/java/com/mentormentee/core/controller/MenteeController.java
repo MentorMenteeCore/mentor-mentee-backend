@@ -5,6 +5,7 @@ import com.mentormentee.core.dto.ResponseCode;
 import com.mentormentee.core.dto.UpdateMenteeInformDto;
 import com.mentormentee.core.service.MenteeService;
 
+import com.mentormentee.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class MenteeController {
 
     private final MenteeService menteeService;
+    private final UserService userService;
+
     /**
      * 멘티가 자기 정보를 보고싶을때
      * 실행되는 API입니다.
@@ -40,9 +43,6 @@ public class MenteeController {
 
         return ResponseEntity.ok(new ResponseCode(200));
     }
-
-
-
 
 
 }

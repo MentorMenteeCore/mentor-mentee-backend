@@ -100,4 +100,10 @@ public class UserController {
         userService.updatePassword(passwordUpdateDto);
         return ResponseEntity.ok(new ResponseCode(200));
     }
+
+    @PostMapping("/user/role")
+    public ResponseEntity<?> updateRoleController(){
+        userService.changeRole();
+        return ResponseEntity.ok(new ResponseCode(200));
+    }
 }
