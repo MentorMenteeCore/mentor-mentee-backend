@@ -33,11 +33,12 @@ public class UserController {
 
     /**
      * 회원가입입니다.
+     *
      * @param userSignUpRequestDto : 이름, 닉네임, 비밀번호 ..etc
      * @return id(pk)
      */
     @PostMapping("/user/sign-up")
-    public ResponseEntity<Long> signUp(@RequestBody UserSignUpRequestDto userSignUpRequestDto){
+    public ResponseEntity<Long> signUp(@RequestBody UserSignUpRequestDto userSignUpRequestDto) {
         return ResponseEntity.ok(userService.save(userSignUpRequestDto));
     }
 
@@ -46,16 +47,17 @@ public class UserController {
      *
      * @param loginRequestDto : email, pw
      * @return auth token -> grant Type : bearer
-     *                      access token : api 이용 시 사용
-     *                      refresh token : access token이 만료되었을 시 사용
+     * access token : api 이용 시 사용
+     * refresh token : access token이 만료되었을 시 사용
      */
     @PostMapping("/user/login")
-    public ResponseEntity<AuthToken> login(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<AuthToken> login(@RequestBody LoginRequestDto loginRequestDto) {
         return ResponseEntity.ok(userService.login(loginRequestDto));
     }
 
     /**
      * 유저가 수정을 하면 그 부분을 DB에 반영합니다.
+     *
      * @return ResponseEntity
      * @RequestBody 내용을 DTO로 반환
      */
@@ -77,7 +79,7 @@ public class UserController {
         try {
             String userEmail = userInformation.getUserEmail();
             userService.deleteUserByEmail(userEmail);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new UserNotMatchedException();
         }
         return ResponseEntity.ok(new ResponseCode(200));
@@ -102,8 +104,20 @@ public class UserController {
     }
 
     @PostMapping("/user/role")
-    public ResponseEntity<?> updateRoleController(){
+    public ResponseEntity<?> updateRoleController() {
         userService.changeRole();
+        return ResponseEntity.ok(new ResponseCode(200));
+    }
+
+    /**
+     * 유저가 닉네임 중복확인을 보내면 해당 닉네임이 디비에 있는지 확인하고
+     * 있으면 예외를 발생시킨다.
+     * 없으면, 아무런 예외를 발생시키지 않고 컨트롤러에서 성공 응답코드를 내보낸다.
+     */
+    @GetMapping("/user/signup/nickname")
+    public ResponseEntity<?> signUpNicknameController(@RequestParam(name = "nickname") String nickname) {
+        String nicknameWithoutSpace = nickname.replaceAll("\\s+", "");
+        userService.checkDuplicatedNickname(nicknameWithoutSpace);
         return ResponseEntity.ok(new ResponseCode(200));
     }
 }

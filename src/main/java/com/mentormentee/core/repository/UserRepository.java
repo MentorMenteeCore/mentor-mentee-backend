@@ -98,4 +98,17 @@ public class UserRepository {
             em.createQuery("delete from User u where u.id = :userId").setParameter("userId", userId).executeUpdate();
     }
 
+    /**
+     * 닉네임 중복확인을 하기위해
+     * 유저가 입력한 닉네임이
+     * 디비에 있는지 확인합니다.
+     *
+     * 없으면 예외가 발생합니다.
+     */
+    public User getUserByNickname(String nickname){
+        return em.createQuery("select u.nickName from User u where u.nickName = :nickname", User.class)
+                .setParameter("nickname", nickname)
+                .getSingleResult();
+    }
+
 }

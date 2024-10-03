@@ -40,6 +40,10 @@ public class UserService {
     /**
      * 회원 저장
      * User 객체를 그대로 받는 것은 위험할수도 있기 때문에 dto로 받음
+     *
+     *
+     * 2024-10-03
+     * 닉네임 공백제거기능 추가 (-최기연-)
      */
     @Transactional
     public Long save(UserSignUpRequestDto userSignUpRequestDto) {
@@ -48,6 +52,7 @@ public class UserService {
         String password = userSignUpRequestDto.getPassword();
         Role role = userSignUpRequestDto.getRole();
         String nickname = userSignUpRequestDto.getNickname();
+        String nicknameWithoutSpace = nickname.replaceAll("\\s+", "");
 
         // 이메일 중복시 예외
         userRepository.findByEmail(email)
@@ -61,7 +66,7 @@ public class UserService {
                 .password(password)
                 .userName(userName)
                 .userRole(role)
-                .nickName(nickname)
+                .nickName(nicknameWithoutSpace)
                 .waysOfCommunication(WaysOfCommunication.REMOTE)
                 .build();
 
@@ -212,6 +217,14 @@ public class UserService {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail).orElseThrow(()-> new JWTClaimException());
         user.changeRole();
+    }
+
+    public void checkDuplicatedNickname(String nickname) {
+        try {
+            userRepository.getUserByNickname(nickname);
+        }catch (Exception e){
+            throw NicknameExistException.EXCEPTION;
+        }
     }
 }
 

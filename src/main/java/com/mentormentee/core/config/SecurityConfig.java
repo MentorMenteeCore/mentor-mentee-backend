@@ -40,7 +40,8 @@ public class SecurityConfig {
                                                     "/api/refresh",
                                                     "/swagger-ui/**",
                                                     "/v3/api-docs/**",
-                                                    "/api/college/*"    };
+                                                    "/api/college/*",
+                                                    "/api/user/signup/nickname"};
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
