@@ -19,19 +19,20 @@ public class MenteeInformationDto {
     private int currentPageNum;
     private boolean lastPageOrNot;
     private String menteeName;
-    private String menteeImageUrl;
+    private String menteeProfileUrl;
     private String selfIntroduction;
     private List<CourseNameOnly> userCourseList;
     private List<PreferredTeachingMethodOnly> menteePreferredTeachingMethodDtoList;
 
-    public MenteeInformationDto(int totalPages, int number, boolean last, String menteeName, String menteeImageUrl, String selfIntroduction, List<CourseNameOnly> userCourseList, List<PreferredTeachingMethodOnly> menteePreferredTeachingMethodDtoList) {
+    public MenteeInformationDto(int totalPages, int number, boolean last, String menteeName, String menteeProfileUrl, String selfIntroduction, List<CourseNameOnly> userCourseList, List<PreferredTeachingMethodOnly> menteePreferredTeachingMethodDtoList) {
         this.totalPages = totalPages;
         this.currentPageNum = number;
         this.lastPageOrNot = last;
         this.menteeName = menteeName;
-        this.menteeImageUrl = menteeImageUrl;
+        this.menteeProfileUrl = menteeProfileUrl;
         this.selfIntroduction = selfIntroduction;
         this.userCourseList = userCourseList;
         this.menteePreferredTeachingMethodDtoList = menteePreferredTeachingMethodDtoList;
     }
 }
+

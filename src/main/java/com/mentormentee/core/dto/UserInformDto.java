@@ -13,19 +13,24 @@ import lombok.Data;
 public class UserInformDto {
 
     private String userNickname;
+
     @Email
     private String userEmail;
-    private String userDepartment;
-    private int yearInUni;
-    private String userImageUrl;
 
-    public UserInformDto(String userNickname, String userEmail, String userDepartment, int yearInUni, String userImageUrl) {
+    private String userDepartment;
+
+    private int yearInUni;
+
+    private String profileUrl;
+
+    public UserInformDto(String userNickname, String userEmail, String userDepartment, int yearInUni, String profileUrl) {
         this.userNickname = userNickname;
         if(userEmail != null && !userEmail.isEmpty()){
             this.userEmail = userEmail;
         }
         this.userDepartment = userDepartment;
         this.yearInUni = yearInUni;
-        this.userImageUrl = userImageUrl;
+        this.profileUrl = profileUrl;
     }
 }
+

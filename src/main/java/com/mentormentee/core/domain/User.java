@@ -44,7 +44,10 @@ User implements UserDetails {
     private WaysOfCommunication waysOfCommunication;
 
     private int yearInUni;
-    private String userProfilePicture;
+    @Column(name = "profile_url")
+    private String profileUrl = "defaultProfileImage";
+
+
 
     // 리프래시 토큰 필드 추가
     private String refreshToken;

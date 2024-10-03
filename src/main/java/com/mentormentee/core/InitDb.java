@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -22,12 +23,15 @@ import static com.mentormentee.core.domain.WaysOfCommunication.FACETOFACE;
 public class InitDb {
 
         private final InitService initService;
-
+        private static String defaultProfileImage;
+        @Value("${defaultProfileImage}")
+        public void setDefaultProfileImage(String defaultProfileImage) {
+                InitDb.defaultProfileImage = defaultProfileImage;
+        }
 
         @PostConstruct
         public void init() {
-                initService.dbInit1();
-        }
+                initService.dbInit1();}
 
         @Component
         @Transactional
@@ -35,6 +39,9 @@ public class InitDb {
         static class InitService{
                 private final EntityManager em;
                 private final PasswordEncoder passwordEncoder;
+
+
+
 
                 public void dbInit1() {
 
@@ -74,17 +81,16 @@ public class InitDb {
                         User user1 = createUser(
                                 "choegiyeon", "choegi", ROLE_MENTOR, "choegi@example.com",
                                 "password123",
-                                FACETOFACE, 1, "www.exampleProfilePicture1.com",
+                                FACETOFACE, 1, defaultProfileImage, // 기본 이미지 URL 사용
                                 department7, "sampleRefreshToken1"
                         );
                         user1.hashPassword(passwordEncoder);
-
                         em.persist(user1);
 
                         User user2 = createUser(
                                 "박대팔", "그럼제가선배맘에탕탕", ROLE_MENTOR, "cs1@example.com",
                                 "password1234",
-                                FACETOFACE, 3, "www.exampleProfilePicture2.com",
+                                FACETOFACE, 3, defaultProfileImage, // 기본 이미지 URL 사용
                                 department7, "sampleRefreshToken2"
                         );
                         user2.hashPassword(passwordEncoder);
@@ -93,7 +99,7 @@ public class InitDb {
                         User user3 = createUser(
                                 "최금평", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
                                 "password12345",
-                                FACETOFACE, 2, "www.exampleProfilePicture3.com",
+                                FACETOFACE, 2, defaultProfileImage,
                                 department7, "sampleRefreshToken3"
                         );
                         user3.hashPassword(passwordEncoder);
@@ -175,7 +181,9 @@ public class InitDb {
 
 
 
-                private static User createUser(String userName, String nickName, Role userRole, String email, String password, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken) {
+                private static User createUser(String userName, String nickName, Role userRole, String email, String password,
+                                               WaysOfCommunication waysOfCommunication, int yearInUni, String defaultProfileImage,
+                                               Department department, String refreshToken) {
                         User user = new User();
                         user.setUserName(userName);
                         user.setNickName(nickName);
@@ -184,7 +192,7 @@ public class InitDb {
                         user.setPassword(password);
                         user.setWaysOfCommunication(waysOfCommunication);
                         user.setYearInUni(yearInUni);
-                        user.setUserProfilePicture(userProfilePicture);
+                        user.setProfileUrl(defaultProfileImage);
                         user.setDepartment(department);
                         user.setRefreshToken(refreshToken);
 

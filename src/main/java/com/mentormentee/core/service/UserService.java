@@ -18,7 +18,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
+    private final S3Uploader s3Uploader;
 
     /**
      * 회원 저장
@@ -100,23 +103,35 @@ public class UserService {
         return authToken;
     }
 
+    // 프로필 이미지 업로드 메서드 추가
+    @Transactional
+    public String uploadProfileImage(MultipartFile file) throws IOException {
+        return s3Uploader.uploadProfileImage(file);
+    }
+
+    // 프로필 이미지 삭제 메서드 추가
+    @Transactional
+    public String deleteProfileImage() {
+        return s3Uploader.deleteProfileImage();
+    }
+
+
     @Transactional(readOnly = true)
     public UserInformDto getUserinformation() {
-        // 헤더에서 유저정보를 가져오기 위해 JwtUtils.getUserEmail 사용함
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
-        UserInformDto userInformDto;
 
-        if(user.getDepartment() == null) {
-            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), null, user.getYearInUni(), user.getUserProfilePicture());
-        }
-        else{
-            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), user.getDepartment().getDepartmentName(), user.getYearInUni(), user.getUserProfilePicture());
+
+        UserInformDto userInformDto;
+        if (user.getDepartment() == null) {
+            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), null, user.getYearInUni(), user.getProfileUrl());
+        } else {
+            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), user.getDepartment().getDepartmentName(), user.getYearInUni(), user.getProfileUrl());
         }
         return userInformDto;
-
     }
+
 
     @Transactional
     public Long updateUserInformationService(UserInformDto userInformation) {
@@ -124,28 +139,34 @@ public class UserService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
 
+        // 부서 정보 수정
         if (userInformation.getUserDepartment() != null) {
             Department departmentByName = departmentRepository.findDepartmentByName(userInformation.getUserDepartment());
             user.setDepartment(departmentByName);
         }
+        // 닉네임 수정
         if (userInformation.getUserNickname() != null) {
             user.setNickName(userInformation.getUserNickname());
         }
+        // 학년 수정
         if (userInformation.getYearInUni() != user.getYearInUni()) {
             user.setYearInUni(userInformation.getYearInUni());
         }
+        // 이메일 수정
         if (userInformation.getUserEmail() != null) {
             user.setEmail(userInformation.getUserEmail());
         }
-        if (userInformation.getUserImageUrl() != null) {
-            user.setUserProfilePicture(userInformation.getUserImageUrl());
+        // 프로필 이미지 URL 수정
+        if (userInformation.getProfileUrl() != null) {
+            user.setProfileUrl(userInformation.getProfileUrl()); // profileUrl을 사용하여 수정
         }
 
- //       Long save = userRepository.save(user);
-
         return user.getId();
-
     }
+
+
+    //       Long save = userRepository.save(user);
+
 
     /**
      * 유저의 이메일을 통해 유저를 찾고 유저가 존재하면
@@ -228,7 +249,8 @@ public class UserService {
          * 자 이제 DTO에 담을게요
          */
         MenteeInformationDto menteeInformationDto
-                = new MenteeInformationDto(totalPages,number,last,user.getNickName(),user.getUserProfilePicture(),user.getSelfIntroduction(),courseList,TeachingMethod);
+                = new MenteeInformationDto(totalPages, number, last, user.getNickName(), user.getProfileUrl(), user.getSelfIntroduction(), courseList, TeachingMethod);
+
 
         /**
          * 이 Dto 컨트롤러로 보내서 API로 보내도록 하겠습니다

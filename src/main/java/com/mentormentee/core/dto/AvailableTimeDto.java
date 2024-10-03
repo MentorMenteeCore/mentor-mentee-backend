@@ -9,7 +9,6 @@ import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class AvailableTimeDto {
     private Long id;
     private DayOfWeek dayOfWeek;
