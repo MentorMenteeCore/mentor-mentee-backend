@@ -74,16 +74,15 @@ public class UserService {
     }
 
     @Transactional
-    public AuthToken login(LoginRequestDto loginRequestDto){
+    public AuthToken login(LoginRequestDto loginRequestDto) {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         // 자격 증명 확인
         // 여기서 CustomUserDetailService의 loadUser메서드가 실행되고 비밀번호 검증까지 완료
-        // loadUser메서드는 Authentication객체 실행될때 무조건 실행
+        // Authentication Manager로 Authentication Token넘겨서 인증 수행.
         Authentication authenticate = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        // 인증이 완료되면 해당 authenticate 객체에서 role을 뽑음
         Collection<? extends GrantedAuthority> authorities = authenticate.getAuthorities();
         List<String> roles = authorities.stream()
                 .map(GrantedAuthority::getAuthority)
@@ -198,16 +197,16 @@ public class UserService {
         String oldPassword = passwordUpdateDto.getOldPassword();
 
         // 1. 기존 비밀번호롸 입력 비밀번호가 같은지 확인.
-        if(!passwordEncoder.matches(oldPassword,user.getPassword())){
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new IllegalArgumentException("입력한 비밀번호가 기존 비밀번호와 같지 않습니다.");
         }
 
         // 2. 새로운 비밀번호와 한번더 비밀번호가 같은지 확인.
-        if(!newPassword.equals(confirmPassword)){
+        if (!newPassword.equals(confirmPassword)) {
             throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
         }
         //3. 변경할 비밀번호가 기존 비밀번호랑 같은 경우.
-        if(newPassword.equals(oldPassword)){
+        if (newPassword.equals(oldPassword)) {
             throw new IllegalArgumentException("기존 비밀번호랑 다른 비밀번호를 입력해 주세요.");
         }
 
@@ -217,46 +216,8 @@ public class UserService {
         userRepository.save(newPasswordUser);
 
     }
-
-    /**
-     * 멘티가 자기 정보 보고싶으면
-     * 실행되는 메서드 입니다.
-     */
-    public MenteeInformationDto getMenteeInformation(Pageable coursePage) {
-
-        String userEmail = JwtUtils.getUserEmail();
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
-
-        /**
-         * 여기서 이제 이수 교과목들, 선호하는 수업방식들 가져옵니다
-         */
-        Page<CourseNameOnly> coursesByUser = menteeCoursesRepository.findCoursesByUser(user, coursePage);
-        List<PreferredTeachingMethodOnly> TeachingMethod = preferredTeachingMethodRepository.findUserPreferredTeachingMethodByUser(user);
-
-        /**
-         * 그 페이지에서 좀 뽑아올거 있어서 뽑아올게요
-         */
-        int totalPages = coursesByUser.getTotalPages();
-        int number = coursesByUser.getNumber();
-        boolean last = coursesByUser.isLast();
-
-        /**
-         * 이제 Page에서 List로 바꿀게요
-         */
-        List<CourseNameOnly> courseList = coursesByUser.getContent();
-
-        /**
-         * 자 이제 DTO에 담을게요
-         */
-        MenteeInformationDto menteeInformationDto
-                = new MenteeInformationDto(totalPages, number, last, user.getNickName(), user.getProfileUrl(), user.getSelfIntroduction(), courseList, TeachingMethod);
-
-
-        /**
-         * 이 Dto 컨트롤러로 보내서 API로 보내도록 하겠습니다
-         */
-        return menteeInformationDto;
-    }
 }
+
+
 
 

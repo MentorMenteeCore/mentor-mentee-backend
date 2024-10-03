@@ -2,6 +2,7 @@ package com.mentormentee.core.repository;
 
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.domain.UserCourse;
+import com.mentormentee.core.dto.CourseNameDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -19,11 +20,21 @@ import java.util.List;
 public interface MenteeCoursesRepository extends JpaRepository<UserCourse, Long>{
 
 
-    @EntityGraph(attributePaths = "course")
-    @Query("select c.courseName as courseName"
+    @EntityGraph(attributePaths = {"course"})
+    @Query("select c.courseName as courseName, uc.isMajor as isMajor"
             +" from UserCourse uc"
             +" join uc.course c"
-            +" where uc.user = :user")
-    Page<CourseNameOnly> findCoursesByUser(@Param("user") User user, Pageable pageable);
+            +" where uc.user = :user" +
+            " order by uc.course.courseName")
+    Page<CourseNameAndMajorOnly> findCoursesByUser(@Param("user") User user, Pageable pageable);
 
+
+    @EntityGraph(attributePaths = {"user", "course"})
+    @Query("select new com.mentormentee.core.dto.CourseNameDto(cn.course.courseName, cn.isMajor)" +
+            "from UserCourse cn " +
+            "where cn.user= :user " +
+            "order by cn.course.courseName")
+    List<CourseNameDto> findCourseNameDtoByUser(@Param("user") User user);
+
+    void deleteByUser(User user);
 }

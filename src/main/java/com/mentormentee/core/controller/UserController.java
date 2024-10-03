@@ -40,11 +40,12 @@ public class UserController {
 
     /**
      * 회원가입입니다.
+     *
      * @param userSignUpRequestDto : 이름, 닉네임, 비밀번호 ..etc
      * @return id(pk)
      */
     @PostMapping("/user/sign-up")
-    public ResponseEntity<Long> signUp(@RequestBody UserSignUpRequestDto userSignUpRequestDto){
+    public ResponseEntity<Long> signUp(@RequestBody UserSignUpRequestDto userSignUpRequestDto) {
         return ResponseEntity.ok(userService.save(userSignUpRequestDto));
     }
 
@@ -53,16 +54,17 @@ public class UserController {
      *
      * @param loginRequestDto : email, pw
      * @return auth token -> grant Type : bearer
-     *                      access token : api 이용 시 사용
-     *                      refresh token : access token이 만료되었을 시 사용
+     * access token : api 이용 시 사용
+     * refresh token : access token이 만료되었을 시 사용
      */
     @PostMapping("/user/login")
-    public ResponseEntity<AuthToken> login(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<AuthToken> login(@RequestBody LoginRequestDto loginRequestDto) {
         return ResponseEntity.ok(userService.login(loginRequestDto));
     }
 
     /**
      * 유저가 수정을 하면 그 부분을 DB에 반영합니다.
+     *
      * @return ResponseEntity
      * @RequestBody 내용을 DTO로 반환
      */
@@ -86,7 +88,6 @@ public class UserController {
 
         return ResponseEntity.ok(new ResponseCode(200));
     }
-
 
 
     /**
@@ -133,6 +134,7 @@ public class UserController {
         userService.updatePassword(passwordUpdateDto);
         return ResponseEntity.ok(new ResponseCode(200));
     }
+
 
     /**
      * 멘티가 자기 정보를 보고싶을때
