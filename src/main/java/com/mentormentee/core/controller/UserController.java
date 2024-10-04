@@ -120,4 +120,11 @@ public class UserController {
         userService.checkDuplicatedNickname(nicknameWithoutSpace);
         return ResponseEntity.ok(new ResponseCode(200));
     }
+
+
+    @GetMapping("/user/signup/email")
+    public ResponseEntity<?> signupEmailDuplicationCheckController(@RequestParam(name = "email") String email) {
+        userService.checkEmailDuplication(email);
+        return ResponseEntity.ok(new ResponseCode(200));
+    }
 }

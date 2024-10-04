@@ -226,6 +226,13 @@ public class UserService {
             throw NicknameExistException.EXCEPTION;
         }
     }
+
+    public void checkEmailDuplication(String email) {
+        Optional<User> userByEmail = userRepository.findByEmail(email);
+        if(userByEmail.isPresent()){
+            throw DuplicatedEmailException.EXCEPTION;
+        }
+    }
 }
 
 

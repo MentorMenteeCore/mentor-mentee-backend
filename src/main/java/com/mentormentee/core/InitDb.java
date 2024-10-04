@@ -92,6 +92,7 @@ public class InitDb {
             );
             user1.hashPassword(passwordEncoder);
 
+            
             em.persist(user1);
 
             User user2 = new User();
