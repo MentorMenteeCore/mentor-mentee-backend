@@ -13,9 +13,10 @@ import java.util.List;
 /**
  * 과목
  */
+
 public class Course {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
     private Long id;
 
@@ -23,9 +24,6 @@ public class Course {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    /**
-     *
-     */
     @OneToMany(mappedBy = "course")
     private List<UserCourse> userCourse = new ArrayList<>();
 
@@ -33,4 +31,13 @@ public class Course {
     private int credit;
     private String professor;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "course_year")
+    private CourseYear courseYear; // 학년 정보
+
+    public void changeCourseInfo(String newCourseName, int newCredit) {
+        this.courseName = newCourseName;
+        this.credit = newCredit;
+    }
 }
+

@@ -1,9 +1,12 @@
 package com.mentormentee.core.repository;
 
-public class CourseRepository {
+import com.mentormentee.core.domain.Course;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    /**
-     * 개발 예정
-     */
+import java.util.Optional;
+
+public interface CourseRepository extends JpaRepository<Course, Long> {
+
+    Optional<Course> findByCourseName(String courseName);
 
 }
