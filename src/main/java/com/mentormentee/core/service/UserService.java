@@ -8,6 +8,7 @@ import com.mentormentee.core.repository.*;
 //import com.mentormentee.core.repository.PreferredTeachingMethodRepository;
 import com.mentormentee.core.token.dto.AuthToken;
 import com.mentormentee.core.utils.JwtUtils;
+import com.mentormentee.core.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,7 @@ public class UserService {
 //    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
+    private final RedisUtil redisUtil;
 
     /**
      * 회원 저장
@@ -232,6 +234,15 @@ public class UserService {
         if(userByEmail.isPresent()){
             throw DuplicatedEmailException.EXCEPTION;
         }
+    }
+
+    @Transactional
+    public void logout(String token) {
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(()-> new JWTClaimException());
+        user.setRefreshToken(null);
+        long remainingTimeFromAccessToken = JwtUtils.getRemainingTimeFromAccessToken(token);
+        redisUtil.setBlackList(token, "accessToken", remainingTimeFromAccessToken);
     }
 }
 

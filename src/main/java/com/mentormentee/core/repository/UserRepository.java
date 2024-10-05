@@ -110,5 +110,4 @@ public class UserRepository {
                 .setParameter("nickname", nickname)
                 .getSingleResult();
     }
-
 }

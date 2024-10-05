@@ -35,6 +35,17 @@ public class JwtUtils {
         JWT_SECRET_KEY = key;
     }
 
+    public static long getRemainingTimeFromAccessToken(String token) {
+        Claims claims = JwtUtils.parseClaims(token); // 토큰에서 클레임(Claims) 정보 가져오기
+        Date expiration = claims.getExpiration();   // 토큰의 만료 시간 가져오기
+        long currentTime = System.currentTimeMillis(); // 현재 시간 (밀리초)
+
+        // 남은 시간 계산 (밀리초 단위)
+        long remainingTime = expiration.getTime() - currentTime;
+
+        return remainingTime > 0 ? remainingTime : 0; // 만약 시간이 지났다면 0 반환
+    }
+
     // 해당 메서드들을 static으로 지정하여 전역적으로 사용할 수 있도록 구현
     public static String generateAccessToken(String email, List<String> roles){
         // 토큰 발급

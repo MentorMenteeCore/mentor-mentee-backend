@@ -3,6 +3,7 @@ package com.mentormentee.core.config;
 import com.mentormentee.core.service.CustomUserDetailService;
 import com.mentormentee.core.token.filter.JwtFilter;
 
+import com.mentormentee.core.utils.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
+    private final RedisUtil redisUtil;
 
     /**
      * 가독성과 유지 보수성을 높이기 위해 따로 URL을 배열로 뽑음
@@ -84,7 +86,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(unauthorizedEntryPoint())
                         .accessDeniedHandler(accessDeniedHandler())
                 )
-                .addFilterBefore(new JwtFilter(customUserDetailService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(customUserDetailService,redisUtil), UsernamePasswordAuthenticationFilter.class);
         //JwtFilters는 UsernamePasswordAuthenticationFilter를 커스텀하는 것이 아니라 추가하는 것이다. 따라서 addFilterBefore
 
 
@@ -98,7 +100,7 @@ public class SecurityConfig {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            String json = "{\"error\": \"Unauthorized\"}";
+            String json = "{\"error\": \"Unauthorizeddd\"}";
             response.getWriter().write(json);
         };
     }

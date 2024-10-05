@@ -121,10 +121,17 @@ public class UserController {
         return ResponseEntity.ok(new ResponseCode(200));
     }
 
-
     @GetMapping("/user/signup/email")
     public ResponseEntity<?> signupEmailDuplicationCheckController(@RequestParam(name = "email") String email) {
         userService.checkEmailDuplication(email);
         return ResponseEntity.ok(new ResponseCode(200));
     }
+
+    @DeleteMapping("/user/logout")
+    public ResponseEntity<?> logoutController(@RequestBody TokenDto tokenDto) {
+        String token = tokenDto.getToken();
+        userService.logout(token);
+        return ResponseEntity.ok(new ResponseCode(200));
+    }
+
 }
