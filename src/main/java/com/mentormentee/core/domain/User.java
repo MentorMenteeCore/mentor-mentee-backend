@@ -38,8 +38,8 @@ User implements UserDetails {
 
     private String email;
 
-    private LocalTime availableStartTime;
-    private LocalTime availableEndTime;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<AvailableTime> availabilities = new ArrayList<>();
 
     private String password;
 
@@ -53,7 +53,6 @@ User implements UserDetails {
     private String refreshToken;
 
     //유저가 수강하는 과목들 추가.
-    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<UserCourse> userCourse = new ArrayList<>();
 
@@ -100,13 +99,11 @@ User implements UserDetails {
         return email;
     }
 
-    public void createUser(String userName, String nickName, Role userRole, String email, String password, LocalTime availableStartTime, LocalTime availableEndTime, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken, String selfIntro) {
+    public void createUser(String userName, String nickName, Role userRole, String email, String password, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken, String selfIntro) {
         this.userName = userName;
         this.userRole = userRole;
         this.email = email;
         this.password = password;
-        this.availableStartTime = availableStartTime;
-        this.availableEndTime = availableEndTime;
         this.waysOfCommunication = waysOfCommunication;
         this.nickName = nickName;
         this.userProfilePicture = userProfilePicture;
@@ -123,4 +120,5 @@ User implements UserDetails {
             this.userRole = Role.ROLE_MENTEE;
         }
     }
+
 }

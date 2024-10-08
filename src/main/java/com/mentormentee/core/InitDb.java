@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 import static com.mentormentee.core.domain.Role.ROLE_MENTEE;
@@ -86,10 +87,12 @@ public class InitDb {
             User user1 = new User();
             user1.createUser(
                     "choegiyeon", "choegi", ROLE_MENTEE, "choegi@example.com",
-                    "password123", LocalTime.of(9, 0), LocalTime.of(17, 0),
+                    "password123",
                     FACETOFACE, 2, "www.exampleProfilePicture1.com",
                     department5, "sampleRefreshToken1","최기연입니다. 충북대 학생 입니다. 안녕하세요! "
             );
+            new AvailableTime(user1, DayOfWeek.FRIDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
+            new AvailableTime(user1, DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
             user1.hashPassword(passwordEncoder);
 
             
@@ -98,7 +101,7 @@ public class InitDb {
             User user2 = new User();
             user2.createUser(
                     "박상현", "나는야박상", ROLE_MENTEE, "cs1@example.com",
-                    "password1234", LocalTime.of(9, 0), LocalTime.of(18, 0),
+                    "password1234",
                     FACETOFACE, 2, "www.exampleProfilePicture2.com",
                     department7, "sampleRefreshToken2","선배 탕후루도 같이"
             );
@@ -108,12 +111,22 @@ public class InitDb {
             User user3 = new User();
             user3.createUser(
                     "최기연", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
-                    "password12345", LocalTime.of(9, 0), LocalTime.of(18, 0),
+                    "password12345",
                     FACETOFACE, 2, "www.exampleProfilePicture3.com",
                     department7, "sampleRefreshToken3","저는 충북대 컴공을 전공중인 멘토입니다. 어서 저에게 연락을 주세요!"
             );
             user3.hashPassword(passwordEncoder);
+            new AvailableTime(user3, DayOfWeek.FRIDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
+            new AvailableTime(user3, DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
+            Review review = new Review();
+            review.createDate(2024,2,3);
+            review.createReview(user3, 3, "좋은 사람 근데 가끔 냄새나요");
+            Review review1 = new Review();
+            review1.createDate(2024,3,2);
+            review1.createReview(user3, 5, "친절헤여");
             em.persist(user3);
+            em.persist(review1);
+            em.persist(review);
 //
 //            PreferredTeachingMethod preferredTeachingMethod1 = new PreferredTeachingMethod();
 //            preferredTeachingMethod1.createTeachingMethod("자기주도_학습_야자_싫어");
