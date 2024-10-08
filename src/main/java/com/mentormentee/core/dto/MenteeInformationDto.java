@@ -1,7 +1,6 @@
 package com.mentormentee.core.dto;
 
 import com.mentormentee.core.repository.CourseNameAndMajorOnly;
-import com.mentormentee.core.repository.PreferredTeachingMethodOnly;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
@@ -18,19 +17,18 @@ public class MenteeInformationDto {
     private int totalPages;
     private int currentPageNum;
     private boolean lastPageOrNot;
-    private String menteeName;
-    private String menteeProfileUrl;
+    private String menteeNickName;
+    private String menteeImageUrl;
     private String selfIntroduction;
     private List<CourseNameAndMajorOnly> userCourseList;
-    private List<PreferredTeachingMethodOnly> menteePreferredTeachingMethodDtoList;
+    private List<String> menteePreferredTeachingMethodDtoList;
 
-
-    public MenteeInformationDto(int totalPages, int number, boolean last, String menteeName, String menteeProfileUrl, String selfIntroduction, List<CourseNameAndMajorOnly> userCourseList, List<PreferredTeachingMethodOnly> menteePreferredTeachingMethodDtoList) {
+    public MenteeInformationDto(int totalPages, int number, boolean last, String menteeNickName, String menteeImageUrl, String selfIntroduction, List<CourseNameAndMajorOnly> userCourseList, List<String> menteePreferredTeachingMethodDtoList) {
         this.totalPages = totalPages;
         this.currentPageNum = number;
         this.lastPageOrNot = last;
-        this.menteeName = menteeName;
-        this.menteeProfileUrl = menteeProfileUrl;
+        this.menteeNickName = menteeNickName;
+        this.menteeImageUrl = menteeImageUrl;
         this.selfIntroduction = selfIntroduction;
         this.userCourseList = userCourseList;
         this.menteePreferredTeachingMethodDtoList = menteePreferredTeachingMethodDtoList;

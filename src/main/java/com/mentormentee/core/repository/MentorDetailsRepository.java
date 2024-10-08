@@ -17,71 +17,56 @@ public class MentorDetailsRepository {
     @PersistenceContext
     private EntityManager em;
 
-    // 사용자 ID로 UserCourse를 페이징 처리하여 조회
-    public Page<UserCourse> findUserCoursesByUserId(Long userId, Pageable pageable) {
+    // 닉네임으로 User 엔티티 조회
+    public Optional<User> findByNickName(String nickName) {
+        return em.createQuery(
+                        "select u from User u where u.nickName = :nickName", User.class)
+                .setParameter("nickName", nickName)
+                .getResultList()
+                .stream()
+                .findFirst();
+    }
+
+    // User 엔티티를 사용하여 UserCourse를 페이징 처리하여 조회
+    public Page<UserCourse> findUserCoursesByUser(User user, Pageable pageable) {
         List<UserCourse> userCourses = em.createQuery(
                         "select uc from UserCourse uc " +
-                                "join fetch uc.user u " +
                                 "join fetch uc.course c " +
-                                "where uc.user.id = :userId",
+                                "where uc.user = :user",
                         UserCourse.class)
-                .setParameter("userId", userId)
+                .setParameter("user", user)
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
         long total = em.createQuery(
-                        "select count(uc) from UserCourse uc where uc.user.id = :userId", Long.class)
-                .setParameter("userId", userId)
+                        "select count(uc) from UserCourse uc where uc.user = :user", Long.class)
+                .setParameter("user", user)
                 .getSingleResult();
 
         return new PageImpl<>(userCourses, pageable, total);
     }
 
-    // 사용자 ID로 User 조회
-    public Optional<User> findUserById(Long userId) {
-        return em.createQuery("select u from User u where u.id = :userId", User.class)
-                .setParameter("userId", userId)
-                .getResultStream()
-                .findFirst();
-    }
-
-    // 사용자의 리뷰 조회
-    public List<Review> findReviewsByUserId(Long userId) {
+    // User 엔티티를 사용하여 AvailableTime 조회
+    public List<AvailableTime> findAvailabilitiesByUser(User user) {
         return em.createQuery(
-                        "select r from Review r where r.reviewee.id = :userId", Review.class)
-                .setParameter("userId", userId)
+                        "select a from AvailableTime a where a.user = :user", AvailableTime.class)
+                .setParameter("user", user)
                 .getResultList();
     }
 
-    // 사용자 ID로 AvailableTime 조회
-    public List<AvailableTime> findAvailabilitiesByUserId(Long userId) {
+    // User 엔티티를 사용하여 리뷰 조회
+    public List<Review> findReviewsByUser(User user) {
         return em.createQuery(
-                        "select a from AvailableTime a where a.user.id = :userId", AvailableTime.class)
-                .setParameter("userId", userId)
+                        "select r from Review r where r.reviewee = :user", Review.class)
+                .setParameter("user", user)
                 .getResultList();
     }
 
-    // 사용자 ID로 AvailableTime 삭제
-    public void deleteAvailableTimesByUserId(Long userId) {
-        em.createQuery("delete from AvailableTime a where a.user.id = :userId")
-                .setParameter("userId", userId)
-                .executeUpdate();
-    }
-
-    // AvailableTime 저장
-    public void saveAvailableTime(AvailableTime availableTime) {
-        if (availableTime.getId() == null) {
-            em.persist(availableTime);
-        } else {
-            em.merge(availableTime);
-        }
-    }
-
-    // 사용자 ID로 UserCourse 삭제
-    public void deleteUserCoursesByUserId(Long userId) {
-        em.createQuery("delete from UserCourse uc where uc.user.id = :userId")
-                .setParameter("userId", userId)
+    // User 엔티티를 사용하여 UserCourse 삭제
+    public void deleteUserCoursesByUser(User user) {
+        em.createQuery("delete from UserCourse uc where uc.user = :user")
+                .setParameter("user", user)
                 .executeUpdate();
     }
 
@@ -94,7 +79,23 @@ public class MentorDetailsRepository {
         }
     }
 
-    //coursename과 professor로 course 엔티티 조회
+    // AvailableTime 저장
+    public void saveAvailableTime(AvailableTime availableTime) {
+        if (availableTime.getId() == null) {
+            em.persist(availableTime);
+        } else {
+            em.merge(availableTime);
+        }
+    }
+
+    // UserCourse ID로 UserCourse 레코드 삭제
+    public void deleteUserCourseById(Long userCourseId) {
+        em.createQuery("delete from UserCourse uc where uc.id = :userCourseId")
+                .setParameter("userCourseId", userCourseId)
+                .executeUpdate();
+    }
+
+    // coursename과 professor로 course 엔티티 조회
     public Course findCourseByNameAndProfessor(String courseName, String professor) {
         return em.createQuery(
                         "select c from Course c where c.courseName = :courseName and c.professor = :professor", Course.class)
@@ -102,18 +103,4 @@ public class MentorDetailsRepository {
                 .setParameter("professor", professor)
                 .getSingleResult();
     }
-
-
-    //UserCourseID로 UserCourse 레코드 삭제
-    public void deleteUserCourseById(Long userCourseId) {
-        em.createQuery("delete from UserCourse uc where uc.id = :userCourseId")
-                .setParameter("userCourseId", userCourseId)
-                .executeUpdate();
-    }
-
 }
-
-
-
-
-

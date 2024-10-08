@@ -14,12 +14,12 @@ public class MentorDetailsController {
 
     private final MentorDetailsService mentorDetailsService;
 
-    @GetMapping("/mentordetails/{userId}")
-    public MentorDetailsDto getMentorDetails(@PathVariable Long userId,
+    @GetMapping("/mentordetails")
+    public MentorDetailsDto getMentorDetails(@RequestParam String nickName,
                                              @RequestParam(defaultValue = "0") int page,
                                              @RequestParam(defaultValue = "2") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return mentorDetailsService.getMentorDetails(userId, pageable);
+        return mentorDetailsService.getMentorDetails(nickName, pageable);
     }
 }
 

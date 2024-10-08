@@ -1,8 +1,11 @@
 package com.mentormentee.core.domain;
 
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.eclipse.angus.mail.imap.protocol.Item;
+
+import java.util.Objects;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -24,13 +27,28 @@ public class UserPreferredTeachingMethod {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "preferred_teaching_method_id")
-    private PreferredTeachingMethod preferredTeachingMethod;
-
-    public void createUserMethod(User user, PreferredTeachingMethod userTeachingMethod) {
+    private String preferredTeachingMethod;
+    //
+//    @ManyToOne(fetch = LAZY)
+//    @JoinColumn(name = "preferred_teaching_method_id")
+//    private PreferredTeachingMethod preferredTeachingMethod;
+//
+    public void createUserMethod(User user, String userTeachingMethod) {
 
         this.user = user;
         this.preferredTeachingMethod = userTeachingMethod;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserPreferredTeachingMethod that = (UserPreferredTeachingMethod) o;
+        return Objects.equals(user, that.user) && Objects.equals(preferredTeachingMethod, that.preferredTeachingMethod);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, preferredTeachingMethod);
     }
 }

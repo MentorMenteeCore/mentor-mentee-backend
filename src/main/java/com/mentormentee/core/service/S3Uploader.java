@@ -11,6 +11,7 @@ import com.mentormentee.core.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,9 +22,11 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 @Slf4j
+@Component
 public class S3Uploader {
     private final AmazonS3 amazonS3;
     private final UserRepository userRepository;
@@ -52,12 +55,10 @@ public class S3Uploader {
     }
 
     private String putS3(File uploadFile, String fileName) {
-        amazonS3.putObject(
-                new PutObjectRequest(bucket, fileName, uploadFile)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
-        );
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile));
         return amazonS3.getUrl(bucket, fileName).toString();
     }
+
 
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
@@ -68,18 +69,40 @@ public class S3Uploader {
     }
 
     private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(System.getProperty("java.io.tmpdir") +
+        // 업로드된 파일이 비어 있는지 확인
+        if (file.isEmpty()) {
+            log.error("업로드된 파일이 비어 있습니다.");
+            throw new IllegalArgumentException("업로드된 파일이 비어 있습니다.");
+        }
+
+        log.info("업로드된 파일 크기: " + file.getSize());
+
+        String filePath = System.getProperty("java.io.tmpdir") +
                 System.getProperty("file.separator") +
-                file.getOriginalFilename());
+                file.getOriginalFilename();
+
+        log.info("변환 중인 파일 경로: " + filePath);  // 경로 로그 추가
+
+        File convertFile = new File(filePath);
+
+        if (convertFile.exists()) {
+            log.warn("파일이 이미 존재합니다: " + convertFile.getAbsolutePath());
+        }
 
         if (convertFile.createNewFile()) {
+            log.info("파일 생성 성공: " + convertFile.getAbsolutePath());
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
             }
             return Optional.of(convertFile);
+        } else {
+            log.error("파일 생성 실패: " + convertFile.getAbsolutePath());
+            throw new IOException("파일 생성에 실패했습니다. 경로: " + convertFile.getAbsolutePath());
         }
-        return Optional.empty();
     }
+
+
+
 
     @Transactional
     public String uploadProfileImage(MultipartFile file) throws IOException {
@@ -91,7 +114,7 @@ public class S3Uploader {
         String profileUrl = upload(file, "profile");
         requestUser.setProfileUrl(profileUrl); // 받아온 URL로 사용자 프로필 이미지 업데이트
 
-        return "프로필 사진 업로드에 성공하였습니다.";
+        return profileUrl;
     }
 
 

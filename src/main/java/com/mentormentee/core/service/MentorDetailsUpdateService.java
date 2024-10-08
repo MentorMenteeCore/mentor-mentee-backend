@@ -1,15 +1,14 @@
 package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.*;
-import com.mentormentee.core.dto.AvailableTimeDto;
-import com.mentormentee.core.dto.CourseDetailsDto;
-import com.mentormentee.core.dto.MentorDetailsDto;
-import com.mentormentee.core.dto.MentorDetailsUpdateDto;
+import com.mentormentee.core.dto.*;
+import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.MentorDetailsRepository;
 import com.mentormentee.core.repository.UserRepository;
 import com.mentormentee.core.utils.JwtUtils;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -27,62 +26,99 @@ import java.util.stream.Collectors;
 public class MentorDetailsUpdateService {
 
     private final UserRepository userRepository;
-    private final MentorDetailsRepository mentorDetailsRepository;  // CourseRepository를 추가
+    private final MentorDetailsRepository mentorDetailsRepository;
     private final JwtUtils jwtUtils;
     private final MentorDetailsService mentorDetailsService;
 
-
-
     //사용자 접근 권한 검증
-    private User validateUserAccess(Long userId) {
-        String userEmail = jwtUtils.getUserEmail();
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
-
-        if (!userId.equals(user.getId())) {
-            throw new AccessDeniedException("이 사용자 정보에 접근할 수 없습니다.");
-        }
+    private User validateUserAccess() {
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new JWTClaimException());
 
         if (user.getUserRole() != Role.ROLE_MENTOR) {
             throw new AccessDeniedException("멘토가 아닙니다.");
         }
-
-        return user;  
+        return user;
     }
 
     //멘토 정보 조회
-    public MentorDetailsDto getMentorDetails(Long userId, Pageable pageable) {
-        validateUserAccess(userId);
-        return mentorDetailsService.getMentorDetails(userId, pageable);  
+    public MentorDetailsDto getMentorDetails(Pageable pageable) {
+
+        User user = validateUserAccess();
+        // 페이징 처리된 UserCourse 목록
+        Page<UserCourse> userCoursesPage = mentorDetailsRepository.findUserCoursesByUser(user, pageable);
+
+        // UserCourse 목록을 CourseDetailsDto 목록으로 변환
+        List<CourseDetailsDto> courseDetailsDtos = userCoursesPage.getContent().stream()
+                .map(userCourse -> {
+                    Course course = userCourse.getCourse();
+                    return new CourseDetailsDto(
+                            userCourse.getId(),
+                            course.getCourseName(),
+                            course.getCredit(),
+                            userCourse.getGradeStatus().getDisplayValue(),
+                            course.getProfessor()
+                    );
+                })
+                .collect(Collectors.toList());
+
+        // AvailableTime을 별도로 조회하여 중복 제거 후 변환
+        List<AvailableTime> availableTimes = mentorDetailsRepository.findAvailabilitiesByUser(user);
+        List<AvailableTimeDto> availabilityDtos = availableTimes.stream()
+                .map(at -> new AvailableTimeDto(
+                        at.getId(),  // Availability ID
+                        at.getDayOfWeek(),
+                        at.getAvailableStartTime(),
+                        at.getAvailableEndTime()
+                ))
+                .distinct() // 중복 제거
+                .collect(Collectors.toList());
+
+        // 멘토에 대한 리뷰 조회
+        List<ReviewDto> reviews = mentorDetailsRepository.findReviewsByUser(user)
+                .stream()
+                .map(review -> new ReviewDto(review.getComment(), review.getRating(), review.getReviewDate()))
+                .collect(Collectors.toList());
+
+        // 페이지 정보 계산
+        int totalPages = userCoursesPage.getTotalPages();
+        int currentPageNum = userCoursesPage.getNumber();
+        boolean lastPageOrNot = userCoursesPage.isLast();
+
+        // MentorDetailsDto로 변환
+        return new MentorDetailsDto(
+                courseDetailsDtos,
+                availabilityDtos,
+                user.getWaysOfCommunication().name(),
+                user.getSelfIntroduction(),
+                reviews,
+                user.getUserRole(),
+                totalPages,
+                currentPageNum,
+                lastPageOrNot
+        );
     }
 
 
+
     //멘토 정보 추가
-    public void postMentorDetails(Long userId, MentorDetailsUpdateDto updateDto) {
-        //사용자 접근 권한 검증
-        User user = validateUserAccess(userId);
+    public void postMentorDetails(MentorDetailsUpdateDto updateDto) {
+        User user = validateUserAccess();
 
         //자기소개
-        if (updateDto.getSelfIntroduction() != null) {  //사용자가 해당 정보의 추가를 요청한 경우
-            if (user.getSelfIntroduction() == null || user.getSelfIntroduction().isEmpty()) {  //null이면 정보 추가
-                user.changeSelfIntroduction(updateDto.getSelfIntroduction());
-            } else {
-                throw new IllegalStateException("정보가 존재합니다.");
-            }
+        if (updateDto.getSelfIntroduction() != null) {
+            user.changeSelfIntroduction(updateDto.getSelfIntroduction());
         }
+
 
         //WaysOfCommunication
         if (updateDto.getWaysOfCommunication() != null) {
-            if (user.getWaysOfCommunication() == null) {
-                user.changeWaysOfCommunication(WaysOfCommunication.valueOf(updateDto.getWaysOfCommunication()));
-            } else {
-                throw new IllegalStateException("정보가 존재합니다.");
-            }
+            user.changeWaysOfCommunication(WaysOfCommunication.valueOf(updateDto.getWaysOfCommunication()));
         }
+
 
         //availabilities
         if (updateDto.getAvailabilities() != null) {
-            //중복 방지
             Set<AvailableTime> existingAvailabilities = new HashSet<>(user.getAvailabilities());
             for (AvailableTimeDto dto : updateDto.getAvailabilities()) {
                 AvailableTime newAvailability = new AvailableTime(user, dto.getDayOfWeek(), dto.getAvailableStartTime(), dto.getAvailableEndTime());
@@ -94,40 +130,32 @@ public class MentorDetailsUpdateService {
 
         //courseDetails
         if (updateDto.getCourseDetails() != null) {
-            //중복 방지
-            Set<UserCourse> existingCourses = new HashSet<>(user.getUserCourse());  //이미 등록한 UserCourse 엔티티들을 Set으로 로드
+            Set<UserCourse> existingCourses = new HashSet<>(user.getUserCourse());
             for (CourseDetailsDto dto : updateDto.getCourseDetails()) {
                 Course course;
                 try {
-                    //courseName과 professor를 기준으로 Course를 검색
                     course = mentorDetailsRepository.findCourseByNameAndProfessor(dto.getCourseName(), dto.getProfessor());
                 } catch (NoResultException e) {
                     throw new IllegalArgumentException("해당 과목이 존재하지 않습니다.");
                 }
 
-                //UserCourse 엔티티 생성
-                UserCourse newUserCourse = new UserCourse(
-                        user, course, GradeStatus.valueOf(dto.getGradeStatus()));
+                UserCourse newUserCourse = new UserCourse(user, course, GradeStatus.valueOf(dto.getGradeStatus()));
 
-                //기존에 같은 UserCourse가 있는지 확인
                 boolean alreadyExists = existingCourses.stream()
                         .anyMatch(uc -> uc.getCourse().equals(course) && uc.getUser().equals(user) && uc.getGradeStatus().equals(newUserCourse.getGradeStatus()));
 
                 if (!alreadyExists) {
                     user.getUserCourse().add(newUserCourse);
-                    mentorDetailsRepository.saveUserCourse(newUserCourse); //추가 저장 호출
+                    mentorDetailsRepository.saveUserCourse(newUserCourse);
                 }
             }
         }
-        //변경된 사용자 정보 저장
         userRepository.save(user);
     }
 
-    
     //멘토 정보 수정
-    public MentorDetailsDto updateMentorDetails(Long userId, MentorDetailsUpdateDto updateDto, Pageable pageable) {
-        //사용자 접근 권한 검증
-        User user = validateUserAccess(userId);
+    public MentorDetailsDto updateMentorDetails(MentorDetailsUpdateDto updateDto, String nickName, Pageable pageable) {
+        User user = validateUserAccess();
 
         //자기소개
         if (updateDto.getSelfIntroduction() != null) {
@@ -149,17 +177,15 @@ public class MentorDetailsUpdateService {
             updateCourseDetails(user, updateDto.getCourseDetails());
         }
 
-        //변경된 사용자 정보 저장
         userRepository.save(user);
-        return mentorDetailsService.getMentorDetails(userId, pageable);
+        return mentorDetailsService.getMentorDetails(nickName, pageable);
     }
 
     private void updateCourseDetails(User user, List<CourseDetailsDto> courseDetails) {
         if (courseDetails == null) {
-            throw new IllegalArgumentException("post요청을 해주세요.");
+            throw new IllegalArgumentException("post 요청을 해주세요.");
         }
 
-        //기존의 UserCourse 맵핑
         Map<Long, UserCourse> currentCoursesMap = user.getUserCourse().stream()
                 .collect(Collectors.toMap(uc -> uc.getCourse().getId(), uc -> uc));
 
@@ -168,7 +194,6 @@ public class MentorDetailsUpdateService {
         for (CourseDetailsDto dto : courseDetails) {
             Course course;
             try {
-                //courseName과 professor를 기준으로 Course 검색
                 course = mentorDetailsRepository.findCourseByNameAndProfessor(dto.getCourseName(), dto.getProfessor());
             } catch (NoResultException e) {
                 throw new IllegalArgumentException("해당 과목이 존재하지 않습니다.");
@@ -177,12 +202,10 @@ public class MentorDetailsUpdateService {
             UserCourse existingCourse = currentCoursesMap.get(course.getId());
 
             if (existingCourse != null) {
-                //기존 UserCourse의 정보 수정
                 if (dto.getGradeStatus() != null) {
                     existingCourse.changeInfo(GradeStatus.valueOf(dto.getGradeStatus()));
                 }
             } else {
-                //수정된 UserCourse 추가
                 UserCourse newUserCourse = new UserCourse(user, course, GradeStatus.valueOf(dto.getGradeStatus()));
                 user.getUserCourse().add(newUserCourse);
             }
@@ -197,49 +220,32 @@ public class MentorDetailsUpdateService {
 
     private void updateAvailability(User user, List<AvailableTimeDto> availabilities) {
         if (availabilities == null) {
-            throw new IllegalArgumentException("post요청을 해주세요.");
+            throw new IllegalArgumentException("post 요청을 해주세요.");
         }
 
-        //기존의 AvailableTime 정보를 Map으로 변환 (key: dayOfWeek + startTime)
         Map<String, AvailableTime> currentAvailabilitiesMap = user.getAvailabilities().stream()
-                .collect(Collectors.toMap(
-                        avail -> avail.getDayOfWeek() + "|" + avail.getAvailableStartTime(),
-                        avail -> avail
-                ));
+                .collect(Collectors.toMap(avail -> avail.getDayOfWeek() + "|" + avail.getAvailableStartTime(), avail -> avail));
 
-        //업데이트할 AvailableTime 정보를 Map으로 변환 (key: dayOfWeek + startTime)
         Map<String, AvailableTimeDto> newAvailabilitiesMap = availabilities.stream()
-                .collect(Collectors.toMap(
-                        dto -> dto.getDayOfWeek() + "|" + dto.getAvailableStartTime(),
-                        dto -> dto
-                ));
+                .collect(Collectors.toMap(dto -> dto.getDayOfWeek() + "|" + dto.getAvailableStartTime(), dto -> dto));
 
-        // 기존 정보를 업데이트하거나 새 항목을 추가
         for (AvailableTimeDto dto : availabilities) {
             String key = dto.getDayOfWeek() + "|" + dto.getAvailableStartTime();
             if (currentAvailabilitiesMap.containsKey(key)) {
-                // 기존 항목 업데이트
                 AvailableTime existingAvailability = currentAvailabilitiesMap.get(key);
-
-                // 필드 업데이트
                 if (dto.getAvailableEndTime() != null) {
                     existingAvailability.setAvailableEndTime(dto.getAvailableEndTime());
                 }
-                // 다른 필드는 기존 값을 유지하며 수정하지 않습니다.
-
             } else {
-                // 새 항목 추가
                 AvailableTime newAvailability = new AvailableTime(user, dto.getDayOfWeek(), dto.getAvailableStartTime(), dto.getAvailableEndTime());
                 user.getAvailabilities().add(newAvailability);
             }
         }
-
     }
 
-
     //멘토 정보 삭제(자기소개와 waysofcommunication은 삭제 불가)
-    public void deleteMentorDetails(Long userId, List<Long> availabilityId, List<Long> courseDetailsId) {
-        User user = validateUserAccess(userId);
+    public void deleteMentorDetails(List<Long> availabilityId, List<Long> courseDetailsId) {
+        User user = validateUserAccess();
 
         if (availabilityId != null && !availabilityId.isEmpty()) {
             for (Long id : availabilityId) {
@@ -264,11 +270,7 @@ public class MentorDetailsUpdateService {
         mentorDetailsRepository.deleteUserCourseById(courseDetailsId);
     }
 
-
-
-
-
-    //정보를 추가하거나 변경할 때, 데이터를 검증한다. 데이터 요청 시 빠진 데이터가 없는 지 검사.
+    //정보를 추가하거나 변경할 때, 데이터를 검증한다.
     public String validateMentorDetails(MentorDetailsUpdateDto dto) {
         StringBuilder validationMessage = new StringBuilder();
 
@@ -327,18 +329,5 @@ public class MentorDetailsUpdateService {
         }
 
         return missingInfo.length() > 0 ? missingInfo.toString().trim() : null;
-    }
-
-    
-
-    //멘티로 역할 변경
-    public void changeRoleToMentee(Long userId) {
-        User user = validateUserAccess(userId);
-
-        //멘티로 역할 변경
-        user.setUserRole(Role.ROLE_MENTEE);
-
-        //멘토 정보 유지
-        userRepository.save(user);
     }
 }

@@ -39,4 +39,7 @@ out/
 
 # Ignore application.yml
 src/main/resources/application.yml
+src/main/resources/application-aws.yml
+build/resources/main/application.yml
+build/resources/main/application-aws.yml
 

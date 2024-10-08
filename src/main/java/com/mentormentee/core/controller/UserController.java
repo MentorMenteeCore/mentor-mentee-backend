@@ -1,17 +1,13 @@
 package com.mentormentee.core.controller;
 
-import com.mentormentee.core.domain.User;
+
 import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.ExceptionResponse;
 import com.mentormentee.core.exception.UserNotFoundException;
-import com.mentormentee.core.service.S3Uploader;
 import com.mentormentee.core.service.UserService;
 import com.mentormentee.core.token.dto.AuthToken;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,15 +64,23 @@ public class UserController {
      * @return ResponseEntity
      * @RequestBody 내용을 DTO로 반환
      */
-    @PatchMapping(value = "/user/information", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updateUserInformationController(
-            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
-            @RequestPart(value = "userInfo") @Valid UserInformDto userInformation) throws IOException {
+    @PatchMapping("/user/information")
+    public ResponseEntity<?> updateUserInformationController(@Valid @RequestBody UserInformDto userInformation) {
+        Long updateduser = userService.updateUserInformationService(userInformation);
+
+        return ResponseEntity.ok(new ResponseCode(200));
+    }
+
+
+    @PatchMapping(value = "/user/profile/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateProfileImage(
+            @RequestPart(value = "userInfo") @Valid UserInformDto userInformation,
+            @RequestPart(value = "profileImage") MultipartFile profileImage) throws IOException {
 
         // 프로필 이미지가 있다면 업로드 처리
         if (profileImage != null && !profileImage.isEmpty()) {
-            String profileUrl = userService.uploadProfileImage(profileImage); // URL을 profileUrl로 설정
-            userInformation.setProfileUrl(profileUrl); // 새 이미지 URL 설정
+            String profileUrl = userService.uploadProfileImage(profileImage);
+            userInformation.setProfileUrl(profileUrl);
         }
 
         // 유저 정보 업데이트
@@ -88,6 +92,7 @@ public class UserController {
 
         return ResponseEntity.ok(new ResponseCode(200));
     }
+
 
 
     /**
@@ -142,6 +147,7 @@ public class UserController {
      */
 
 
+    /*
     @GetMapping("/user/mentee")
     public MenteeInformationDto getMenteeController(@RequestParam(defaultValue = "0", name = "coursePage") int coursePage,
                                                     @RequestParam(defaultValue = "0", name = "courseSize") int courseSize) {
@@ -151,5 +157,5 @@ public class UserController {
 
         return menteeInformation;
     }
-
+*/
 }

@@ -42,14 +42,12 @@ public class CourseMentorDto {
 
     @Getter
     public static class MentorDto {
-        private Long userId;
         private String nickName;
         private String courseName;
         private String gradeStatus;
         private int yearInUni;
 
-        public MentorDto(User user, Course course, UserCourse userCourse, int cieatStock, int cieatGrade) {
-            this.userId = user.getId();
+        public MentorDto(User user, Course course, UserCourse userCourse) {
             this.nickName = user.getNickName();
             this.courseName = course.getCourseName();
             this.gradeStatus = userCourse.getGradeStatus().getDisplayValue();

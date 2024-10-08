@@ -2,9 +2,10 @@ package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.*;
 import com.mentormentee.core.dto.*;
+import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.*;
 
-import com.mentormentee.core.repository.PreferredTeachingMethodRepository;
+//import com.mentormentee.core.repository.PreferredTeachingMethodRepository;
 import com.mentormentee.core.token.dto.AuthToken;
 import com.mentormentee.core.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class UserService {
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
+    //private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final S3Uploader s3Uploader;
 
@@ -136,7 +137,7 @@ public class UserService {
     public Long updateUserInformationService(UserInformDto userInformation) {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalStateException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new JWTClaimException());
 
         // 부서 정보 수정
         if (userInformation.getUserDepartment() != null) {
@@ -157,7 +158,7 @@ public class UserService {
         }
         // 프로필 이미지 URL 수정
         if (userInformation.getProfileUrl() != null) {
-            user.setProfileUrl(userInformation.getProfileUrl()); // profileUrl을 사용하여 수정
+            user.setProfileUrl(userInformation.getProfileUrl());
         }
 
         return user.getId();

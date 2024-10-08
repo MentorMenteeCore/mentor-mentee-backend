@@ -107,16 +107,16 @@ public class InitDb {
             em.persist(user3);
 
 
-            PreferredTeachingMethod preferredTeachingMethod1 = createTeachingMethod("자기주도_학습_야자_싫어");
-            em.persist(preferredTeachingMethod1);
+            //PreferredTeachingMethod preferredTeachingMethod1 = createTeachingMethod("자기주도_학습_야자_싫어");
+            //em.persist(preferredTeachingMethod1);
 
-            PreferredTeachingMethod preferredTeachingMethod2 = createTeachingMethod("교수님과_함께하는_수업");
-            em.persist(preferredTeachingMethod2);
+            //PreferredTeachingMethod preferredTeachingMethod2 = createTeachingMethod("교수님과_함께하는_수업");
+            //em.persist(preferredTeachingMethod2);
 
-            UserPreferredTeachingMethod userTeachingMethod1 = createUserTeachingMethod(user2, preferredTeachingMethod1);
-            em.persist(userTeachingMethod1);
-            UserPreferredTeachingMethod userTeachingMethod2 = createUserTeachingMethod(user2, preferredTeachingMethod2);
-            em.persist(userTeachingMethod2);
+            //UserPreferredTeachingMethod userTeachingMethod1 = createUserTeachingMethod(user2, preferredTeachingMethod1);
+            //em.persist(userTeachingMethod1);
+            //UserPreferredTeachingMethod userTeachingMethod2 = createUserTeachingMethod(user2, preferredTeachingMethod2);
+            //em.persist(userTeachingMethod2);
 
             Course course1 = createCourse(
                     "디지털공학", 3, "최준성", CourseYear.SOPHOMORE, department7
@@ -216,14 +216,14 @@ public class InitDb {
 
         }
 
-        private static UserPreferredTeachingMethod createUserTeachingMethod(User user, PreferredTeachingMethod userTeachingMethod) {
+        //private static UserPreferredTeachingMethod createUserTeachingMethod(User user, PreferredTeachingMethod userTeachingMethod) {
 
-            UserPreferredTeachingMethod UserPreferredTeachingMethod = new UserPreferredTeachingMethod();
+        //    UserPreferredTeachingMethod UserPreferredTeachingMethod = new UserPreferredTeachingMethod();
 
-            UserPreferredTeachingMethod.createUserMethod(user, userTeachingMethod);
+        //    UserPreferredTeachingMethod.createUserMethod(user, userTeachingMethod);
 
-            return UserPreferredTeachingMethod;
-        }
+        //    return UserPreferredTeachingMethod;
+        //}
 
 
         private static College createCollege(CollegeName collegeName) {
