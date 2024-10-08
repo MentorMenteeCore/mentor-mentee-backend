@@ -16,7 +16,8 @@ public enum ErrorCode implements BaseErrorCode {
     NEW_PASSWORD_NOT_MATCHED(400, "새 비밀번호가 일치하지 않습니다."),
     ENTERED_EXISTED_PASSWORD(400,"기존 비밀번호랑 다른 비밀번호를 입력해 주세요."),
     NICKNAME_EXIST(400,"유저의 닉네임이 이미 존재합니다"),
-    LOGOUT_USER(400, "로그아웃한 유저입니다.");
+    LOGOUT_USER(400, "로그아웃한 유저입니다."),
+    NICKNAME_NOT_EXISTED(400,"존재하지 않는 닉네임입니다.");
 
     private final Integer status;
     private final String message;

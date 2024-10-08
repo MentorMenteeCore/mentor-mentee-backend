@@ -10,9 +10,7 @@ import com.mentormentee.core.token.dto.AuthToken;
 import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -24,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import static com.mentormentee.core.domain.Role.ROLE_MENTOR;
 
 @Service
 @Transactional(readOnly = true)
@@ -243,6 +243,37 @@ public class UserService {
         user.setRefreshToken(null);
         long remainingTimeFromAccessToken = JwtUtils.getRemainingTimeFromAccessToken(token);
         redisUtil.setBlackList(token, "accessToken", remainingTimeFromAccessToken);
+    }
+
+    public User findByToken() {
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(()-> new JWTClaimException());
+        return user;
+    }
+
+    public MentorDetailsDtoForEditing changeDtoForMentorEditingPage(MentorDetailsDto mentorDetailsDtoForEditingPage) {
+        int totalPages = mentorDetailsDtoForEditingPage.getTotalPages();
+        List<CourseDetailsDto> courseDetails = mentorDetailsDtoForEditingPage.getCourseDetails();
+        List<AvailableTimeDto> availabilities = mentorDetailsDtoForEditingPage.getAvailabilities();
+        String selfIntroduction = mentorDetailsDtoForEditingPage.getSelfIntroduction();
+        String nickName = mentorDetailsDtoForEditingPage.getNickName();
+        String userProfilePictureUrl = mentorDetailsDtoForEditingPage.getUserProfilePictureUrl();
+        String waysOfCommunication = mentorDetailsDtoForEditingPage.getWaysOfCommunication();
+        int currentPageNum = mentorDetailsDtoForEditingPage.getCurrentPageNum();
+        boolean lastPageOrNot = mentorDetailsDtoForEditingPage.getLastPageOrNot();
+
+        MentorDetailsDtoForEditing mentorDetailsDtoForEditing
+                = new MentorDetailsDtoForEditing(courseDetails
+                ,availabilities
+                ,waysOfCommunication
+                ,selfIntroduction
+                ,totalPages
+                ,currentPageNum
+                ,lastPageOrNot
+                ,nickName
+                ,userProfilePictureUrl);
+        return mentorDetailsDtoForEditing;
+
     }
 }
 

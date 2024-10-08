@@ -49,7 +49,6 @@ public class MenteeService {
             String teachingMethod = userPreferredTeachingMethod.getPreferredTeachingMethod();
             teachingMethods.add(teachingMethod);
         }
-//        List<PreferredTeachingMethodOnly> TeachingMethod = preferredTeachingMethodRepository.findUserPreferredTeachingMethodByUser(user);
 
         /**
          * 추출
@@ -212,28 +211,46 @@ public class MenteeService {
 
     }
 
+    /**
+     * 유저가
+     */
+    public MenteeInformationDto getMenteeInformationByNickname(Pageable coursePage, User user) {
 
+        List<String> teachingMethods = new ArrayList<>();
 
-//        userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUser(user);
-//        List<UserPreferredTeachingMethod> userPreferredTeachingMethods = new ArrayList<>();
-//
-//
-//        for (PreferredTeachingMethodDto preferredTeachingMethod1 : preferredTeachingMethods) {
-//
-//            UserPreferredTeachingMethod userPreferredTeachingMethod = new UserPreferredTeachingMethod();
-//
-//            PreferredTeachingMethod menteePreferredTeachingMethod = new PreferredTeachingMethod();
-//            menteePreferredTeachingMethod.createMethod(preferredTeachingMethod1.getPreferredTeachingMethod());
-//
-//            entityManager.persist(menteePreferredTeachingMethod);
-//
-//            userPreferredTeachingMethod.createUserMethod(user , menteePreferredTeachingMethod);
-//
-//            userPreferredTeachingMethods.add(userPreferredTeachingMethod);
-//        }
-//
-//        userPreferredTeachingMethodRepository.saveAll(userPreferredTeachingMethods);
-//
-//    }
+        /**
+         * 여기서 이제 이수 교과목들, 선호하는 수업방식들 가져옵니다
+         */
+        Page<CourseNameAndMajorOnly> coursesByUser = menteeCoursesRepository.findCoursesByUser(user, coursePage);
+        List<UserPreferredTeachingMethod> userPreferredTeachingMethodByUser = userPreferredTeachingMethodRepository.findUserPreferredTeachingMethodByUser(user);
+        for (UserPreferredTeachingMethod userPreferredTeachingMethod : userPreferredTeachingMethodByUser) {
+            String teachingMethod = userPreferredTeachingMethod.getPreferredTeachingMethod();
+            teachingMethods.add(teachingMethod);
+        }
+
+        /**
+         * 추출
+         */
+        int totalPages = coursesByUser.getTotalPages();
+        int number = coursesByUser.getNumber();
+        boolean last = coursesByUser.isLast();
+
+        /**
+         * 이제 Page에서 List로 변환
+         */
+        List<CourseNameAndMajorOnly> courseList = coursesByUser.getContent();
+
+        /**
+         * DTO로 변환
+         */
+        MenteeInformationDto menteeInformationDto
+                = new MenteeInformationDto(totalPages, number, last, user.getNickName(), user.getUserProfilePicture(), user.getSelfIntroduction(), courseList, teachingMethods);
+
+        /**
+         * 이 Dto 컨트롤러로 보내서 API로 보내도록 하겠습니다
+         */
+        return menteeInformationDto;
+
+    }
 
 }

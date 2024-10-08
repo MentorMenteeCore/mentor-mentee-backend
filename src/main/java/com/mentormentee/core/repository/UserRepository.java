@@ -1,4 +1,5 @@
 package com.mentormentee.core.repository;
+import com.mentormentee.core.domain.AvailableTime;
 import com.mentormentee.core.domain.Review;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.domain.UserCourse;
@@ -106,8 +107,9 @@ public class UserRepository {
      * 없으면 예외가 발생합니다.
      */
     public User getUserByNickname(String nickname){
-        return em.createQuery("select u.nickName from User u where u.nickName = :nickname", User.class)
+        return em.createQuery("select u from User u where u.nickName = :nickname", User.class)
                 .setParameter("nickname", nickname)
                 .getSingleResult();
     }
+
 }

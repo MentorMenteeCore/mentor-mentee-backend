@@ -1,13 +1,19 @@
 package com.mentormentee.core.controller;
 
+import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.ExceptionResponse;
 import com.mentormentee.core.exception.exceptionCollection.UserNotFoundException;
 import com.mentormentee.core.exception.exceptionCollection.UserNotMatchedException;
+import com.mentormentee.core.service.MenteeService;
+import com.mentormentee.core.service.UserSearchByNicknameService;
 import com.mentormentee.core.service.UserService;
 import com.mentormentee.core.token.dto.AuthToken;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,12 +21,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
+import static com.mentormentee.core.domain.Role.ROLE_MENTOR;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
+    private final UserSearchByNicknameService userSearchByNicknameService;
+    private final MenteeService menteeService;
 
     /**
      * @return UserInformDto
@@ -133,5 +143,25 @@ public class UserController {
         userService.logout(token);
         return ResponseEntity.ok(new ResponseCode(200));
     }
+
+
+    @GetMapping("/user")
+    public ResponseEntity<?> findUserInfoPageByRole(@PageableDefault(size = 2, sort = "course.courseName"
+            , direction = Sort.Direction.ASC) Pageable pageable){
+        User user = userService.findByToken();
+
+        if(user.getUserRole()==ROLE_MENTOR){
+            MentorDetailsDto mentorDetailsDto
+                    = userSearchByNicknameService.getUserDetailsByUserNickname(pageable,user);
+
+            MentorDetailsDtoForEditing mentorDetailsDtoForEditing = userService.changeDtoForMentorEditingPage(mentorDetailsDto);
+            return ResponseEntity.ok(mentorDetailsDtoForEditing);
+        }else {
+            MenteeInformationDto menteeInformation
+                    = menteeService.getMenteeInformationByNickname(pageable,user);
+            return ResponseEntity.ok(menteeInformation);
+        }
+    }
+
 
 }
