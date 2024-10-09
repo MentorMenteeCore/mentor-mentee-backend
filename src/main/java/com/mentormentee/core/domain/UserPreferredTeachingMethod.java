@@ -1,5 +1,6 @@
 package com.mentormentee.core.domain;
 
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.eclipse.angus.mail.imap.protocol.Item;
@@ -27,7 +28,6 @@ public class UserPreferredTeachingMethod {
     private User user;
 
     private String preferredTeachingMethod;
-//
 //    @ManyToOne(fetch = LAZY)
 //    @JoinColumn(name = "preferred_teaching_method_id")
 //    private PreferredTeachingMethod preferredTeachingMethod;

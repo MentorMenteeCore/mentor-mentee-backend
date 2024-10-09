@@ -24,7 +24,6 @@ import java.util.*;
 public class MenteeService {
 
     private final UserRepository userRepository;
-//    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final CourseRepository courseRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
@@ -67,7 +66,7 @@ public class MenteeService {
          * DTO로 변환
          */
         MenteeInformationDto menteeInformationDto
-                = new MenteeInformationDto(totalPages, number, last, user.getNickName(), user.getUserProfilePicture(), user.getSelfIntroduction(), courseList, teachingMethods);
+                = new MenteeInformationDto(totalPages, number, last, user.getNickName(), user.getProfileUrl(), user.getSelfIntroduction(), courseList, teachingMethods);
 
         /**
          * 이 Dto 컨트롤러로 보내서 API로 보내도록 하겠습니다
@@ -92,8 +91,8 @@ public class MenteeService {
 
         // menteeImageUrl 업데이트
         if (updateMenteeInformationDto.getMenteeImageUrl() != null &&
-                !updateMenteeInformationDto.getMenteeImageUrl().equals(user.getUserProfilePicture())) {
-            user.setUserProfilePicture(updateMenteeInformationDto.getMenteeImageUrl());
+                !updateMenteeInformationDto.getMenteeImageUrl().equals(user.getProfileUrl())) {
+            user.setProfileUrl(updateMenteeInformationDto.getMenteeImageUrl());
         }
 
         // selfIntroduction 업데이트
@@ -160,7 +159,7 @@ public class MenteeService {
                     });
             course.setCourseName(courseDto.getCourseName());
             userCourse.setCourse(course);
-            userCourse.setIsMajor(courseDto.getIsMajor());
+
 
 
             userCourses.add(userCourse);

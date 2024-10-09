@@ -34,8 +34,7 @@ public class Course {
     @Enumerated(EnumType.STRING)
     @Column(name = "course_year")
     private CourseYear courseYear; // 학년 정보
-
-
+    
     public void createCourse(String courseName, int credit, String professor, CourseYear courseYear, Department department) {
         this.courseName=courseName;
         this.credit=credit;
@@ -43,6 +42,10 @@ public class Course {
         this.courseYear=courseYear;
         this.department=department;
     }
-
+    
+    public void changeCourseInfo(String newCourseName, int newCredit) {
+        this.courseName = newCourseName;
+        this.credit = newCredit;
+    }
 }
 

@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
@@ -95,17 +97,23 @@ JwtFilter extends OncePerRequestFilter {
         return null;
     }
 
-    //Authentication 객체 지금 가져와서 나중에 사용할 것
     private Authentication getAuthentication(String accessToken) {
         // 여기에서 authentication 객체를 뽑아내서 리턴, 이후 위에 doFilterInternal 메서드에서
         // 해당 유저 정보를 security context holder에 넣는다
         Claims claims = JwtUtils.parseClaims(accessToken);
         String userId = claims.getSubject();//userEmail
+        String authorities = String.valueOf(claims.get("role"));
 
-        //여기서 토큰 에서 추출한 이메일이 db에 있는지 확인
-        UserDetails userDetails = customUserDetailService.loadUserByUsername(userId);
-        String findUserId = userDetails.getUsername();
-        UserDetails principal = new User(findUserId , "", userDetails.getAuthorities());//유저의 이름과 유저의 역할 담아서
-        return new UsernamePasswordAuthenticationToken(principal, "", userDetails.getAuthorities());
+
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+                = new UsernamePasswordAuthenticationToken(userId, ""
+                , AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));//유저의 이름과 유저의 역할 담아서
+        return usernamePasswordAuthenticationToken;
+
+
+//        UserDetails userDetails = customUserDetailService.loadUserByUsername(userId);
+//        String findUserId = userDetails.getUsername();
+//        UserDetails principal = new User(findUserId , "", userDetails.getAuthorities());//유저의 이름과 유저의 역할 담아서
+//        return new UsernamePasswordAuthenticationToken(principal, "", userDetails.getAuthorities());
     }
 }

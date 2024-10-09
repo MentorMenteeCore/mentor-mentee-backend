@@ -4,12 +4,14 @@ package com.mentormentee.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.sql.Clob;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,10 +38,8 @@ User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role userRole;
 
+    @Column(unique = true, nullable = false)
     private String email;
-
-    private LocalTime availableStartTime;
-    private LocalTime availableEndTime;
 
     private String password;
 
@@ -47,7 +47,10 @@ User implements UserDetails {
     private WaysOfCommunication waysOfCommunication;
 
     private int yearInUni;
-    private String userProfilePicture;
+    @Column(name = "profile_url")
+    private String profileUrl = "defaultProfileImage";
+
+
 
     // 리프래시 토큰 필드 추가
     private String refreshToken;
@@ -58,13 +61,28 @@ User implements UserDetails {
     private List<UserCourse> userCourse = new ArrayList<>();
 
     //자기소개
+    @Lob
     private String selfIntroduction;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvailableTime> availabilities = new ArrayList<>(); // 사용자의 요일별 시간 리스트
+
 
     //선호하는 수업 방식
     //해시태그로 여러개 있을 수 있음
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserPreferredTeachingMethod> userPreferredTeachingMethodList = new ArrayList<>();
+
+
+    public void changeWaysOfCommunication(WaysOfCommunication newWaysOfCommunication) {
+        this.waysOfCommunication = newWaysOfCommunication;
+    }
+
+    public void changeSelfIntroduction(String newSelfIntroduction) {
+        this.selfIntroduction = newSelfIntroduction;
+    }
 
     /**
      * 회원정보 페이지를 보면 학과,학년,이미지를 가져오기 때문에
@@ -100,16 +118,14 @@ User implements UserDetails {
         return email;
     }
 
-    public void createUser(String userName, String nickName, Role userRole, String email, String password, LocalTime availableStartTime, LocalTime availableEndTime, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken, String selfIntro) {
+    public void createUser(String userName, String nickName, Role userRole, String email, String password, WaysOfCommunication waysOfCommunication, int yearInUni, String userProfilePicture, Department department,String refreshToken, String selfIntro) {
         this.userName = userName;
         this.userRole = userRole;
         this.email = email;
         this.password = password;
-        this.availableStartTime = availableStartTime;
-        this.availableEndTime = availableEndTime;
         this.waysOfCommunication = waysOfCommunication;
         this.nickName = nickName;
-        this.userProfilePicture = userProfilePicture;
+        this.profileUrl = userProfilePicture;
         this.department = department;
         this.refreshToken = refreshToken;
         this.selfIntroduction = selfIntro;
@@ -124,3 +140,4 @@ User implements UserDetails {
         }
     }
 }
+

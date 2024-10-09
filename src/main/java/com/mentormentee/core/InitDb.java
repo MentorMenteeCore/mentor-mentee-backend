@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static com.mentormentee.core.domain.Role.ROLE_MENTEE;
@@ -19,20 +22,26 @@ import static com.mentormentee.core.domain.WaysOfCommunication.FACETOFACE;
 @RequiredArgsConstructor
 public class InitDb {
 
-    private final InitService initService;
 
+        private final InitService initService;
+        private static String defaultProfileImage;
+        @Value("${defaultProfileImage}")
+        public void setDefaultProfileImage(String defaultProfileImage) {
+                InitDb.defaultProfileImage = defaultProfileImage;
+        }
 
-    @PostConstruct
-    public void init() {
-        initService.dbInit1();
-    }
+        @PostConstruct
+        public void init() {
+                initService.dbInit1();}
+
 
     @Component
     @Transactional
     @RequiredArgsConstructor
-    static class InitService{
+    static class InitService {
         private final EntityManager em;
         private final PasswordEncoder passwordEncoder;
+
 
         public void dbInit1() {
 
@@ -86,19 +95,18 @@ public class InitDb {
             User user1 = new User();
             user1.createUser(
                     "choegiyeon", "choegi", ROLE_MENTEE, "choegi@example.com",
-                    "password123", LocalTime.of(9, 0), LocalTime.of(17, 0),
-                    FACETOFACE, 2, "www.exampleProfilePicture1.com",
-                    department5, "sampleRefreshToken1","최기연입니다. 충북대 학생 입니다. 안녕하세요! "
-            );
+                    "password123",
+                    FACETOFACE,3, defaultProfileImage,
+                    department5, "sampleRefreshToken1","최기연입니다. 충북대 학생 입니다. 안녕하세요! ");
             user1.hashPassword(passwordEncoder);
-
             em.persist(user1);
+
 
             User user2 = new User();
             user2.createUser(
                     "박상현", "나는야박상", ROLE_MENTEE, "cs1@example.com",
-                    "password1234", LocalTime.of(9, 0), LocalTime.of(18, 0),
-                    FACETOFACE, 2, "www.exampleProfilePicture2.com",
+                    "password1234",
+                    FACETOFACE, 2, defaultProfileImage,
                     department7, "sampleRefreshToken2","선배 탕후루도 같이"
             );
             user2.hashPassword(passwordEncoder);
@@ -106,10 +114,10 @@ public class InitDb {
 
             User user3 = new User();
             user3.createUser(
-                    "최기연", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
-                    "password12345", LocalTime.of(9, 0), LocalTime.of(18, 0),
-                    FACETOFACE, 2, "www.exampleProfilePicture3.com",
-                    department7, "sampleRefreshToken3","저는 충북대 컴공을 전공중인 멘토입니다. 어서 저에게 연락을 주세요!"
+                    "최금평", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
+                    "password12345",
+                    FACETOFACE, 2, defaultProfileImage,
+                    department7, "sampleRefreshToken3","안녕하세요 저는 최"
             );
             user3.hashPassword(passwordEncoder);
             em.persist(user3);
@@ -156,6 +164,7 @@ public class InitDb {
 
             Course course1 = new Course();
             course1.createCourse("디지털공학", 3, "최준성", CourseYear.SOPHOMORE, department7);
+
             em.persist(course1);
 
             Course course2 = new Course();
@@ -206,7 +215,21 @@ public class InitDb {
             );
             em.persist(usercourse6);
 
-        }
-    }
 
+            Review review1 = new Review();
+            review1.createReview(3, LocalDateTime.of(2024, 8, 8, 0, 0), user2, user3, "좋았습니다");
+
+            AvailableTime availableTime1 = new AvailableTime();
+            availableTime1.createAvailableTime(user3,DayOfWeek.MONDAY, LocalTime.of(9, 0), LocalTime.of(18, 0));
+
+            AvailableTime availableTime2 = new AvailableTime();
+            availableTime2.createAvailableTime(user3,DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(15, 0));
+
+            em.persist(review1);
+            em.persist(availableTime1);
+            em.persist(availableTime2);
+
+
+        }
+        }
 }

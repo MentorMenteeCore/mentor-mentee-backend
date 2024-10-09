@@ -96,7 +96,7 @@ public class SecurityConfig {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            String json = "{\"error\": \"Unauthorized\"}";
+            String json = "{\"error\": \"접근 권한이 없습니다.\"}";
             response.getWriter().write(json);
         };
     }

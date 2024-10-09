@@ -1,18 +1,25 @@
 package com.mentormentee.core.controller;
 
+
 import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.ExceptionResponse;
 import com.mentormentee.core.exception.exceptionCollection.UserNotFoundException;
 import com.mentormentee.core.exception.exceptionCollection.UserNotMatchedException;
+import com.mentormentee.core.service.MenteeService;
 import com.mentormentee.core.service.UserService;
 import com.mentormentee.core.token.dto.AuthToken;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 
 @RestController
@@ -21,6 +28,7 @@ import java.util.Date;
 public class UserController {
 
     private final UserService userService;
+    private final MenteeService menteeService;
 
     /**
      * @return UserInformDto
@@ -70,6 +78,30 @@ public class UserController {
         return ResponseEntity.ok(new ResponseCode(200));
     }
 
+
+    @PatchMapping(value = "/user/profile/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateProfileImage(
+            @RequestPart(value = "userInfo") @Valid UserInformDto userInformation,
+            @RequestPart(value = "profileImage") MultipartFile profileImage) throws IOException {
+
+        // 프로필 이미지가 있다면 업로드 처리
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String profileUrl = userService.uploadProfileImage(profileImage);
+            userInformation.setProfileUrl(profileUrl);
+        }
+
+        // 유저 정보 업데이트
+        Long updatedUser = userService.updateUserInformationService(userInformation);
+
+        if (updatedUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("유저의 정보가 존재하지 않습니다.");
+        }
+
+        return ResponseEntity.ok(new ResponseCode(200));
+    }
+
+
+
     /**
      * 이메일을 가지고 있는 유저가 DB에 있는지 확인
      * 그 이후 있으면 아이디 삭제 처리.
@@ -83,6 +115,20 @@ public class UserController {
             throw new UserNotMatchedException();
         }
         return ResponseEntity.ok(new ResponseCode(200));
+    }
+
+    // 프로필 이미지 삭제 API
+    @DeleteMapping("/user/profile/image")
+    public ResponseEntity<String> deleteProfileImage() {
+        try {
+            String message = userService.deleteProfileImage();
+            if (message.equals("기본 프로필 이미지는 삭제할 수 없습니다.")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            }
+            return ResponseEntity.ok(message);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     /**
@@ -119,5 +165,19 @@ public class UserController {
         String nicknameWithoutSpace = nickname.replaceAll("\\s+", "");
         userService.checkDuplicatedNickname(nicknameWithoutSpace);
         return ResponseEntity.ok(new ResponseCode(200));
+    }
+
+    /**
+     * 멘티가 자기 정보를 보고싶을때
+     * 실행되는 API입니다.
+     */
+    @GetMapping("/user/mentee")
+    public MenteeInformationDto getMenteeController(@RequestParam(defaultValue = "0", name = "coursePage") int coursePage,
+                                                    @RequestParam(defaultValue = "0", name = "courseSize") int courseSize) {
+        Pageable coursePageable = PageRequest.of(coursePage, courseSize);
+
+        MenteeInformationDto menteeInformation = menteeService.getMenteeInformation(coursePageable);
+
+        return menteeInformation;
     }
 }

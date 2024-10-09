@@ -39,7 +39,6 @@ public class UserRepository {
 
     /**
      * 이메일 중복 확인
-     * ispresent()사용하기 위해 Optional
      */
     public Optional<User> findByEmail(String email) {
         try{
@@ -58,10 +57,7 @@ public class UserRepository {
     /**
      * 멘토 Id받으면 그 멘토에게 남긴 리뷰들 다 봔환
      */
-    public List<Review> findMentorReviewsById(Long mentorId) {
-        return em.createQuery("select r from Review r where r.mentor.id = :mentorId", Review.class)
-                .setParameter("mentorId", mentorId).getResultList();
-    }
+
 
 
     /**

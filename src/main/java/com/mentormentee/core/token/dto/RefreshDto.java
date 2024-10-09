@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class RefreshDto {
+public class
+RefreshDto {
     @Schema(description = "refresh token")
     private String refreshToken;
 }

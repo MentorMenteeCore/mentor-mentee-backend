@@ -24,7 +24,4 @@ public class EmailSendUtil {
         mailSender.send(simpleMailMessage);
 
     }
-
-
-    
 }

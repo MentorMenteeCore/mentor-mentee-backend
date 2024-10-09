@@ -5,7 +5,6 @@ import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.CourseMentorRepository;
 import com.mentormentee.core.repository.UserRepository;
-import com.mentormentee.core.repository.UserTransactionRepository;
 import com.mentormentee.core.utils.CourseNameComparator;
 import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.MentorComparator;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,56 +21,52 @@ import java.util.stream.Collectors;
 public class CourseMentorService {
 
     private final CourseMentorRepository courseMentorRepository;
-    private final UserTransactionRepository userTransactionRepository;
     private final UserRepository userRepository;
 
     public CourseMentorDto getCourseMentorDetails(Long departmentId, String selectedYear, Long courseId, String sortBy, Pageable pageable) {
         UserInformDto userInformDto = getUserinforDto();
         int userYearInUni = userInformDto.getYearInUni();
-        CourseYear courseYear = determineCourseYear(selectedYear, userYearInUni);  //선택된 학년 또는 사용자의 학년을 기준으로 과목 학년 결정
+        CourseYear courseYear = determineCourseYear(selectedYear, userYearInUni); // 선택된 학년 또는 사용자의 학년을 기준으로 과목 학년 결정
 
         List<Course> courses = courseMentorRepository.findCoursesByDepartmentAndYear(departmentId, courseYear);
-
         // 코스 ㄱㄴㄷ순 정렬
         courses.sort((c1, c2) -> new CourseNameComparator().compare(c1.getCourseName(), c2.getCourseName()));
 
+        List<CourseMentorDto.CourseDto> courseDtoList = courses.stream()
+                .map(CourseMentorDto.CourseDto::new)
+                .collect(Collectors.toList());
+
+        // 선택된 과목을 조회
         Course selectedCourse = courseId != null ? courseMentorRepository.findById(courseId) : (courses.isEmpty() ? null : courses.get(0));
 
-        // 특정 과목을 수강한 멘토들 다 불러옴
-        List<UserCourse> userCourses = selectedCourse == null ? Collections.emptyList() : courseMentorRepository.findUserCoursesByCourse(selectedCourse.getId());  //선택된 과목을 수강한 멘토의 과목정보 조회
+        // 특정 과목을 수강한 멘토들 조회
+        List<UserCourse> userCourses = selectedCourse == null ? Collections.emptyList() : courseMentorRepository.findUserCoursesByCourse(selectedCourse.getId());
 
-        Map<Long, Integer> userCieatStockMap = new HashMap<>();  //사용자ID와 cieatstock 매핑
-        Map<Long, Integer> userCieatGradeMap = new HashMap<>();  //사용자ID와 cieatgrade매핑
-
-        //사용자 거래 내역 조회
-        for (UserCourse userCourse : userCourses) {
-            List<UserTransaction> transactions = userTransactionRepository.findByUser(userCourse.getUser().getId());//멘토 id -> 멘토의 거레 내역
-            //씨앗 거래 때마다 씨앗 잔고를 더하는것
-            int cieatStock = transactions.stream().mapToInt(transaction -> transaction.getTransaction().getCieatStock()).sum();  //거레네약 히니히나의 cieatamount 총합 계산
-            int cieatGrade = transactions.stream().mapToInt(transaction -> transaction.getTransaction().getTransactionAmount()).sum();  //UserTransaction 엔티티의 TransactionAmount에 따라 cieatgrade계산
-
-            userCieatStockMap.put(userCourse.getUser().getId(), cieatStock);
-            userCieatGradeMap.put(userCourse.getUser().getId(), cieatGrade);
-        }
-
-        //MentorDto 변환
+        // MentorDto 변환
         List<CourseMentorDto.MentorDto> mentorDtos = userCourses.stream()
-                .map(userCourse -> {
-                    User user = userCourse.getUser();//멘토
-                    Course course = userCourse.getCourse();//과목
-                    int cieatStock = userCieatStockMap.getOrDefault(user.getId(), 0);  //사용자 ID에 해당하는 cieat 재고 합 조회
-                    int cieatGrade = userCieatGradeMap.getOrDefault(user.getId(), 0);  //사용자 ID에 해당하는 cieat 거래량 합 조회
-                    return new CourseMentorDto.MentorDto(user, course, userCourse, cieatStock, cieatGrade);//멘토, 과목, 멘토과목, cieat 재고 합, cieat 거래량 합
-                })
+                .map(userCourse -> new CourseMentorDto.MentorDto(userCourse.getUser(), userCourse.getCourse(), userCourse))
                 .sorted(new MentorComparator(sortBy))
-                .collect(Collectors.toList());//배열 기준에따라 배열
+                .collect(Collectors.toList()); // 정렬 기준에 따라 출력
 
-        //페이징 처리
+        // 페이징 처리
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), mentorDtos.size());
-        List<CourseMentorDto.MentorDto> pagedMentors = mentorDtos.subList(start, end);
+        List<CourseMentorDto.MentorDto> pagedMentors = mentorDtos.subList(start, end); // mentorDtos 리스트에서 start 인덱스부터 end 인덱스까지의 서브리스트를 추출
 
-        return new CourseMentorDto(selectedCourse == null ? null : selectedCourse.getCourseName(), pagedMentors, mentorDtos.size());
+        // 페이지 정보 계산
+        int totalPages = (int) Math.ceil((double) mentorDtos.size() / pageable.getPageSize());
+        int currentPageNum = pageable.getPageNumber();
+        boolean lastPageOrNot = currentPageNum == totalPages - 1;
+
+        return new CourseMentorDto(
+                selectedCourse == null ? null : selectedCourse.getCourseName(),
+                pagedMentors,
+                mentorDtos.size(),
+                courseDtoList,
+                totalPages,
+                currentPageNum,
+                lastPageOrNot
+        );
     }
 
     /**
@@ -89,14 +83,15 @@ public class CourseMentorService {
         UserInformDto userInformDto;
 
         if(user.getDepartment() == null) {
-            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), null, user.getYearInUni(), user.getUserProfilePicture());
+            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), null, user.getYearInUni(), user.getProfileUrl());
         }
         else{
-            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), user.getDepartment().getDepartmentName(), user.getYearInUni(), user.getUserProfilePicture());
+            userInformDto = new UserInformDto(user.getNickName(), user.getEmail(), user.getDepartment().getDepartmentName(), user.getYearInUni(), user.getProfileUrl());
         }
         return userInformDto;
 
     }
+
 
     private CourseYear determineCourseYear(String selectedYear, int userYearInUni) {
         if (selectedYear == null || selectedYear.isEmpty()) {
@@ -104,26 +99,10 @@ public class CourseMentorService {
         } else {
             try {
                 return CourseYear.fromString(selectedYear.toLowerCase());
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) { // 예외 발생 시 사용자의 학년을 기준으로 CourseYear 반환
                 return CourseYear.fromInt(userYearInUni);
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

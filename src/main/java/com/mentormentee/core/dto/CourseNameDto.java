@@ -10,10 +10,9 @@ public class CourseNameDto {
 
     private String courseName;
 
-    private IsMajor isMajor;
 
-    public CourseNameDto(String courseName, IsMajor isMajor) {
+    public CourseNameDto(String courseName) {
         this.courseName = courseName;
-        this.isMajor = isMajor;
+
     }
 }
