@@ -59,10 +59,9 @@ public class UserCourse {
         user.getUserCourse().add(this);
     }
 
-    public void createUserCourse(User user, Course course, GradeStatus gradeStatus, IsMajor isMajor) {
+    public void createUserCourse(User user, Course course, GradeStatus gradeStatus) {
         this.user=user;
         this.course=course;
         this.gradeStatus=gradeStatus;
-        this.isMajor=isMajor;
     }
 }

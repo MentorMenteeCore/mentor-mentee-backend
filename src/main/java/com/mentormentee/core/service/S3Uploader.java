@@ -32,10 +32,10 @@ public class S3Uploader {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${defaultProfileImage}")
+    @Value("${spring.defaultProfileImage}")
     private String defaultProfileImage;
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {

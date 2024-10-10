@@ -4,6 +4,7 @@ package com.mentormentee.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -47,8 +48,10 @@ User implements UserDetails {
     private WaysOfCommunication waysOfCommunication;
 
     private int yearInUni;
+
+    @Value("${spring.defaultProfileImage}")
     @Column(name = "profile_url")
-    private String profileUrl = "defaultProfileImage";
+    private String profileUrl = "${spring.defaultProfileImage}";
 
 
 

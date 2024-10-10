@@ -23,16 +23,16 @@ import static com.mentormentee.core.domain.WaysOfCommunication.FACETOFACE;
 public class InitDb {
 
 
-        private final InitService initService;
-        private static String defaultProfileImage;
-        @Value("${defaultProfileImage}")
-        public void setDefaultProfileImage(String defaultProfileImage) {
-                InitDb.defaultProfileImage = defaultProfileImage;
-        }
+    private final InitService initService;
+    private static String defaultProfileImage;
+    @Value("${spring.defaultProfileImage}")
+    public void setDefaultProfileImage(String defaultProfileImage) {
+        InitDb.defaultProfileImage = defaultProfileImage;
+    }
 
-        @PostConstruct
-        public void init() {
-                initService.dbInit1();}
+    @PostConstruct
+    public void init() {
+        initService.dbInit1();}
 
 
     @Component
@@ -181,37 +181,37 @@ public class InitDb {
 
             UserCourse usercourse1 = new UserCourse();
             usercourse1.createUserCourse(
-                    user2, course2, GradeStatus.APLUS, IsMajor.MAJOR
+                    user2, course2, GradeStatus.APLUS
             );
             em.persist(usercourse1);
 
             UserCourse usercourse2 = new UserCourse();
             usercourse2.createUserCourse(
-                    user3, course2, GradeStatus.A, IsMajor.MAJOR
+                    user3, course2, GradeStatus.A
             );
             em.persist(usercourse2);
 
             UserCourse usercourse3 = new UserCourse();
             usercourse3.createUserCourse(
-                    user1, course2, GradeStatus.B, IsMajor.MAJOR
+                    user1, course2, GradeStatus.B
             );
             em.persist(usercourse3);
 
             UserCourse usercourse4 = new UserCourse();
             usercourse4.createUserCourse(
-                    user2, course1, GradeStatus.APLUS, IsMajor.MAJOR
+                    user2, course1, GradeStatus.APLUS
             );
             em.persist(usercourse4);
 
             UserCourse usercourse5 = new UserCourse();
             usercourse5.createUserCourse(
-                    user3, course3, GradeStatus.APLUS, IsMajor.MAJOR
+                    user3, course3, GradeStatus.APLUS
             );
             em.persist(usercourse5);
 
             UserCourse usercourse6 = new UserCourse();
             usercourse6.createUserCourse(
-                    user3, course4, GradeStatus.APLUS, IsMajor.MAJOR
+                    user3, course4, GradeStatus.APLUS
             );
             em.persist(usercourse6);
 
@@ -231,5 +231,5 @@ public class InitDb {
 
 
         }
-        }
+    }
 }
