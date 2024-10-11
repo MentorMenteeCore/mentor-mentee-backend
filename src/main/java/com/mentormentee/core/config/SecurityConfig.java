@@ -44,7 +44,9 @@ public class SecurityConfig {
                                                     "/v3/api-docs/**",
                                                     "/api/college/*",
                                                     "/api/user/signup/nickname",
-                                                    "/api/user/signup/email"
+                                                    "/api/user/signup/email",
+                                                    "/api/search"
+
     };
 
     @Bean

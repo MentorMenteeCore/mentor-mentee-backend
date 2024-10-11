@@ -4,6 +4,8 @@ import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.MenteeInformationDto;
 import com.mentormentee.core.dto.MentorDetailsDto;
 import com.mentormentee.core.dto.MentorDetailsDtoForEditing;
+import com.mentormentee.core.dto.SearchDto;
+import com.mentormentee.core.service.DepartmentService;
 import com.mentormentee.core.service.MenteeService;
 import com.mentormentee.core.service.UserSearchByNicknameService;
 import com.mentormentee.core.service.UserService;
@@ -30,6 +32,7 @@ public class SearchController {
     private final UserSearchByNicknameService userSearchByNicknameService;
     private final MenteeService menteeService;
     private final UserService userService;
+    private final DepartmentService departmentService;
     /**
      * 닉네임 유저가 멘토인지 멘티인지 확인
      * 멘토면 멘토 정보 불러오고
@@ -52,6 +55,18 @@ public class SearchController {
             return menteeInformation;
         }
 
+    }
+
+    /**
+     * 학과 이름으로
+     * 학과이름과 이미지 URL과 단과대 이름을 보여주는 API입니다.
+     *
+     * 2024-09-20 최기연
+     */
+    @GetMapping("/search")
+    public SearchDto search(@RequestParam(name = "departmentName", defaultValue = "국제경영학과") String departmentName) {
+        SearchDto departmentAndCollege = departmentService.findDepartmentAndCollege(departmentName);
+        return departmentAndCollege;
     }
 
 }

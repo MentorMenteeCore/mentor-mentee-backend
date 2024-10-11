@@ -90,7 +90,7 @@ JwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request){
         // jwt 인증 미 실시 api 보통은 security의 permit all url과 동일하게 간다
-        String[] excludePath = {"/api/user/sign-up", "/api/user/login", "/api/email/**", "/api/refresh","/swagger-ui/**", "/v3/api-docs/**","/api/college/*"};
+        String[] excludePath = {"/api/user/sign-up", "/api/user/login", "/api/email/**", "/api/refresh","/swagger-ui/**", "/v3/api-docs/**","/api/college/*","/api/search"};
 
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
