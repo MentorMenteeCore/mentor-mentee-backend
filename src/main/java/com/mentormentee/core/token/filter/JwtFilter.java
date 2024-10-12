@@ -22,6 +22,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -90,10 +91,26 @@ JwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request){
         // jwt 인증 미 실시 api 보통은 security의 permit all url과 동일하게 간다
-        String[] excludePath = {"/api/user/sign-up", "/api/user/login", "/api/email/**", "/api/refresh","/swagger-ui/**", "/v3/api-docs/**","/api/college/*","/api/search"};
+        String[] excludePath = {"/api/user/sign-up",
+                                "/api/user/login",
+                                "/api/email/**",
+                                "/api/refresh",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/api/college/*",
+                                "/api/user/signup/nickname",
+                                "/api/user/signup/email",
+                                "/api/search"};
 
-        String path = request.getRequestURI();
-        return Arrays.stream(excludePath).anyMatch(path::startsWith);
+        String path = request.getServletPath();
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+
+        for (String s : excludePath) {
+            if (pathMatcher.match(s, path)) {
+                return true;  // 경로가 제외된 목록에 있을 경우 true 반환
+            }
+        }
+        return false;
     }
 
     // 헤더에 있는 토큰의 기본 형태가 Authorization : Bearer [access token] 이기 때문에 원문만 뽑아오는 메서드
