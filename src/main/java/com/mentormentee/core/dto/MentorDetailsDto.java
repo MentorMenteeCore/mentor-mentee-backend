@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class MentorDetailsDto {
+    private Long mentorId;
     private List<CourseDetailsDto> courseDetails;
     private List<AvailableTimeDto> availabilities;
     private String waysOfCommunication;
@@ -18,7 +19,8 @@ public class MentorDetailsDto {
     private int currentPageNum;
     private boolean lastPageOrNot;
 
-    public MentorDetailsDto(List<CourseDetailsDto> courseDetails,
+    public MentorDetailsDto(Long id,
+                            List<CourseDetailsDto> courseDetails,
                             List<AvailableTimeDto> availabilities,
                             String waysOfCommunication,
                             String selfIntroduction,
@@ -27,6 +29,7 @@ public class MentorDetailsDto {
                             int currentPageNum,
                             boolean lastPageOrNot,
                             String nickName, String userProfilePicture, int size) {
+        this.mentorId = id;
         this.courseDetails = courseDetails;
         this.availabilities = availabilities;
         this.waysOfCommunication = waysOfCommunication;

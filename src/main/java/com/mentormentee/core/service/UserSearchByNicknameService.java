@@ -74,8 +74,12 @@ public class UserSearchByNicknameService {
         int currentPageNum = userCoursesPage.getNumber();
         boolean lastPageOrNot = userCoursesPage.isLast();
 
+        //mentor의 아이디 추출 -> 채팅방 형성에 중요
+        Long mentorId = user.getId();
+
         //MentorDetailsDto로 변환
         return new MentorDetailsDto(
+                mentorId,
                 courseDetailsDtos,
                 availabilityDtos,
                 user.getWaysOfCommunication().name(),
