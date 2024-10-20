@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Mentor {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mentor_id")
     private Long id;
 

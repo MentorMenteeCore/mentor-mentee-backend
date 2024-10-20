@@ -25,11 +25,38 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	//Json이 Proxy객체를 가져오지 않게 하기 위한 hibernate5 추가.
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.core:jackson-core'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
+
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
+
+	//mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//jwt
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+
+	//json parser
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+
+	testImplementation 'org.springframework.security:spring-security-test'
+
 
 
 	compileOnly 'org.projectlombok:lombok'
@@ -41,8 +68,6 @@ dependencies {
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
 		exclude group: "org.hamcrest", module: "hamcrest-core"
 	}
-
-//	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
