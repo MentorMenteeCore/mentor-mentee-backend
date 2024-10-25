@@ -24,7 +24,6 @@ import java.util.*;
 public class MenteeService {
 
     private final UserRepository userRepository;
-//    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final CourseRepository courseRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
