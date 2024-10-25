@@ -20,5 +20,9 @@ public class CharUtil {
                 || (ch >= '[' && ch <= '`') // [\]^_`
                 || (ch >= '{' && ch <= '~'); // {|}~
     }
+
+    public static String removeSpaces(String str){
+        return str.replaceAll("\\s","");
+    }
 }
 

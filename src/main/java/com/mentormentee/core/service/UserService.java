@@ -223,11 +223,11 @@ public class UserService {
         user.changeRole();
     }
 
-    public void checkDuplicatedNickname(String nickname) {
-        try {
-            userRepository.getUserByNickname(nickname);
-        }catch (Exception e){
-            throw NicknameExistException.EXCEPTION;
+    public boolean checkDuplicatedNickname(String nickname) {
+        if(userRepository.getUserByNickname(nickname)!=null){
+            return true;
+        }else {
+            return false;
         }
     }
 

@@ -3,12 +3,14 @@ package com.mentormentee.core.controller;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.ExceptionResponse;
+import com.mentormentee.core.exception.exceptionCollection.NicknameExistException;
 import com.mentormentee.core.exception.exceptionCollection.UserNotFoundException;
 import com.mentormentee.core.exception.exceptionCollection.UserNotMatchedException;
 import com.mentormentee.core.service.MenteeService;
 import com.mentormentee.core.service.UserSearchByNicknameService;
 import com.mentormentee.core.service.UserService;
 import com.mentormentee.core.token.dto.AuthToken;
+import com.mentormentee.core.utils.CharUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -133,9 +135,25 @@ public class UserController {
      */
     @GetMapping("/user/signup/nickname")
     public ResponseEntity<?> signUpNicknameController(@RequestParam(name = "nickname") String nickname) {
-        String nicknameWithoutSpace = nickname.replaceAll("\\s+", "");
-        userService.checkDuplicatedNickname(nicknameWithoutSpace);
-        return ResponseEntity.ok(new ResponseCode(200));
+        boolean checkDuplicatedNickname = checkIfNicknameIsDuplicated(nickname);
+
+        if (checkDuplicatedNickname) {
+            throw NicknameExistException.EXCEPTION;
+        }else {
+            return ResponseEntity.ok(new ResponseCode(200));
+        }
+
+    }
+
+    private boolean checkIfNicknameIsDuplicated(String nickname) {
+        String nicknameWithoutSpace = CharUtil.removeSpaces(nickname);
+        boolean checkDuplicatedNickname;
+        try {
+            checkDuplicatedNickname = userService.checkDuplicatedNickname(nicknameWithoutSpace);
+        }catch (Exception e){
+            checkDuplicatedNickname = false;
+        }
+        return checkDuplicatedNickname;
     }
 
     @GetMapping("/user/signup/email")
