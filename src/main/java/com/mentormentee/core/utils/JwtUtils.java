@@ -46,6 +46,22 @@ public class JwtUtils {
         return remainingTime > 0 ? remainingTime : 0; // 만약 시간이 지났다면 0 반환
     }
 
+    //ws-stomp로 웹소켓 연결 시도 전에 쿼리 파라미터에 넣기 위한 짧은 시간 토큰 생성
+    public static String generateWebsocketToken(String email){
+        // 토큰 발급
+        String socketToken = Jwts.builder()
+                // subject = 토큰 제목으로 주로 식별자를 사용하기 때문에 email로 지정
+                .setSubject(email)
+                // 발급 시간
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                // 만료 시간
+                .setExpiration(new Date(System.currentTimeMillis() + 30000))
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET_KEY)
+                .compact();
+
+        return socketToken;
+    }
+
     // 해당 메서드들을 static으로 지정하여 전역적으로 사용할 수 있도록 구현
     public static String generateAccessToken(String email, List<String> roles){
         // 토큰 발급
@@ -63,6 +79,7 @@ public class JwtUtils {
 
         return accessToken;
     }
+
     public static String generateRefreshToken(String userId){
         return Jwts.builder()
                 .setSubject(userId)

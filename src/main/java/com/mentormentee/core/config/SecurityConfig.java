@@ -45,7 +45,8 @@ public class SecurityConfig {
                                                     "/api/college/*",
                                                     "/api/user/signup/nickname",
                                                     "/api/user/signup/email",
-                                                    "/api/search"
+                                                    "/api/search",
+                                                    "/ws-stomp"
     };
 
     @Bean

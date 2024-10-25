@@ -65,6 +65,12 @@ public class UserController {
         return ResponseEntity.ok(userService.login(loginRequestDto));
     }
 
+    @GetMapping("/user/socket-token")
+    public ResponseEntity<WebsocketDto> getSocketToken() {
+        WebsocketDto socketToken = userService.getSocketToken();
+        return ResponseEntity.ok(socketToken);
+    }
+
     /**
      * 유저가 수정을 하면 그 부분을 DB에 반영합니다.
      *
@@ -73,6 +79,7 @@ public class UserController {
      */
     @PatchMapping("/user/information")
     public ResponseEntity<?> updateUserInformationController(@Valid @RequestBody UserInformDto userInformation) {
+
         Long updateduser = userService.updateUserInformationService(userInformation);
         if (updateduser == null) {
             throw new UserNotFoundException();
@@ -162,6 +169,4 @@ public class UserController {
             return ResponseEntity.ok(menteeInformation);
         }
     }
-
-
 }

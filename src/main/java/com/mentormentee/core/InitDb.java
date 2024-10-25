@@ -100,7 +100,7 @@ public class InitDb {
 
             User user2 = new User();
             user2.createUser(
-                    "박상현", "나는야박상", ROLE_MENTEE, "cs1@example.com",
+                    "박상현", "나는야박상", ROLE_MENTOR, "cs1@example.com",
                     "password1234",
                     FACETOFACE, 2, "www.exampleProfilePicture2.com",
                     department7, "sampleRefreshToken2","선배 탕후루도 같이"
@@ -110,7 +110,7 @@ public class InitDb {
 
             User user3 = new User();
             user3.createUser(
-                    "최기연", "어디로가야하오", ROLE_MENTOR, "cs2@example.com",
+                    "최기연", "어디로가야하오", ROLE_MENTEE, "cs2@example.com",
                     "password12345",
                     FACETOFACE, 2, "www.exampleProfilePicture3.com",
                     department7, "sampleRefreshToken3","저는 충북대 컴공을 전공중인 멘토입니다. 어서 저에게 연락을 주세요!"

@@ -9,6 +9,7 @@ import com.mentormentee.core.repository.*;
 import com.mentormentee.core.token.dto.AuthToken;
 import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.RedisUtil;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -101,6 +102,7 @@ public class UserService {
 
         // authenticate 객체에 user 객체가 포함되어 있어 이를 뽑음
         User user = (User) authenticate.getPrincipal();
+        authToken.setUserId(user.getId());
 
         // 생성된 refresh token을 user.refreshToken 필드에 넣음
         user.setRefreshToken(authToken.getRefreshToken());
@@ -275,6 +277,22 @@ public class UserService {
         return mentorDetailsDtoForEditing;
 
     }
+
+    /**
+     * 유저가 웹소켓 연결을 하기 전에 URL에 토큰을 넣기 위해
+     * 웹소켓 연결 전용 토큰을 생성하는 로직이다
+     *
+     * 2024-10-14
+     * 최기연
+     */
+    public WebsocketDto getSocketToken() {
+        String email = JwtUtils.getUserEmail();
+        String websocketToken = JwtUtils.generateWebsocketToken(email);
+        WebsocketDto websocketDto = new WebsocketDto();
+        websocketDto.setSocketToken(websocketToken);
+        return websocketDto;
+    }
+
 }
 
 

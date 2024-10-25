@@ -100,7 +100,9 @@ JwtFilter extends OncePerRequestFilter {
                                 "/api/college/*",
                                 "/api/user/signup/nickname",
                                 "/api/user/signup/email",
-                                "/api/search"};
+                                "/api/search",
+                                "/ws-stomp"
+        };
 
         String path = request.getServletPath();
         AntPathMatcher pathMatcher = new AntPathMatcher();

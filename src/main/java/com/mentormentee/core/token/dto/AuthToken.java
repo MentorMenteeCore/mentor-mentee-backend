@@ -12,4 +12,5 @@ public class AuthToken {
     private String grantType;//access 토큰 타입 : Bearer로 고정
     private String accessToken;
     private String refreshToken;
+    private Long userId;
 }
