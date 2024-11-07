@@ -26,75 +26,20 @@ public class UserSearchByNicknameService {
     private final MentorDetailsRepository mentorDetailsRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+    private final MentorDetails mentorDetails;
 
 
     //멘토 조회 페이지(사용자 접근 권한 인증 불필요)
-
     public MentorDetailsDto getUserDetailsByUserNickname(Pageable pageable, User user) {
-        //페이징 처리된 UserCourse 목록
-        Page<UserCourse> userCoursesPage = mentorDetailsRepository.findUserCourseByUser(user, pageable);
+        Page<UserCourse> mentorCompletedCourseWithPageType = mentorDetailsRepository.findUserCourseByUser(user, pageable);
+        List<CourseDetailsDto> mentorCompletedCourses = mentorDetails.getMentorCompletedCourses(mentorCompletedCourseWithPageType);
 
-        List<UserCourse> userCourseList = userCoursesPage.getContent();
+        List<AvailableTimeDto> mentorAvailableTimes = mentorDetails.getMentorAvailableTime(user);
 
-        List<CourseDetailsDto> courseDetailsDtos = userCourseList.stream()
-                .map(courseDetailsDto -> {
-                    Course course = courseDetailsDto.getCourse();
-                    return new CourseDetailsDto(
-                            courseDetailsDto.getId(),
-                            course.getCourseName(),
-                            course.getCredit(),
-                            courseDetailsDto.getGradeStatus().getDisplayValue(),
-                            course.getProfessor()
-                    );
-                })
-                .collect(Collectors.toList());
-
-        //AvailableTime을 별도로 조회하여 중복 제거 후 변환
-        List<AvailableTime> availableTimes = user.getAvailabilities();
-
-        List<AvailableTimeDto> availabilityDtos = availableTimes.stream()
-                .map(at -> new AvailableTimeDto(
-                        at.getId(),  // Availability ID를 추가
-                        at.getDayOfWeek(),
-                        at.getAvailableStartTime(),
-                        at.getAvailableEndTime()
-                ))
-                .distinct() // 중복 제거
-                .collect(Collectors.toList());
-
-        //멘토에 대한 리뷰 조회
         List<Review> reviews = reviewRepository.findReviewsByMentor(user);
-                List<ReviewDto> reviewDtos =
-                reviews.stream()
-                .map(review -> new ReviewDto(review.getComment(), review.getRating(), review.getReviewDate()))
-                .collect(Collectors.toList());
+        List<ReviewDto> reviewsFromMentee = mentorDetails.getMentorReviews(reviews);
 
-        //페이지 정보 계산
-        int totalPages = userCoursesPage.getTotalPages();
-        int currentPageNum = userCoursesPage.getNumber();
-        boolean lastPageOrNot = userCoursesPage.isLast();
-
-        //mentor의 아이디 추출 -> 채팅방 형성에 중요
-        Long mentorId = user.getId();
-
-        //MentorDetailsDto로 변환
-        return new MentorDetailsDto(
-                mentorId,
-                courseDetailsDtos,
-                availabilityDtos,
-                user.getWaysOfCommunication().name(),
-                user.getSelfIntroduction(),
-                reviewDtos,
-                /**
-                 * Role은 따로 빼요!
-                 */
-                totalPages,
-                currentPageNum,
-                lastPageOrNot,
-                user.getNickName(),
-                user.getUserProfilePicture(),
-                reviews.size()
-        );
+        return mentorDetails.getFinalMentorDtoAndReturn(user, mentorCompletedCourses, mentorAvailableTimes, reviewsFromMentee, mentorCompletedCourseWithPageType, reviews);
     }
 
     /**
