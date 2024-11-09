@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.security.SecureRandom;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,9 +76,9 @@ User implements UserDetails {
 
 
 
-    public User updatePassword(String newPassword) {
+    public void updatePassword(String newPassword, PasswordEncoder passwordEncoder) {
         this.password = newPassword;
-        return this;
+        this.password = passwordEncoder.encode(this.password);
     }
 
     // 비밀번호 암호화 로직
@@ -119,6 +120,18 @@ User implements UserDetails {
         }else {
             this.userRole = Role.ROLE_MENTEE;
         }
+    }
+
+
+    public static String generateTemporaryPassword(SecureRandom random) {
+        String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        int PASSWORD_LENGTH = 10;
+        StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
+        for (int i = 0; i < PASSWORD_LENGTH; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            password.append(CHARACTERS.charAt(index));
+        }
+        return password.toString();
     }
 
 }

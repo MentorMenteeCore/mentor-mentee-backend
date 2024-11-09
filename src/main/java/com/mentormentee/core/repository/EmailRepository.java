@@ -47,4 +47,6 @@ public class EmailRepository {
     public void delete(EmailSession emailSession){
         em.remove(emailSession);
     }
+
+
 }

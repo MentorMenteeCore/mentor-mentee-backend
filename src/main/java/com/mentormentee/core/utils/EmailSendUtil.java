@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component;
 public class EmailSendUtil {
     @Value("${mail.host}")
     private String host;
-
     private final MailSender mailSender;
+    public static String temporaryPasswordEmailTitle = "[CBNU 멘토 멘티] 임시 비밀번호 발급";
+    public static String temporaryPassword = "임시비밀번호 :";
+
+
     public void sendEmail(String to, String title, String body){
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(host);
@@ -22,9 +25,5 @@ public class EmailSendUtil {
         simpleMailMessage.setSubject(title);
         simpleMailMessage.setText(body);
         mailSender.send(simpleMailMessage);
-
     }
-
-
-    
 }

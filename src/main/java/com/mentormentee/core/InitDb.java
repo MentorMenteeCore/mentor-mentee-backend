@@ -480,7 +480,7 @@ public class InitDb {
 
             User user3 = new User();
             user3.createUser(
-                    "최기연", "어디로가야하오", ROLE_MENTEE, "cs2@example.com",
+                    "최기연", "어디로가야하오", ROLE_MENTEE, "bdcgy22@daum.net",
                     "password12345",
                     FACETOFACE, 2, "www.exampleProfilePicture3.com",
                     informationCommunicationDepartment, "sampleRefreshToken3","저는 충북대 컴공을 전공중인 멘토입니다. 어서 저에게 연락을 주세요!"

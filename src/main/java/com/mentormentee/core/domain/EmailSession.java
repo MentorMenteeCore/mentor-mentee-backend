@@ -1,5 +1,6 @@
 package com.mentormentee.core.domain;
 
+import com.mentormentee.core.exception.exceptionCollection.UserNotMatchedException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,4 +39,11 @@ public class EmailSession {
         this.verifyCode = verifyCode;
         this.createdAt = createdAt;
     }
+
+    public static void compareTypedEmailAndUserEmail(String typedEmail, String userEmail){
+        if(!typedEmail.equals(userEmail)) {
+            throw UserNotMatchedException.EXCEPTION;
+        }
+    }
+
 }

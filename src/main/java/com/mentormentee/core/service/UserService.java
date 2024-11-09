@@ -209,9 +209,8 @@ public class UserService {
         }
 
         // 1번 2번 3번 통과 -> 저장(merge)
-        User newPasswordUser = user.updatePassword(newPassword);
-        newPasswordUser.hashPassword(passwordEncoder);
-        userRepository.save(newPasswordUser);
+        user.updatePassword(newPassword,passwordEncoder);
+        userRepository.save(user);
 
     }
 

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import java.security.SecureRandom;
 import java.util.Properties;
 
 
@@ -78,4 +79,9 @@ public class EmailConfig {
     public String getPassword(){
         return password;
     }
+    @Bean
+    public SecureRandom getSecureRandom(){
+        return new SecureRandom();
+    }
+
 }

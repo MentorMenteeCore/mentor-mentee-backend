@@ -1,13 +1,20 @@
 package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.EmailSession;
+import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.EmailSendRequestDto;
 import com.mentormentee.core.dto.EmailSendResponseDto;
 import com.mentormentee.core.dto.EmailVerifyRequestDto;
+import com.mentormentee.core.exception.ErrorCode;
+import com.mentormentee.core.exception.ExceptionResponse;
+import com.mentormentee.core.exception.exceptionCollection.EmailNotFoundException;
 import com.mentormentee.core.repository.EmailRepository;
+import com.mentormentee.core.repository.UserRepository;
 import com.mentormentee.core.utils.EmailSendUtil;
+import com.mentormentee.core.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +34,13 @@ public class EmailService {
     private final EmailRepository emailRepository;
     //이메일 보낼 수 있도록 정의
     private final EmailSendUtil emailSendUtil;
+    private final SecureRandom secureRandom;
+    private final PasswordEncoder passwordEncoder;
 
     // 인증시간 3분
     private final Long AUTH_CODE_EXPIRATION_TIME = 3 * 60 * 1000L;
+    private final UserRepository userRepository;
+
     public EmailSendResponseDto sendEmail(String email){
         String code = createCode();
         Optional<EmailSession> emailSessionOptional = emailRepository.findByUserEmail(email);
@@ -105,5 +116,17 @@ public class EmailService {
         }
 
         return false;
+    }
+
+    public void sendReissuedPassword(EmailSendRequestDto email) {
+        User user = userRepository.findByEmail(email.getEmail())
+                .orElseThrow(() -> EmailNotFoundException.EXCEPTION);
+
+        String temporaryPassword = User.generateTemporaryPassword(secureRandom);
+        user.updatePassword(temporaryPassword, passwordEncoder);
+
+        emailSendUtil.sendEmail(email.getEmail()
+                , EmailSendUtil.temporaryPasswordEmailTitle,
+            EmailSendUtil.temporaryPassword+temporaryPassword);
     }
 }
