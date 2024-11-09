@@ -28,4 +28,5 @@ public interface MentorDetailsRepository extends JpaRepository<UserCourse, Long>
     List<AvailableTime> findAvailabilitiesByUser(User user);
 
     Collection<Object> findReviewsByUser(User user);
+
 }

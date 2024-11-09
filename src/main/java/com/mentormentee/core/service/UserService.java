@@ -19,7 +19,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +41,7 @@ public class UserService {
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
     private final RedisUtil redisUtil;
+    private final S3Uploader s3Uploader;
 
     /**
      * 회원 저장
@@ -172,6 +175,11 @@ public class UserService {
         userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUserId(user.getId());
         menteeCoursesRepository.deleteByUserId(user.getId());
         userRepository.deleteUser(user.getId());
+    }
+
+    @Transactional
+    public String uploadProfileImage(MultipartFile file) throws IOException {
+        return s3Uploader.uploadProfileImage(file);
     }
 
     /**

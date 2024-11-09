@@ -3,14 +3,12 @@ package com.mentormentee.core.service;
 import com.mentormentee.core.domain.*;
 import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
-import com.mentormentee.core.repository.CourseMentorRepository;
-import com.mentormentee.core.repository.CourseRepository;
-import com.mentormentee.core.repository.UserRepository;
-import com.mentormentee.core.repository.UserTransactionRepository;
+import com.mentormentee.core.repository.*;
 import com.mentormentee.core.utils.CourseNameComparator;
 import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.MentorComparator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,7 @@ public class CourseMentorService {
     private final CourseMentorRepository courseMentorRepository;
     private final UserTransactionRepository userTransactionRepository;
     private final UserRepository userRepository;
+    private final MentorDetailsRepository mentorDetailsRepository;
 
     public CourseMentorDto getCourseMentorDetails(Long departmentId, String selectedYear, Long courseId, String sortBy, Pageable pageable) {
         UserInformDto userInformDto = getUserinforDto();
@@ -66,7 +65,7 @@ public class CourseMentorService {
                     int cieatGrade = userCieatGradeMap.getOrDefault(user.getId(), 0);  //사용자 ID에 해당하는 cieat 거래량 합 조회
                     return new CourseMentorDto.MentorDto(user, course, userCourse, cieatStock, cieatGrade);//멘토, 과목, 멘토과목, cieat 재고 합, cieat 거래량 합
                 })
-                .sorted(new MentorComparator(sortBy))
+                .sorted()
                 .collect(Collectors.toList());//배열 기준에따라 배열
 
         //페이징 처리
@@ -110,6 +109,220 @@ public class CourseMentorService {
                 return CourseYear.fromInt(userYearInUni);
             }
         }
+    }
+
+    // 멘토 정보 조회
+    public MentorDetailsUpdateDto getMentorDetails(Pageable pageable) {
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new JWTClaimException());
+
+        // CourseDetails 페이징 처리 (3과목씩)
+        Page<UserCourse> userCoursesPage = userRepository.findUserCoursesByUser(user, pageable);
+        List<CourseDetailsDto> courseDetailsDtos = convertToCourseDetailsDto(userCoursesPage.getContent());
+
+        // 멘토의 AvailableTime 조회 및 변환 (전체)
+        List<AvailableTimeDto> availabilityDtos = convertToAvailableTimeDto(
+                userRepository.findAvailabilitiesByUser(user)
+        );
+
+        // MentorDetailsUpdateDto 생성 및 반환
+        return new MentorDetailsUpdateDto(
+                courseDetailsDtos,
+                availabilityDtos,
+                user.getWaysOfCommunication().name(),
+                user.getSelfIntroduction(),
+                user.getUserRole(),
+                user.getUserProfilePicture(),
+                userCoursesPage.getTotalPages(),
+                userCoursesPage.getNumber(),
+                userCoursesPage.isLast()
+        );
+    }
+
+    public MentorDetailsUpdateDto updateMentorDetails(MentorDetailsUpdateDto updateDto, Pageable pageable) {
+        String userEmail = JwtUtils.getUserEmail();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new JWTClaimException());
+
+        // 자기소개 수정
+        if (updateDto.getSelfIntroduction() != null) {
+            user.changeSelfIntroduction(updateDto.getSelfIntroduction());
+        }
+
+        // 연락 방법 수정
+        if (updateDto.getWaysOfCommunication() != null) {
+            user.changeWaysOfCommunication(
+                    WaysOfCommunication.valueOf(updateDto.getWaysOfCommunication())
+            );
+        }
+
+        // CourseDetails 수정 및 추가
+        if (updateDto.getCourseDetails() == null) {
+        } else { // courseDetails가 null이 아닌 경우
+            updateCourseDetails(user, updateDto.getCourseDetails());
+        }
+
+
+
+        // AvailableTime 수정 및 추가
+        if (updateDto.getAvailabilities() == null) {
+        } else {
+            updateAvailability(user, updateDto.getAvailabilities());
+        }
+
+        userRepository.save(user);
+
+        // CourseDetails 페이징된 목록 반환
+        Page<UserCourse> userCoursesPage = userRepository.findUserCoursesByUser(user, pageable);
+        List<CourseDetailsDto> courseDetailsDtos = convertToCourseDetailsDto(userCoursesPage.getContent());
+
+        // AvailableTime 조회 및 변환
+        List<AvailableTimeDto> availabilityDtos = convertToAvailableTimeDto(
+                userRepository.findAvailabilitiesByUser(user)
+        );
+
+        // 수정된 정보를 포함한 MentorDetailsUpdateDto 반환
+        return new MentorDetailsUpdateDto(
+                courseDetailsDtos,
+                availabilityDtos,
+                user.getWaysOfCommunication().name(),
+                user.getSelfIntroduction(),
+                user.getUserRole(),
+                user.getUserProfilePicture(),
+                userCoursesPage.getTotalPages(),
+                userCoursesPage.getNumber(),
+                userCoursesPage.isLast()
+        );
+    }
+
+    // CourseDetails 수정 로직
+    public void updateCourseDetails(User user, List<CourseDetailsDto> courseDetailsDtos) {
+        // 기존 UserCourse 삭제
+        userRepository.deleteUserCoursesByUser(user);
+
+        // 새로운 UserCourse 생성 및 저장
+        for (CourseDetailsDto courseDetailsDto : courseDetailsDtos) {
+            Course newCourse = userRepository.findCourseByName(courseDetailsDto.getCourseName())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 과목이 존재하지 않습니다."));
+
+            UserCourse newUserCourse = new UserCourse();
+            newUserCourse.setCourse(newCourse);
+            newUserCourse.setGradeStatus(courseDetailsDto.getGrade() != null ?
+                    GradeStatus.valueOf(courseDetailsDto.getGrade()) : null);
+            newUserCourse.setUser(user);
+
+            mentorDetailsRepository.save(newUserCourse); // 저장 로직
+        }
+    }
+
+    public void updateAvailability(User user, List<AvailableTimeDto> availableTimeDtos) {
+        // 기존의 Availability를 삭제
+        userRepository.deleteAllAvailableTimes(user); // 모든 Availability 삭제
+
+        // 새로운 Availability 정보를 저장
+        for (AvailableTimeDto availableTimeDto : availableTimeDtos) {
+            AvailableTime newAvailability = new AvailableTime();
+            newAvailability.setDayOfWeek(availableTimeDto.getDayOfWeek());
+            newAvailability.setAvailableStartTime(availableTimeDto.getAvailableStartTime());
+            newAvailability.setAvailableEndTime(availableTimeDto.getAvailableEndTime());
+            newAvailability.setUser(user);
+
+            userRepository.save(newAvailability);
+        }
+    }
+
+    // 변환 메서드
+    private List<CourseDetailsDto> convertToCourseDetailsDto(List<UserCourse> userCourses) {
+        return userCourses.stream()
+                .map(userCourse -> new CourseDetailsDto(
+                        userCourse.getCourse().getCourseName(),
+                        userCourse.getCourse().getCredit(),
+                        userCourse.getGradeStatus() != null ? userCourse.getGradeStatus().getDisplayValue() : null // GradeStatus
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // AvailableTime 변환 메서드
+    private List<AvailableTimeDto> convertToAvailableTimeDto(List<AvailableTime> availableTimes) {
+        return availableTimes.stream()
+                .map(at -> new AvailableTimeDto(
+                        at.getId(),
+                        at.getDayOfWeek(),
+                        at.getAvailableStartTime(),
+                        at.getAvailableEndTime()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
+
+
+
+
+    //정보를 추가하거나 변경할 때, 데이터를 검증한다.
+    public String validateMentorDetails(MentorDetailsUpdateDto dto) {
+        StringBuilder validationMessage = new StringBuilder();
+
+        if (dto.getCourseDetails() != null) {
+            for (CourseDetailsDto course : dto.getCourseDetails()) {
+                String courseValidationMessage = validateCourseDetails(course);
+                if (courseValidationMessage != null) {
+                    validationMessage.append(courseValidationMessage).append(" ");
+                }
+            }
+        }
+
+        if (dto.getAvailabilities() != null) {
+            for (AvailableTimeDto availability : dto.getAvailabilities()) {
+                String availabilityValidationMessage = validateAvailability(availability);
+                if (availabilityValidationMessage != null) {
+                    validationMessage.append(availabilityValidationMessage).append(" ");
+                }
+            }
+        }
+
+        return validationMessage.length() > 0 ? validationMessage.toString().trim() : null;
+    }
+
+
+    private String validateCourseDetails(CourseDetailsDto course) {
+        StringBuilder missingInfo = new StringBuilder();
+
+        if (course.getCourseName() == null) {
+            missingInfo.append("과목 이름이 필요합니다. ");
+        }
+
+        if (course.getCredit() <= 0) {
+            missingInfo.append("학점이 필요합니다. ");
+        }
+
+        if (course.getGrade() == null) {
+            missingInfo.append("성적이 필요합니다. ");
+        }
+
+        return missingInfo.length() > 0 ? missingInfo.toString().trim() : null;
+    }
+
+    private String validateAvailability(AvailableTimeDto availability) {
+        StringBuilder missingInfo = new StringBuilder();
+
+        if (availability.getDayOfWeek() == null) {
+            missingInfo.append("요일이 필요합니다. ");
+        }
+
+        if (availability.getAvailableStartTime() == null) {
+            missingInfo.append("시작 시간이 필요합니다. ");
+        }
+
+        if (availability.getAvailableEndTime() == null) {
+            missingInfo.append("종료 시간이 필요합니다. ");
+        }
+
+        return missingInfo.length() > 0 ? missingInfo.toString().trim() : null;
     }
 }
 

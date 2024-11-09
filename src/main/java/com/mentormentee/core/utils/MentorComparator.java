@@ -1,17 +1,15 @@
 package com.mentormentee.core.utils;
 
 import com.mentormentee.core.comparator.OrderingByKoreanEnglishNumbuerSpecial;
-import com.mentormentee.core.dto.CourseMentorDto;
+import com.mentormentee.core.dto.MentorListDto;
 
-import java.text.Collator;
 import java.util.Comparator;
-import java.util.Locale;
 
 
 //멘토 목록 정렬
-import java.util.Comparator;
 
-public class MentorComparator implements Comparator<CourseMentorDto.MentorDto> {
+
+public class MentorComparator implements Comparator<MentorListDto.MentorDto> {
     private final String sortBy;
     private final Comparator<String> nicknameComparator;
 
@@ -20,39 +18,35 @@ public class MentorComparator implements Comparator<CourseMentorDto.MentorDto> {
         this.nicknameComparator = OrderingByKoreanEnglishNumbuerSpecial.getComparator();
     }
 
+
     @Override
-    public int compare(CourseMentorDto.MentorDto m1, CourseMentorDto.MentorDto m2) {
+    public int compare(MentorListDto.MentorDto m1, MentorListDto.MentorDto m2) {
         switch (sortBy) {
             case "nickname":
                 return compareByNickname(m1, m2);
             case "gradestatus":
                 return compareByGradeStatus(m1, m2);
-            case "cieatStock":
-                return compareByCieatStock(m1, m2);
-            case "cieatGrade":
-                return compareByCieatGrade(m1, m2);
+            case "yearinuni":
+                return compareByYearInUni(m1, m2);
             default:
                 throw new IllegalArgumentException("Invalid sort criterion: " + sortBy);
         }
     }
 
-    private int compareByNickname(CourseMentorDto.MentorDto m1, CourseMentorDto.MentorDto m2) {
+
+
+    private int compareByNickname(MentorListDto.MentorDto m1, MentorListDto.MentorDto m2) {
         return nicknameComparator.compare(m1.getNickName(), m2.getNickName());
     }
 
-    private int compareByGradeStatus(CourseMentorDto.MentorDto m1, CourseMentorDto.MentorDto m2) {
+    private int compareByGradeStatus(MentorListDto.MentorDto m1, MentorListDto.MentorDto m2) {
         return Integer.compare(m1.getGradeStatusPriority(), m2.getGradeStatusPriority());
     }
 
-    private int compareByCieatStock(CourseMentorDto.MentorDto m1, CourseMentorDto.MentorDto m2) {
-        return Integer.compare(m2.getCieatStock(), m1.getCieatStock());
-    }
-
-    private int compareByCieatGrade(CourseMentorDto.MentorDto m1, CourseMentorDto.MentorDto m2) {
-        return Integer.compare(m2.getCieatGrade(), m1.getCieatGrade());
+    private int compareByYearInUni(MentorListDto.MentorDto m1, MentorListDto.MentorDto m2) {
+        return Integer.compare(m1.getYearInUni(), m2.getYearInUni());
     }
 }
-
 
 
 

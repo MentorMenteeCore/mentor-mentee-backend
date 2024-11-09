@@ -5,6 +5,7 @@ import com.mentormentee.core.service.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,12 @@ import static com.mentormentee.core.domain.WaysOfCommunication.FACETOFACE;
 public class InitDb {
 
     private final InitService initService;
+    private static String defaultProfileImage;
+
+    @Value("${spring.defaultProfileImage}")
+    public void setDefaultProfileImage(String defaultProfileImage) {
+        InitDb.defaultProfileImage = defaultProfileImage;
+    }
 
 
     @PostConstruct
@@ -518,6 +525,47 @@ public class InitDb {
 //            preferredTeachingMethod5.createTeachingMethod("카톡 중요");
 //            em.persist(preferredTeachingMethod5);
 
+            User user4 = new User();
+            user4.createUser(
+                    "최만평", "네로", ROLE_MENTOR, "cs3@example.com",
+                    "password111",
+                    FACETOFACE, 4, defaultProfileImage,
+                    informationCommunicationDepartment, "sampleRefreshToken4","안녕"
+            );
+            user4.hashPassword(passwordEncoder);
+            em.persist(user4);
+
+            User user5 = new User();
+            user5.createUser(
+                    "최억평", "하잇", ROLE_MENTOR, "cs4@example.com",
+                    "password11",
+                    FACETOFACE, 2, defaultProfileImage,
+                    informationCommunicationDepartment, "sampleRefreshToken4","안녕"
+            );
+            user5.hashPassword(passwordEncoder);
+            em.persist(user5);
+
+            User user6 = new User();
+            user6.createUser(
+                    "최조평", "동동이", ROLE_MENTOR, "cs5@example.com",
+                    "password111111",
+                    FACETOFACE, 3, defaultProfileImage,
+                    informationCommunicationDepartment, "sampleRefreshToken4","안녕"
+            );
+            user6.hashPassword(passwordEncoder);
+            em.persist(user6);
+
+            User user7 = new User();
+            user7.createUser(
+                    "타학과생", "난달라달라", ROLE_MENTOR, "cs6@example.com",
+                    "password1212",
+                    FACETOFACE, 3, defaultProfileImage,
+                    informationCommunicationDepartment, "sampleRefreshToken5","안녕"
+            );
+            user7.hashPassword(passwordEncoder);
+            em.persist(user7);
+
+
             UserPreferredTeachingMethod userPreferredTeachingMethod1 = new UserPreferredTeachingMethod();
             userPreferredTeachingMethod1.createUserMethod(user2,"자기주도_학습_야자_싫어");
             em.persist(userPreferredTeachingMethod1);
@@ -538,21 +586,240 @@ public class InitDb {
             userPreferredTeachingMethod5.createUserMethod(user3,"카톡 중요");
             em.persist(userPreferredTeachingMethod5);
 
+
+            //강의
             Course course1 = new Course();
-            course1.createCourse("디지털공학", 3, "최준성", CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            course1.createCourse("미래설계탐색", 1, CourseYear.FRESHMAN, informationCommunicationDepartment);
             em.persist(course1);
 
             Course course2 = new Course();
-            course2.createCourse( "공학수학1", 3, "심동규", CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            course2.createCourse("미래설계준비", 0, CourseYear.FRESHMAN, informationCommunicationDepartment);
             em.persist(course2);
 
             Course course3 = new Course();
-            course3.createCourse( "영어수업", 3, "심동규", CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            course3.createCourse("오픈소스소프트웨어 이해와 실습", 1, CourseYear.FRESHMAN, informationCommunicationDepartment);
             em.persist(course3);
 
             Course course4 = new Course();
-            course4.createCourse( "공학수학2", 3, "심동규", CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            course4.createCourse("정보통신개론", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
             em.persist(course4);
+
+            Course course5 = new Course();
+            course5.createCourse("전자기학", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course5);
+
+            Course course6 = new Course();
+            course6.createCourse("회로이론1", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course6);
+
+            Course course7 = new Course();
+            course7.createCourse("공학수학1", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course7);
+
+            Course course8 = new Course();
+            course8.createCourse("회로실험1", 2, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course8);
+
+            Course course9 = new Course();
+            course9.createCourse("미래설계구현", 0, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course9);
+
+            Course course10 = new Course();
+            course10.createCourse("디지털공학", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course10);
+
+            Course course11 = new Course();
+            course11.createCourse("고급컴퓨터프로그래밍", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course11);
+
+            Course course12 = new Course();
+            course12.createCourse("오픈소스 기초프로젝트", 1, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course12);
+
+            Course course13 = new Course();
+            course13.createCourse("임베디드소프트웨어실습", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course13);
+
+            Course course14 = new Course();
+            course14.createCourse("컴퓨터네트워크", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course14);
+
+            Course course15 = new Course();
+            course15.createCourse("회로실험2", 2, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course15);
+
+            Course course16 = new Course();
+            course16.createCourse("확률및통계", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course16);
+
+            Course course17 = new Course();
+            course17.createCourse("회로이론2", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course17);
+
+            Course course18 = new Course();
+            course18.createCourse("공학수학2", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course18);
+
+            Course course19 = new Course();
+            course19.createCourse("객체지향 프로그래밍(C++)", 3, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course19);
+
+            Course course20 = new Course();
+            course20.createCourse("오픈소스 개발프로젝트", 1, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course20);
+
+            Course course21 = new Course();
+            course21.createCourse("소프트웨어 실전영어", 2, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course21);
+
+            Course course22 = new Course();
+            course22.createCourse("창업탐색", 0, CourseYear.SOPHOMORE, informationCommunicationDepartment);
+            em.persist(course22);
+
+            Course course23 = new Course();
+            course23.createCourse("전자회로1", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course23);
+
+            Course course24 = new Course();
+            course24.createCourse("통신공학", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course24);
+
+            Course course25 = new Course();
+            course25.createCourse("자료구조", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course25);
+
+            Course course26 = new Course();
+            course26.createCourse("운영체제", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course26);
+
+            Course course27 = new Course();
+            course27.createCourse("고주파시스템공학", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course27);
+
+            Course course28 = new Course();
+            course28.createCourse("신호및시스템", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course28);
+
+            Course course29 = new Course();
+            course29.createCourse("자바프로그래밍", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course29);
+
+            Course course30 = new Course();
+            course30.createCourse("데이터통신설계", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course30);
+
+            Course course31 = new Course();
+            course31.createCourse("오픈소스 전문프로젝트", 1, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course31);
+
+            Course course32 = new Course();
+            course32.createCourse("창업기획", 0, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course32);
+
+            Course course33 = new Course();
+            course33.createCourse("전자통신실험", 2, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course33);
+
+            Course course34 = new Course();
+            course34.createCourse("산학프로젝트", 1, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course34);
+
+            Course course35 = new Course();
+            course35.createCourse("전자회로2", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course35);
+
+            Course course36 = new Course();
+            course36.createCourse("디지털통신", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course36);
+
+            Course course37 = new Course();
+            course37.createCourse("빅데이터시스템설계", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course37);
+
+            Course course38 = new Course();
+            course38.createCourse("인터넷통신설계", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course38);
+
+            Course course39 = new Course();
+            course39.createCourse("마이크로프로세서", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course39);
+
+            Course course40 = new Course();
+            course40.createCourse("모바일프로그래밍및실습", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course40);
+
+            Course course41 = new Course();
+            course41.createCourse("디지털신호처리설계", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course41);
+
+            Course course42 = new Course();
+            course42.createCourse("지능형영상처리", 3, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course42);
+
+            Course course43 = new Course();
+            course43.createCourse("안테나설계", 0, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course43);
+
+            Course course44 = new Course();
+            course44.createCourse("창업설계", 0, CourseYear.JUNIOR, informationCommunicationDepartment);
+            em.persist(course44);
+
+            Course course45 = new Course();
+            course45.createCourse("캡스톤디자인", 1, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course45);
+
+            Course course46 = new Course();
+            course46.createCourse("임베디드IoT응용실험", 2, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course46);
+
+            Course course47 = new Course();
+            course47.createCourse("광통신", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course47);
+
+            Course course48 = new Course();
+            course48.createCourse("이동통신공학", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course48);
+
+            Course course49 = new Course();
+            course49.createCourse("딥러닝이론및실습", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course49);
+
+            Course course50 = new Course();
+            course50.createCourse("정보및부호이론", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course50);
+
+            Course course51 = new Course();
+            course51.createCourse("지능형네트워크", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course51);
+
+            Course course52 = new Course();
+            course52.createCourse("공업교육론", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course52);
+
+            Course course53 = new Course();
+            course53.createCourse("지능형시스템", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course53);
+
+            Course course54 = new Course();
+            course54.createCourse("무선통신망공학", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course54);
+
+            Course course55 = new Course();
+            course55.createCourse("VLSI설계및실습", 3, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course55);
+
+            Course course56 = new Course();
+            course56.createCourse("창업산학초청세미나Ⅱ", 1, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course56);
+
+            Course course57 = new Course();
+            course57.createCourse("창업파일럿프로젝트", 1, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course57);
+
+            Course course58 = new Course();
+            course58.createCourse("공업논리및논술", 1, CourseYear.SENIOR, informationCommunicationDepartment);
+            em.persist(course58);
+
 
             UserCourse usercourse1 = new UserCourse();
             usercourse1.createUserCourse(
@@ -589,6 +856,32 @@ public class InitDb {
                     user3, course4, GradeStatus.APLUS, IsMajor.MAJOR
             );
             em.persist(usercourse6);
+
+            UserCourse usercourse7 = new UserCourse();
+            usercourse7.createUserCourse(
+                    user3, course19, GradeStatus.A, IsMajor.MAJOR
+            );
+            em.persist(usercourse7);
+
+            UserCourse usercourse8 = new UserCourse();
+            usercourse8.createUserCourse(
+                    user4, course19, GradeStatus.B, IsMajor.MAJOR
+            );
+            em.persist(usercourse8);
+
+            UserCourse usercourse9 = new UserCourse();
+            usercourse9.createUserCourse(
+                    user5, course19, GradeStatus.BPLUS, IsMajor.MAJOR
+            );
+            em.persist(usercourse9);
+
+            UserCourse usercourse10 = new UserCourse();
+            usercourse10.createUserCourse(
+                    user6, course19, GradeStatus.APLUS, IsMajor.MAJOR
+            );
+            em.persist(usercourse10);
+
+
 
         }
     }

@@ -121,4 +121,11 @@ User implements UserDetails {
         }
     }
 
+    public void changeSelfIntroduction(String selfIntroduction) {
+        this.selfIntroduction = selfIntroduction;
+    }
+
+    public void changeWaysOfCommunication(WaysOfCommunication newWaysOfCommunication) {
+        this.waysOfCommunication = newWaysOfCommunication;
+    }
 }

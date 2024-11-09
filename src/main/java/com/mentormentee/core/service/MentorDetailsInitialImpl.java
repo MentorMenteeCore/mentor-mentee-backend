@@ -23,11 +23,9 @@ public class MentorDetailsInitialImpl implements MentorDetails {
                 .map(courseDetailsDto -> {
                     Course course = courseDetailsDto.getCourse();
                     return new CourseDetailsDto(
-                            courseDetailsDto.getId(),
                             course.getCourseName(),
                             course.getCredit(),
-                            courseDetailsDto.getGradeStatus().getDisplayValue(),
-                            course.getProfessor()
+                            courseDetailsDto.getGradeStatus().getDisplayValue()
                     );
                 })
                 .collect(Collectors.toList());

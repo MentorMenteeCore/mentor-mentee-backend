@@ -3,14 +3,14 @@ package com.mentormentee.core.dto;
 import lombok.Data;
 
 @Data
-public class CourseDetailsDto {
+public class CourseDto {
     private String courseName;
     private int credit;
-    private String grade;
+    private String gradeStatus;
 
-    public CourseDetailsDto( String courseName, int credit, String grade) {
+    public CourseDto( String courseName, int credit, String grade) {
         this.courseName = courseName;
         this.credit = credit;
-        this.grade = grade;
+        this.gradeStatus = grade;
     }
 }

@@ -1,10 +1,11 @@
 package com.mentormentee.core.repository;
-import com.mentormentee.core.domain.AvailableTime;
-import com.mentormentee.core.domain.Review;
-import com.mentormentee.core.domain.User;
-import com.mentormentee.core.domain.UserCourse;
+import com.mentormentee.core.domain.*;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -111,5 +112,107 @@ public class UserRepository {
                 .setParameter("nickname", nickname)
                 .getSingleResult();
     }
+
+    // 닉네임으로 User 엔티티 조회
+    public Optional<User> findByNickName(String nickName) {
+        return em.createQuery(
+                        "select u from User u where u.nickName = :nickName", User.class)
+                .setParameter("nickName", nickName)
+                .getResultList()
+                .stream()
+                .findFirst();
+    }
+
+    // User 엔티티를 사용하여 UserCourse를 페이징 처리하여 조회
+    public Page<UserCourse> findUserCoursesByUser(User user, Pageable pageable) {
+        List<UserCourse> userCourses = em.createQuery(
+                        "select uc from UserCourse uc " +
+                                "join fetch uc.course c " +
+                                "where uc.user = :user",
+                        UserCourse.class)
+                .setParameter("user", user)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+        long total = em.createQuery(
+                        "select count(uc) from UserCourse uc where uc.user = :user", Long.class)
+                .setParameter("user", user)
+                .getSingleResult();
+
+        return new PageImpl<>(userCourses, pageable, total);
+    }
+
+    // User 엔티티를 사용하여 AvailableTime 조회
+    public List<AvailableTime> findAvailabilitiesByUser(User user) {
+        return em.createQuery(
+                        "select a from AvailableTime a where a.user = :user", AvailableTime.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
+    // User 엔티티를 사용하여 리뷰 조회
+    public List<Review> findReviewsByUser(User user) {
+        return em.createQuery(
+                        "select r from Review r where r.reviewee = :user", Review.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
+    // UserCourse 삭제 메서드 (사용자에 대한 모든 UserCourse 삭제)
+    public void deleteUserCoursesByUser(User user) {
+        em.createQuery("delete from UserCourse uc where uc.user = :user")
+                .setParameter("user", user)
+                .executeUpdate();
+    }
+
+
+    // 모든 AvailableTime 삭제
+    public void deleteAllAvailableTimes(User user) {
+        em.createQuery("delete from AvailableTime a where a.user = :user")
+                .setParameter("user", user)
+                .executeUpdate();
+    }
+
+
+
+    // AvailableTime 저장
+    public void save(AvailableTime availableTime) {
+        em.persist(availableTime);
+    }
+
+    // UserCourse 저장
+    public void save(UserCourse userCourse) {
+        em.persist(userCourse);
+    }
+
+    // Course 엔티티 저장
+    public void save(Course course) {
+        em.persist(course);
+    }
+
+    // UserCourse ID로 UserCourse 레코드 삭제
+    public void deleteUserCourseById(Long userCourseId) {
+        em.createQuery("delete from UserCourse uc where uc.id = :userCourseId")
+                .setParameter("userCourseId", userCourseId)
+                .executeUpdate();
+    }
+
+    // Course 이름으로 Course 조회
+    public Optional<Course> findCourseByName(String courseName) {
+        String normalizedCourseName = courseName.replaceAll("\\s+", " ").trim();
+
+        try {
+            Course course = em.createQuery(
+                            "select c from Course c where replace(c.courseName, ' ', '') = replace(:courseName, ' ', '')",
+                            Course.class)
+                    .setParameter("courseName", normalizedCourseName)
+                    .getSingleResult();
+            return Optional.of(course);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
 
 }
