@@ -38,7 +38,7 @@ User implements UserDetails {
 
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<AvailableTime> availabilities = new ArrayList<>();
 
     private String password;
@@ -53,7 +53,7 @@ User implements UserDetails {
     private String refreshToken;
 
     //유저가 수강하는 과목들 추가.
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserCourse> userCourse = new ArrayList<>();
 
     //자기소개
@@ -62,7 +62,7 @@ User implements UserDetails {
     //선호하는 수업 방식
     //해시태그로 여러개 있을 수 있음
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserPreferredTeachingMethod> userPreferredTeachingMethodList = new ArrayList<>();
 
     /**

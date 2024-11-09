@@ -486,15 +486,18 @@ public class InitDb {
                     informationCommunicationDepartment, "sampleRefreshToken3","저는 충북대 컴공을 전공중인 멘토입니다. 어서 저에게 연락을 주세요!"
             );
             user3.hashPassword(passwordEncoder);
-            new AvailableTime(user3, DayOfWeek.FRIDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
-            new AvailableTime(user3, DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
+
             Review review = new Review();
             review.createDate(2024,2,3);
             review.createReview(user3, 3, "좋은 사람 근데 가끔 냄새나요");
             Review review1 = new Review();
             review1.createDate(2024,3,2);
             review1.createReview(user3, 5, "친절헤여");
+            AvailableTime availableTime1 = new AvailableTime(user3, DayOfWeek.FRIDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
+            AvailableTime availableTime2 = new AvailableTime(user3, DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
             em.persist(user3);
+            em.persist(availableTime1);
+            em.persist(availableTime2);
             em.persist(review1);
             em.persist(review);
 //

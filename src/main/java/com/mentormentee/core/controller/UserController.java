@@ -99,7 +99,7 @@ public class UserController {
             String userEmail = userInformation.getUserEmail();
             userService.deleteUserByEmail(userEmail);
         } catch (Exception e) {
-            throw new UserNotMatchedException();
+            throw e;
         }
         return ResponseEntity.ok(new ResponseCode(200));
     }

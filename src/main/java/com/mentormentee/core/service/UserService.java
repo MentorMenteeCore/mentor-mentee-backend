@@ -39,6 +39,8 @@ public class UserService {
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
     private final RedisUtil redisUtil;
+    private final ReviewRepository reviewRepository;
+    private final AvailableTimeRepository availableTimeRepository;
 
     /**
      * 회원 저장
@@ -171,6 +173,8 @@ public class UserService {
                 .orElseThrow(() -> new JWTClaimException());
         userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUserId(user.getId());
         menteeCoursesRepository.deleteByUserId(user.getId());
+        reviewRepository.deleteReviewsByUser(user);
+        availableTimeRepository.deleteByUser(user);
         userRepository.deleteUser(user.getId());
     }
 
