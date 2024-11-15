@@ -30,6 +30,7 @@ public class UserSearchByNicknameService {
 
 
     //멘토 조회 페이지(사용자 접근 권한 인증 불필요)
+    @Transactional
     public MentorDetailsDto getUserDetailsByUserNickname(Pageable pageable, User user) {
         Page<UserCourse> mentorCompletedCourseWithPageType = mentorDetailsRepository.findUserCourseByUser(user, pageable);
         List<CourseDetailsDto> mentorCompletedCourses = mentorDetails.getMentorCompletedCourses(mentorCompletedCourseWithPageType);

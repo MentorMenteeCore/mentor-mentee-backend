@@ -26,4 +26,5 @@ public class Message {
     private User user;
     private String content;
     private LocalDateTime time;
+
 }

@@ -23,6 +23,4 @@ public class ChatRoom {
 
     private boolean readOrNot;
 
-
-
 }
