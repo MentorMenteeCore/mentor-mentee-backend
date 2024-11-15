@@ -7,11 +7,13 @@ import com.mentormentee.core.dto.MentorDetailsDto;
 import com.mentormentee.core.dto.ReviewDto;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Transactional
 public class MentorDetailsInitialImpl implements MentorDetails {
 
     @Override

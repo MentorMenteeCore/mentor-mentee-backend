@@ -48,9 +48,11 @@ public class UserSearchByNicknameService {
      * 처음에 검색한 유저 가져오는 Api
      * @return
      */
+    @Transactional(readOnly = false)
     public User findUserByNickname(String nickname) {
         try {
             User user = userRepository.getUserByNickname(nickname);
+            user.getAvailabilities();
             return user;
         }catch (Exception e) {
             throw NickNameIsNotExistedException.EXCEPTION;
