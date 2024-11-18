@@ -5,15 +5,18 @@ import com.mentormentee.core.dto.AvailableTimeDto;
 import com.mentormentee.core.dto.CourseDetailsDto;
 import com.mentormentee.core.dto.MentorDetailsDto;
 import com.mentormentee.core.dto.ReviewDto;
+import com.mentormentee.core.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Transactional
+@RequiredArgsConstructor
 public class MentorDetailsInitialImpl implements MentorDetails {
 
     @Override
@@ -38,7 +41,9 @@ public class MentorDetailsInitialImpl implements MentorDetails {
 
     @Override
     public List<AvailableTimeDto> getMentorAvailableTime(User user) {
+
         List<AvailableTime> availableTimes = user.getAvailabilities();
+
 
         List<AvailableTimeDto> availabilityDtos = availableTimes.stream()
                 .map(at -> new AvailableTimeDto(

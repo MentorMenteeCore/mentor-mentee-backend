@@ -251,7 +251,6 @@ public class UserService {
         redisUtil.setBlackList(token, "accessToken", remainingTimeFromAccessToken);
     }
 
-    @Transactional
     public User findByToken() {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail).orElseThrow(()-> new JWTClaimException());

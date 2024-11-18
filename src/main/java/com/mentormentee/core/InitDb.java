@@ -489,15 +489,20 @@ public class InitDb {
 
             Review review = new Review();
             review.createDate(2024,2,3);
-            review.createReview(user3, 3, "좋은 사람 근데 가끔 냄새나요");
+            review.createReview(user2, 3, "좋은 사람 근데 가끔 냄새나요");
             Review review1 = new Review();
             review1.createDate(2024,3,2);
-            review1.createReview(user3, 5, "친절헤여");
+            review1.createReview(user2, 5, "친절헤여");
             AvailableTime availableTime1 = new AvailableTime(user3, DayOfWeek.FRIDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
             AvailableTime availableTime2 = new AvailableTime(user3, DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
+            AvailableTime availableTime3 = new AvailableTime(user2, DayOfWeek.FRIDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
+            AvailableTime availableTime4 = new AvailableTime(user2, DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
+
             em.persist(user3);
             em.persist(availableTime1);
             em.persist(availableTime2);
+            em.persist(availableTime3);
+            em.persist(availableTime4);
             em.persist(review1);
             em.persist(review);
 //

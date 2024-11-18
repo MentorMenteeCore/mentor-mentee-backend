@@ -26,6 +26,10 @@ public class UserRepository {
         return user.getId();
     }
 
+    public User merge(User user) {
+        return em.merge(user);
+    }
+
     public User findById(Long id) {
         return em.find(User.class, id);
     }
