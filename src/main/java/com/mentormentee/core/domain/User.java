@@ -128,4 +128,10 @@ User implements UserDetails {
     public void changeWaysOfCommunication(WaysOfCommunication newWaysOfCommunication) {
         this.waysOfCommunication = newWaysOfCommunication;
     }
+
+    //프로필 URL을 기본 이미지로 초기화
+    public void initializeuserProfilePicture(String defaultProfileImage)
+    {
+        this.userProfilePicture = defaultProfileImage;
+    }
 }

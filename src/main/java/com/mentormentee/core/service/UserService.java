@@ -11,6 +11,7 @@ import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.RedisUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,7 +27,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mentormentee.core.domain.Role.ROLE_MENTOR;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,11 +37,12 @@ public class UserService {
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-//    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
     private final RedisUtil redisUtil;
     private final S3Uploader s3Uploader;
+    @Value("${spring.defaultProfileImage}")
+    private String defaultProfileImage;
 
     /**
      * 회원 저장
@@ -75,6 +76,8 @@ public class UserService {
                 .nickName(nicknameWithoutSpace)
                 .waysOfCommunication(WaysOfCommunication.REMOTE)
                 .build();
+
+        user.initializeuserProfilePicture(defaultProfileImage); //프로필 이미지를 기본이미지로 초기화
 
         /**
          * 유저 비번이 암호화 되지 않은 비번일때 이거를 암호화
