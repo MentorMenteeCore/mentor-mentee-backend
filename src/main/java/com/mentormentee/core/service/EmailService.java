@@ -123,7 +123,8 @@ public class EmailService {
                 .orElseThrow(() -> EmailNotFoundException.EXCEPTION);
 
         String temporaryPassword = User.generateTemporaryPassword(secureRandom);
-        user.updatePassword(temporaryPassword, passwordEncoder);
+        user.updatePassword(temporaryPassword);
+        user.hashPassword(passwordEncoder);
 
         emailSendUtil.sendEmail(email.getEmail()
                 , EmailSendUtil.temporaryPasswordEmailTitle,

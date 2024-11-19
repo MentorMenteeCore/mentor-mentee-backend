@@ -11,6 +11,7 @@ import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.RedisUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,12 +20,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mentormentee.core.domain.Role.ROLE_MENTOR;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,6 +41,9 @@ public class UserService {
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
     private final RedisUtil redisUtil;
+    private final S3Uploader s3Uploader;
+    @Value("${spring.defaultProfileImage}")
+    private String defaultProfileImage;
     private final ReviewRepository reviewRepository;
     private final AvailableTimeRepository availableTimeRepository;
 
@@ -74,6 +79,8 @@ public class UserService {
                 .nickName(nicknameWithoutSpace)
                 .waysOfCommunication(WaysOfCommunication.REMOTE)
                 .build();
+
+        user.initializeuserProfilePicture(defaultProfileImage); //프로필 이미지를 기본이미지로 초기화
 
         /**
          * 유저 비번이 암호화 되지 않은 비번일때 이거를 암호화
@@ -163,7 +170,6 @@ public class UserService {
      * 유저의 이메일을 통해 유저를 찾고 유저가 존재하면
      * 유저를 삭제
      */
-    @Transactional
     public void deleteUserByEmail(String userTypingEmail) {
         String userEmail = JwtUtils.getUserEmail();
         if(!userTypingEmail.equals(userEmail)){
@@ -177,6 +183,11 @@ public class UserService {
         reviewRepository.deleteReviewsByUser(user);
         availableTimeRepository.deleteByUser(user);
         userRepository.deleteUser(user.getId());
+    }
+
+    @Transactional
+    public String uploadProfileImage(MultipartFile file) throws IOException {
+        return s3Uploader.uploadProfileImage(file);
     }
 
     /**
@@ -210,7 +221,8 @@ public class UserService {
         }
 
         // 1번 2번 3번 통과 -> 저장(merge)
-        user.updatePassword(newPassword,passwordEncoder);
+        user.updatePassword(newPassword);
+        user.hashPassword(passwordEncoder);
         userRepository.save(user);
 
     }
@@ -254,7 +266,6 @@ public class UserService {
     public User findByToken() {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail).orElseThrow(()-> new JWTClaimException());
-        user.getAvailabilities();
         return user;
     }
 

@@ -17,10 +17,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 
 import static com.mentormentee.core.domain.Role.ROLE_MENTOR;
@@ -187,4 +190,28 @@ public class UserController {
             return ResponseEntity.ok(menteeInformation);
         }
     }
+
+
+
+    @PatchMapping(value = "/user/profile/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateProfileImage(
+            @RequestPart(value = "userInfo") @Valid UserInformDto userInformation,
+            @RequestPart(value = "profileImage") MultipartFile profileImage) throws IOException {
+
+        // 프로필 이미지가 있다면 업로드 처리
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String profileUrl = userService.uploadProfileImage(profileImage);
+            userInformation.setUserImageUrl(profileUrl);
+        }
+
+        // 유저 정보 업데이트
+        Long updatedUser = userService.updateUserInformationService(userInformation);
+
+        if (updatedUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("유저의 정보가 존재하지 않습니다.");
+        }
+
+        return ResponseEntity.ok(new ResponseCode(200));
+    }
+
 }

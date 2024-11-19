@@ -39,7 +39,7 @@ User implements UserDetails {
 
     private String email;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<AvailableTime> availabilities = new ArrayList<>();
 
     private String password;
@@ -54,7 +54,7 @@ User implements UserDetails {
     private String refreshToken;
 
     //유저가 수강하는 과목들 추가.
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<UserCourse> userCourse = new ArrayList<>();
 
     //자기소개
@@ -63,7 +63,7 @@ User implements UserDetails {
     //선호하는 수업 방식
     //해시태그로 여러개 있을 수 있음
     @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserPreferredTeachingMethod> userPreferredTeachingMethodList = new ArrayList<>();
 
     /**
@@ -76,9 +76,9 @@ User implements UserDetails {
 
 
 
-    public void updatePassword(String newPassword, PasswordEncoder passwordEncoder) {
+    public User updatePassword(String newPassword) {
         this.password = newPassword;
-        this.password = passwordEncoder.encode(this.password);
+        return this;
     }
 
     // 비밀번호 암호화 로직
@@ -134,4 +134,17 @@ User implements UserDetails {
         return password.toString();
     }
 
+    public void changeSelfIntroduction(String selfIntroduction) {
+        this.selfIntroduction = selfIntroduction;
+    }
+
+    public void changeWaysOfCommunication(WaysOfCommunication newWaysOfCommunication) {
+        this.waysOfCommunication = newWaysOfCommunication;
+    }
+
+    //프로필 URL을 기본 이미지로 초기화
+    public void initializeuserProfilePicture(String defaultProfileImage)
+    {
+        this.userProfilePicture = defaultProfileImage;
+    }
 }
