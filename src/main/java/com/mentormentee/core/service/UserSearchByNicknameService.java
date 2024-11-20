@@ -34,7 +34,7 @@ public class UserSearchByNicknameService {
     public MentorDetailsDto getUserDetailsByUserNickname(Pageable pageable, User user) {
         User mergedUser = userRepository.merge(user);
 
-        Page<UserCourse> mentorCompletedCourseWithPageType = mentorDetailsRepository.findUserCourseByUser(user, pageable);
+        Page<UserCourse> mentorCompletedCourseWithPageType = mentorDetailsRepository.findUserCoursesByUser(user, pageable);
         List<CourseDetailsDto> mentorCompletedCourses = mentorDetails.getMentorCompletedCourses(mentorCompletedCourseWithPageType);
 
         List<AvailableTimeDto> mentorAvailableTimes = mentorDetails.getMentorAvailableTime(mergedUser);

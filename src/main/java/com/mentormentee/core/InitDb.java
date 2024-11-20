@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static com.mentormentee.core.domain.Role.ROLE_MENTEE;
@@ -500,6 +501,7 @@ public class InitDb {
             Review review1 = new Review();
             review1.createDate(2024,3,2);
             review1.createReview(user2, 5, "친절헤여");
+
             AvailableTime availableTime1 = new AvailableTime(user3, DayOfWeek.FRIDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
             AvailableTime availableTime2 = new AvailableTime(user3, DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
             AvailableTime availableTime3 = new AvailableTime(user2, DayOfWeek.FRIDAY, LocalTime.of(9, 0), LocalTime.of(14, 0));
