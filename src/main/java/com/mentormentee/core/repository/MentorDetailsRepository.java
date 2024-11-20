@@ -1,12 +1,15 @@
 package com.mentormentee.core.repository;
 
 import com.mentormentee.core.domain.AvailableTime;
+import com.mentormentee.core.domain.Review;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.domain.UserCourse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -16,17 +19,20 @@ import java.util.Optional;
 @Repository
 public interface MentorDetailsRepository extends JpaRepository<UserCourse, Long> {
 
-    Optional<Object> findUserById(Long userId);
+    // 닉네임으로 User 엔티티 조회
+    @Query("select u from User u where u.nickName = :nickName")
+    Optional<User> findUserByNickName(@Param("nickName") String nickName);
 
-    List<AvailableTime> findAvailabilitiesByUserId(Long userId);
+    // UserCourse 페이징 조회
+    @Query("select uc from UserCourse uc join fetch uc.course c where uc.user = :user")
+    Page<UserCourse> findUserCoursesByUser(@Param("user") User user, Pageable pageable);
 
-    Collection<Object> findReviewsByUserId(Long userId);
+    // User의 AvailableTime 조회
+    @Query("select at from AvailableTime at where at.user = :user")
+    List<AvailableTime> findAvailabilitiesByUser(@Param("user") User user);
 
-    @EntityGraph(attributePaths = {"course"})
-    Page<UserCourse> findUserCourseByUser(User user, Pageable pageable);
-
-    List<AvailableTime> findAvailabilitiesByUser(User user);
-
-    Collection<Object> findReviewsByUser(User user);
-
+    // User의 리뷰 조회
+    @Query("select r from Review r where r.user = :user")
+    List<Review> findReviewsByUser(@Param("user") User user);
 }
+

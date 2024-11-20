@@ -6,11 +6,11 @@ import lombok.Data;
 public class CourseDetailsDto {
     private String courseName;
     private int credit;
-    private String grade;
+    private String gradeStatus;
 
-    public CourseDetailsDto( String courseName, int credit, String grade) {
+    public CourseDetailsDto( String courseName, int credit, String gradeStatus) {
         this.courseName = courseName;
         this.credit = credit;
-        this.grade = grade;
+        this.gradeStatus = gradeStatus;
     }
 }

@@ -127,26 +127,24 @@ public class S3Uploader {
 
     // S3에서 이미지 삭제
     private void deleteImageFromS3(String imageUrl) {
-        // imageUrl에서 profile/ 폴더 이후의 키를 추출
-        String s3Key = imageUrl.substring(imageUrl.indexOf("profile/"));
-
-        log.info("S3에서 삭제할 이미지 키: {}", s3Key); // 삭제할 키 로그
-
         try {
-            // 삭제 요청 전 로그
-            log.info("S3에서 이미지 삭제 요청을 전송합니다: {}", s3Key);
+            int index = imageUrl.indexOf("profile/");
+            if (index == -1) {
+                log.error("이미지 URL에 'profile/'이 포함되어 있지 않습니다. URL: {}", imageUrl);
+                return;
+            }
+
+            String s3Key = imageUrl.substring(index + "profile/".length());
+            log.info("S3에서 삭제할 이미지 키: {}", s3Key); // 삭제할 키 로그
 
             // 이미지 삭제 요청
             amazonS3.deleteObject(new DeleteObjectRequest(bucket, s3Key));
-
-            // 삭제 요청 후 로그
             log.info("S3에서 이전 프로필 이미지를 삭제했습니다: {}", s3Key);
-        } catch (AmazonServiceException e) {
-            log.error("S3에서 이미지 삭제 중 오류 발생: {}", e.getErrorMessage());
         } catch (Exception e) {
-            log.error("S3에서 이미지 삭제 중 예상치 못한 오류 발생: {}", e.getMessage());
+            log.error("S3에서 이미지 삭제 중 오류 발생: {}", e.getMessage());
         }
     }
+
 
 }
 

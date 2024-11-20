@@ -45,7 +45,6 @@ public class MentorDetailsInitialImpl implements MentorDetails {
 
         List<AvailableTimeDto> availabilityDtos = availableTimes.stream()
                 .map(at -> new AvailableTimeDto(
-                        at.getId(),  // Availability ID를 추가
                         at.getDayOfWeek(),
                         at.getAvailableStartTime(),
                         at.getAvailableEndTime()
