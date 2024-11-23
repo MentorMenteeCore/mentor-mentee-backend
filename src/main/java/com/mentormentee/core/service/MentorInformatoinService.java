@@ -41,6 +41,7 @@ public class MentorInformatoinService {
                 .map(userCourse -> {
                     Course course = userCourse.getCourse();
                     return new CourseDetailsDto(
+                            course.getId(),
                             course.getCourseName(),
                             course.getCredit(),
                             userCourse.getGradeStatus().getDisplayValue()
@@ -52,6 +53,7 @@ public class MentorInformatoinService {
         List<AvailableTime> availableTimes = mentorDetailsRepository.findAvailabilitiesByUser(mentor);
         List<AvailableTimeDto> availabilityDtos = availableTimes.stream()
                 .map(at -> new AvailableTimeDto(
+                        at.getId(),
                         at.getDayOfWeek(),
                         at.getAvailableStartTime(),
                         at.getAvailableEndTime()
@@ -108,10 +110,21 @@ public class MentorInformatoinService {
                 userRepository.findAvailabilitiesByUser(user)
         );
 
+        List<Review> reviewList = userRepository.findReviewsByUser(user);
+        List<ReviewDto> returnReviews = new ArrayList<>();
+
+        for (Review review : reviewList) {
+            ReviewDto reviewDto = new ReviewDto(review.getComment(), review.getRating(), review.getReviewDate());
+            returnReviews.add(reviewDto);
+        }
+
         // MentorDetailsUpdateDto 생성 및 반환
         return new MentorDetailsUpdateDto(
                 courseDetailsDtos,
                 availabilityDtos,
+                returnReviews,
+                user.getId(),
+                user.getNickName(),
                 user.getWaysOfCommunication().name(),
                 user.getSelfIntroduction(),
                 user.getUserRole(),
@@ -122,7 +135,8 @@ public class MentorInformatoinService {
         );
     }
 
-    public MentorDetailsUpdateDto updateMentorDetails(MentorDetailsUpdateDto updateDto, Pageable pageable) {
+    @Transactional
+    public void updateMentorDetails(MentorDetailsUpdateDto updateDto, Pageable pageable) {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new JWTClaimException());
@@ -148,34 +162,13 @@ public class MentorInformatoinService {
 
 
         // AvailableTime 수정 및 추가
-        if (updateDto.getAvailabilities() == null) {
-        } else {
+        if (updateDto.getAvailabilities().isEmpty()) {
+        }
+        else {
             updateAvailability(user, updateDto.getAvailabilities());
         }
 
         userRepository.save(user);
-
-        // CourseDetails 페이징된 목록 반환
-        Page<UserCourse> userCoursesPage = userRepository.findUserCoursesByUser(user, pageable);
-        List<CourseDetailsDto> courseDetailsDtos = convertToCourseDetailsDto(userCoursesPage.getContent());
-
-        // AvailableTime 조회 및 변환
-        List<AvailableTimeDto> availabilityDtos = convertToAvailableTimeDto(
-                userRepository.findAvailabilitiesByUser(user)
-        );
-
-        // 수정된 정보를 포함한 MentorDetailsUpdateDto 반환
-        return new MentorDetailsUpdateDto(
-                courseDetailsDtos,
-                availabilityDtos,
-                user.getWaysOfCommunication().name(),
-                user.getSelfIntroduction(),
-                user.getUserRole(),
-                user.getUserProfilePicture(),
-                userCoursesPage.getTotalPages(),
-                userCoursesPage.getNumber(),
-                userCoursesPage.isLast()
-        );
     }
 
     // CourseDetails 수정 로직
@@ -218,6 +211,7 @@ public class MentorInformatoinService {
     private List<CourseDetailsDto> convertToCourseDetailsDto(List<UserCourse> userCourses) {
         return userCourses.stream()
                 .map(userCourse -> new CourseDetailsDto(
+                        userCourse.getId(),
                         userCourse.getCourse().getCourseName(),
                         userCourse.getCourse().getCredit(),
                         userCourse.getGradeStatus() != null ? userCourse.getGradeStatus().getDisplayValue() : null // GradeStatus
@@ -229,6 +223,7 @@ public class MentorInformatoinService {
     private List<AvailableTimeDto> convertToAvailableTimeDto(List<AvailableTime> availableTimes) {
         return availableTimes.stream()
                 .map(at -> new AvailableTimeDto(
+                        at.getId(),
                         at.getDayOfWeek(),
                         at.getAvailableStartTime(),
                         at.getAvailableEndTime()

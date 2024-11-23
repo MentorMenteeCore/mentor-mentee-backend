@@ -2,8 +2,6 @@ package com.mentormentee.core.dto;
 
 import com.mentormentee.core.repository.CourseNameAndMajorOnly;
 import lombok.Data;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -21,9 +19,9 @@ public class MenteeInformationDto {
     private String menteeImageUrl;
     private String selfIntroduction;
     private List<CourseNameAndMajorOnly> userCourseList;
-    private List<String> menteePreferredTeachingMethodDtoList;
+    private List<MenteePreferredTeachingMethodDto> menteePreferredTeachingMethodDtoList;
 
-    public MenteeInformationDto(int totalPages, int number, boolean last, String menteeNickName, String menteeImageUrl, String selfIntroduction, List<CourseNameAndMajorOnly> userCourseList, List<String> menteePreferredTeachingMethodDtoList) {
+    public MenteeInformationDto(int totalPages, int number, boolean last, String menteeNickName, String menteeImageUrl, String selfIntroduction, List<CourseNameAndMajorOnly> userCourseList, List<MenteePreferredTeachingMethodDto> menteePreferredTeachingMethodDtoList) {
         this.totalPages = totalPages;
         this.currentPageNum = number;
         this.lastPageOrNot = last;

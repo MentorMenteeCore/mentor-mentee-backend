@@ -5,7 +5,6 @@ import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.ExceptionResponse;
 import com.mentormentee.core.exception.exceptionCollection.NicknameExistException;
 import com.mentormentee.core.exception.exceptionCollection.UserNotFoundException;
-import com.mentormentee.core.exception.exceptionCollection.UserNotMatchedException;
 import com.mentormentee.core.service.MenteeService;
 import com.mentormentee.core.service.UserSearchByNicknameService;
 import com.mentormentee.core.service.UserService;

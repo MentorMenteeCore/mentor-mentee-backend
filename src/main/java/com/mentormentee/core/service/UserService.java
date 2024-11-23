@@ -37,7 +37,6 @@ public class UserService {
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-//    private final PreferredTeachingMethodRepository preferredTeachingMethodRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
     private final RedisUtil redisUtil;
@@ -73,6 +72,7 @@ public class UserService {
         //의사소통 방식은 Remote를 디폴트로 설정.
         User user = User.builder()
                 .email(email)
+                .yearInUni(1)
                 .password(password)
                 .userName(userName)
                 .userRole(role)
@@ -170,6 +170,7 @@ public class UserService {
      * 유저의 이메일을 통해 유저를 찾고 유저가 존재하면
      * 유저를 삭제
      */
+    @Transactional
     public void deleteUserByEmail(String userTypingEmail) {
         String userEmail = JwtUtils.getUserEmail();
         if(!userTypingEmail.equals(userEmail)){

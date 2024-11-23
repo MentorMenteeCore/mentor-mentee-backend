@@ -23,7 +23,7 @@ public interface MenteeCoursesRepository extends JpaRepository<UserCourse, Long>
 
 
     @EntityGraph(attributePaths = {"course"})
-    @Query("select c.courseName as courseName, uc.isMajor as isMajor"
+    @Query("select uc.id as id, c.courseName as courseName, uc.isMajor as isMajor"
             +" from UserCourse uc"
             +" join uc.course c"
             +" where uc.user = :user" +

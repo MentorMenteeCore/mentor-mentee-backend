@@ -1,10 +1,7 @@
 package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.*;
-import com.mentormentee.core.dto.CourseNameDto;
-import com.mentormentee.core.dto.MenteeInformationDto;
-import com.mentormentee.core.dto.PreferredTeachingMethodDto;
-import com.mentormentee.core.dto.UpdateMenteeInformDto;
+import com.mentormentee.core.dto.*;
 import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.*;
 import com.mentormentee.core.utils.JwtUtils;
@@ -37,7 +34,7 @@ public class MenteeService {
 
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new JWTClaimException());
-        List<String> teachingMethods = new ArrayList<>();
+        List<MenteePreferredTeachingMethodDto> teachingMethods = new ArrayList<>();
 
         /**
          * 여기서 이제 이수 교과목들, 선호하는 수업방식들 가져옵니다
@@ -45,8 +42,12 @@ public class MenteeService {
         Page<CourseNameAndMajorOnly> coursesByUser = menteeCoursesRepository.findCoursesByUser(user, coursePage);
         List<UserPreferredTeachingMethod> userPreferredTeachingMethodByUser = userPreferredTeachingMethodRepository.findUserPreferredTeachingMethodByUser(user);
         for (UserPreferredTeachingMethod userPreferredTeachingMethod : userPreferredTeachingMethodByUser) {
-            String teachingMethod = userPreferredTeachingMethod.getPreferredTeachingMethod();
-            teachingMethods.add(teachingMethod);
+
+            MenteePreferredTeachingMethodDto menteePreferredTeachingMethodDto = new MenteePreferredTeachingMethodDto();
+            menteePreferredTeachingMethodDto.setId(userPreferredTeachingMethod.getId());
+            menteePreferredTeachingMethodDto.setMenteePreferredTeachingMethod(userPreferredTeachingMethod.getPreferredTeachingMethod());
+
+            teachingMethods.add(menteePreferredTeachingMethodDto);
         }
 
         /**
@@ -107,8 +108,7 @@ public class MenteeService {
         }
 
         // menteePreferredTeachingMethodDtoList 업데이트
-        if (updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList() != null &&
-                !updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList().equals(teachingMethodsByUser)) {
+        if (updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList() != null) {
             updateTeachingMethod(user, updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList(), teachingMethodsByUser);
         }
 
@@ -199,14 +199,9 @@ public class MenteeService {
         }
 
         /**
-         * List를 하나씩 돌면서 Set에 있으면 아무 행위를 하지 않고
-         * Set에 없으면 그 객체를 Save한다.
+          객체를 Save한다.
          */
-        for (UserPreferredTeachingMethod userPreferredTeachingMethod : userPreferredTeachingMethods) {
-            if(!teachingMethods.contains(userPreferredTeachingMethod)){
-                userPreferredTeachingMethodRepository.save(userPreferredTeachingMethod);
-            }
-        }
+        userPreferredTeachingMethodRepository.saveAll(userPreferredTeachingMethods);
 
     }
 
@@ -215,7 +210,7 @@ public class MenteeService {
      */
     public MenteeInformationDto getMenteeInformationByNickname(Pageable coursePage, User user) {
 
-        List<String> teachingMethods = new ArrayList<>();
+        List<MenteePreferredTeachingMethodDto> teachingMethods = new ArrayList<>();
 
         /**
          * 여기서 이제 이수 교과목들, 선호하는 수업방식들 가져옵니다
@@ -223,8 +218,12 @@ public class MenteeService {
         Page<CourseNameAndMajorOnly> coursesByUser = menteeCoursesRepository.findCoursesByUser(user, coursePage);
         List<UserPreferredTeachingMethod> userPreferredTeachingMethodByUser = userPreferredTeachingMethodRepository.findUserPreferredTeachingMethodByUser(user);
         for (UserPreferredTeachingMethod userPreferredTeachingMethod : userPreferredTeachingMethodByUser) {
-            String teachingMethod = userPreferredTeachingMethod.getPreferredTeachingMethod();
-            teachingMethods.add(teachingMethod);
+
+            MenteePreferredTeachingMethodDto menteePreferredTeachingMethodDto = new MenteePreferredTeachingMethodDto();
+            menteePreferredTeachingMethodDto.setId(userPreferredTeachingMethod.getId());
+            menteePreferredTeachingMethodDto.setMenteePreferredTeachingMethod(userPreferredTeachingMethod.getPreferredTeachingMethod());
+
+            teachingMethods.add(menteePreferredTeachingMethodDto);;
         }
 
         /**

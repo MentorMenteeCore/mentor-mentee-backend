@@ -25,12 +25,13 @@ public class MentorDetailsInitialImpl implements MentorDetails {
         List<UserCourse> userCourseList = userCoursesPage.getContent();
 
         List<CourseDetailsDto> courseDetailsDtos = userCourseList.stream()
-                .map(courseDetailsDto -> {
-                    Course course = courseDetailsDto.getCourse();
+                .map(UserCourse -> {
+                    Course course = UserCourse.getCourse();
                     return new CourseDetailsDto(
+                            course.getId(),
                             course.getCourseName(),
                             course.getCredit(),
-                            courseDetailsDto.getGradeStatus().getDisplayValue()
+                            UserCourse.getGradeStatus().getDisplayValue()
                     );
                 })
                 .collect(Collectors.toList());
@@ -45,6 +46,7 @@ public class MentorDetailsInitialImpl implements MentorDetails {
 
         List<AvailableTimeDto> availabilityDtos = availableTimes.stream()
                 .map(at -> new AvailableTimeDto(
+                        at.getId(),
                         at.getDayOfWeek(),
                         at.getAvailableStartTime(),
                         at.getAvailableEndTime()

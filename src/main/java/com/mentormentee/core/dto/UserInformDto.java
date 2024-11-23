@@ -13,7 +13,6 @@ import lombok.Data;
 public class UserInformDto {
 
     private String userNickname;
-    @Email
     private String userEmail;
     private String userDepartment;
     private int yearInUni;
