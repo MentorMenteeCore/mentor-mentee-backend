@@ -20,8 +20,6 @@ public class MentorInformationController {
 
     private final MentorInformatoinService mentorInformatoinService;
 
-
-
     @GetMapping("/mentordetails")
     public MentorDetailsDto getMentorDetails(@RequestParam String nickName,
                                              @RequestParam(defaultValue = "0") int page,

@@ -21,6 +21,29 @@ public class ChatRoom {
 
     private LocalDateTime createDate;
 
-    private boolean readOrNot;
+    private String roomId;
+    private Long firstUserId;
+    private Long secondUserId;
+
+    public ChatRoom(LocalDateTime createDate, String roomId, Long firstUserId, Long secondUserId) {
+        this.createDate = createDate;
+        this.roomId = roomId;
+        this.firstUserId = firstUserId;
+        this.secondUserId = secondUserId;
+    }
+
+    public ChatRoom() {
+    }
+
+    public static String getRoomId(String userId1, String userId2){
+        int firstId = Integer.parseInt(userId1);
+        int secondId = Integer.parseInt(userId2);
+
+        if(firstId > secondId){
+            return secondId+"/"+firstId;
+        }else{
+            return firstId+"/"+secondId;
+        }
+    }
 
 }

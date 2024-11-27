@@ -1,10 +1,16 @@
 package com.mentormentee.core.controller;
 
+import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.ChatMessageDto;
+import com.mentormentee.core.dto.SendResponseDto;
+import com.mentormentee.core.service.ChatRoomService;
+import com.mentormentee.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Controller
@@ -12,6 +18,8 @@ public class ChatController {
 
 
     private final SimpMessageSendingOperations messagingTemplate;
+    private final UserService userService;
+    private final ChatRoomService chatRoomService;
 
     /**
      * 채팅 방 열고
@@ -25,11 +33,19 @@ public class ChatController {
      */
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto message) {
-        messagingTemplate.convertAndSend("/sub/chat/room/"
-                        + message.getMentorId()
-                        + "/"
-                        + message.getMenteeId()
-                        , message);
-    }
+        Long otherId = ChatMessageDto.getOtherId(message);
+        User otherUserObject = userService.getOtherUserObject(otherId);
+        LocalDateTime now = LocalDateTime.now();
+        boolean isUserInRoom = User.isUserInRoom(otherUserObject, message.getRoomId());
 
+        messagingTemplate.convertAndSend("/sub/chat/room/"+message.getRoomId()
+                , new SendResponseDto(message.getRoomId()
+                                      ,message.getSenderId()
+                                      ,now
+                                      ,isUserInRoom
+                                      ,otherUserObject.getUserProfilePicture(),message.getMessage()));
+
+        chatRoomService.saveMessage(message.getMessage(),message.getRoomId(),now,isUserInRoom,Long.valueOf(message.getSenderId()));
+
+    }
 }

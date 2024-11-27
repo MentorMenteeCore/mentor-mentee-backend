@@ -21,9 +21,13 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
 
+    public final NumberPath<Long> firstUserId = createNumber("firstUserId", Long.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath readOrNot = createBoolean("readOrNot");
+    public final StringPath roomId = createString("roomId");
+
+    public final NumberPath<Long> secondUserId = createNumber("secondUserId", Long.class);
 
     public QChatRoom(String variable) {
         super(ChatRoom.class, forVariable(variable));

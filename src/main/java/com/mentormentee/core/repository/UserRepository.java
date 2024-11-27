@@ -32,7 +32,7 @@ public class UserRepository {
     }
 
     public User findById(Long id) {
-        return em.find(User.class, id);
+        return em.createQuery("select u from User u where u.id = :id", User.class).setParameter("id", id).getSingleResult();
     }
 
     /**

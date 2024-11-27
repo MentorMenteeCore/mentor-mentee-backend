@@ -33,7 +33,6 @@ public class UserPreferredTeachingMethod {
 //    private PreferredTeachingMethod preferredTeachingMethod;
 //
     public void createUserMethod(User user, String userTeachingMethod) {
-
         this.user = user;
         this.preferredTeachingMethod = userTeachingMethod;
     }

@@ -4,6 +4,7 @@ package com.mentormentee.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,7 +40,7 @@ User implements UserDetails {
 
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AvailableTime> availabilities = new ArrayList<>();
 
     private String password;
@@ -59,6 +60,7 @@ User implements UserDetails {
 
     //자기소개
     private String selfIntroduction;
+    private String userCurrentAccessedChatRoom;
 
     //선호하는 수업 방식
     //해시태그로 여러개 있을 수 있음
@@ -146,5 +148,17 @@ User implements UserDetails {
     public void initializeuserProfilePicture(String defaultProfileImage)
     {
         this.userProfilePicture = defaultProfileImage;
+    }
+
+    public static boolean isUserInRoom(User user, String roomId){
+        if(user.getUserCurrentAccessedChatRoom()==null){
+            return false;
+        }
+
+        if(!user.getUserCurrentAccessedChatRoom().equals(roomId)){
+            return false;
+        }else {
+            return true;
+        }
     }
 }

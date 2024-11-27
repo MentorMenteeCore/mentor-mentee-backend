@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static com.mentormentee.core.domain.Role.ROLE_MENTEE;
@@ -484,6 +485,7 @@ public class InitDb {
                     informationCommunicationDepartment, "sampleRefreshToken2","선배 탕후루도 같이"
             );
             user2.hashPassword(passwordEncoder);
+
             em.persist(user2);
 
             User user3 = new User();
@@ -574,6 +576,97 @@ public class InitDb {
             );
             user7.hashPassword(passwordEncoder);
             em.persist(user7);
+
+            ChatRoom chatRoom0 = new ChatRoom(LocalDateTime.now(), ChatRoom.getRoomId(user2.getId().toString(), user5.getId().toString()), user2.getId(), user5.getId());
+            em.persist(chatRoom0);
+
+            ChatRoom chatRoom1 = new ChatRoom(LocalDateTime.now(), ChatRoom.getRoomId(user2.getId().toString(), user1.getId().toString()), user2.getId(), user1.getId());
+            em.persist(chatRoom1);
+
+            ChatRoom chatRoom2 = new ChatRoom(LocalDateTime.now(), ChatRoom.getRoomId(user2.getId().toString(), user3.getId().toString()), user2.getId(), user3.getId());
+            em.persist(chatRoom2);
+
+            ChatRoom chatRoom3 = new ChatRoom(LocalDateTime.now(), ChatRoom.getRoomId(user2.getId().toString(), user4.getId().toString()), user2.getId(), user4.getId());
+            em.persist(chatRoom3);
+
+            // 메시지 생성 (채팅방마다 여러 메시지 추가)
+            // 채팅방 1 (박상현 <-> 최기연)
+            Message message1 = new Message();
+            message1.setChatRoom(chatRoom1);
+            message1.setUser(user2); // 박상현이 보낸 메시지
+            message1.setContent("안녕하세요, 최기연 님!");
+            message1.setTime(LocalDateTime.now().minusMinutes(15));
+            message1.setReadOrNot(true);
+            em.persist(message1);
+
+            Message message2 = new Message();
+            message2.setChatRoom(chatRoom1);
+            message2.setUser(user1); // 최기연이 보낸 메시지
+            message2.setContent("안녕하세요, 박상현 선배님!");
+            message2.setTime(LocalDateTime.now().minusMinutes(10));
+            message2.setReadOrNot(false);
+            em.persist(message2);
+
+            Message message3 = new Message();
+            message3.setChatRoom(chatRoom1);
+            message3.setUser(user2);
+            message3.setContent("오늘 시간 되시나요?");
+            message3.setTime(LocalDateTime.now().minusMinutes(5));
+            message3.setReadOrNot(false);
+            em.persist(message3);
+
+            // 채팅방 2 (박상현 <-> 최기연)
+            Message message4 = new Message();
+            message4.setChatRoom(chatRoom2);
+            message4.setUser(user3); // 어디로가야하오 (최기연) 이 보낸 메시지
+            message4.setContent("멘토링 신청합니다!");
+            message4.setTime(LocalDateTime.now().minusHours(1));
+            message4.setReadOrNot(false);
+            em.persist(message4);
+
+            Message message5 = new Message();
+            message5.setChatRoom(chatRoom2);
+            message5.setUser(user2);
+            message5.setContent("네, 가능합니다.");
+            message5.setTime(LocalDateTime.now().minusMinutes(30));
+            message5.setReadOrNot(false);
+            em.persist(message5);
+
+            // 채팅방 3 (박상현 <-> 최만평)
+            Message message6 = new Message();
+            message6.setChatRoom(chatRoom3);
+            message6.setUser(user4); // 네로 (최만평) 이 보낸 메시지
+            message6.setContent("안녕하세요?");
+            message6.setTime(LocalDateTime.now().minusDays(1));
+            message6.setReadOrNot(false);
+            em.persist(message6);
+
+            Message message7 = new Message();
+            message7.setChatRoom(chatRoom3);
+            message7.setUser(user2);
+            message7.setContent("안녕하세요.");
+            message7.setTime(LocalDateTime.now().minusHours(23));
+            message7.setReadOrNot(false);
+            em.persist(message7);
+
+            // 추가 메시지 생성 (테스트 데이터 풍부하게)
+            // 채팅방 1에 추가 메시지
+            Message message8 = new Message();
+            message8.setChatRoom(chatRoom1);
+            message8.setUser(user1);
+            message8.setContent("네, 오늘 오후 3시에 뵐까요?");
+            message8.setTime(LocalDateTime.now().minusMinutes(2));
+            message8.setReadOrNot(false);
+            em.persist(message8);
+
+            Message message9 = new Message();
+            message9.setChatRoom(chatRoom1);
+            message9.setUser(user2);
+            message9.setContent("좋습니다. 장소는 학생회관 1층에서 만나요.");
+            message9.setTime(LocalDateTime.now().minusMinutes(1));
+            message9.setReadOrNot(false);
+            em.persist(message9);
+
 
 
             UserPreferredTeachingMethod userPreferredTeachingMethod1 = new UserPreferredTeachingMethod();

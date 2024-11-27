@@ -40,6 +40,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<UserCourse, QUserCourse> userCourse = this.<UserCourse, QUserCourse>createList("userCourse", UserCourse.class, QUserCourse.class, PathInits.DIRECT2);
 
+    public final StringPath userCurrentAccessedChatRoom = createString("userCurrentAccessedChatRoom");
+
     public final StringPath userName = createString("userName");
 
     public final ListPath<UserPreferredTeachingMethod, QUserPreferredTeachingMethod> userPreferredTeachingMethodList = this.<UserPreferredTeachingMethod, QUserPreferredTeachingMethod>createList("userPreferredTeachingMethodList", UserPreferredTeachingMethod.class, QUserPreferredTeachingMethod.class, PathInits.DIRECT2);
