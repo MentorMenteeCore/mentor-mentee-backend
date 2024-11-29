@@ -2,10 +2,14 @@ package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.Course;
 import com.mentormentee.core.domain.CourseYear;
+import com.mentormentee.core.domain.Department;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.MentorListDto;
 import com.mentormentee.core.dto.UserInformDto;
+import com.mentormentee.core.exception.exceptionCollection.IllegalArgumentException;
 import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
+import com.mentormentee.core.repository.CourseRepository;
+import com.mentormentee.core.repository.DepartmentRepository;
 import com.mentormentee.core.repository.MentorListRepository;
 import com.mentormentee.core.repository.UserRepository;
 import com.mentormentee.core.utils.JwtUtils;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +30,7 @@ public class MentorListService {
 
     private final UserRepository userRepository;
     private final MentorListRepository mentorListRepository;
+    private final DepartmentRepository departmentRepository;
 
 
     // MentorListDto를 반환하는 서비스 메서드
@@ -35,6 +41,8 @@ public class MentorListService {
 
         // 학년과 연도를 기반으로 CourseYear 결정
         CourseYear courseYear = determineCourseYear(selectedYear, userYearInUni);
+        Department dp = departmentRepository.findById(departmentId)
+                .orElseThrow(()->IllegalArgumentException.EXCEPTION);
 
         // 학과 및 연도에 해당하는 강좌 목록 가져오기
         List<Course> courses = mentorListRepository.findCoursesByDepartmentAndYear(departmentId, courseYear);
@@ -58,6 +66,7 @@ public class MentorListService {
         // MentorListDto 생성하여 반환
         return new MentorListDto(
                 selectedCourse == null ? null : selectedCourse.getCourseName(),
+                dp.getDepartmentName(),
                 mentorsPage.getContent(),
                 courseDtoList,
                 mentorsPage.getTotalPages(),

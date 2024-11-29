@@ -5,6 +5,7 @@ import com.mentormentee.core.domain.CollegeName;
 import com.mentormentee.core.domain.Department;
 import com.mentormentee.core.dto.DepartmentDto;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -34,6 +35,10 @@ public class DepartmentRepository {
         List<DepartmentDto> DtoList = departmentList.stream().map(DepartmentDto::new).collect(Collectors.toList());
 
         return DtoList;
+    }
+
+    public List<Department> findAll() {
+        return em.createQuery("select d from Department d", Department.class).getResultList();
     }
 
     /**

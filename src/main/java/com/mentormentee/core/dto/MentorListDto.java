@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 public class MentorListDto {
     private String courseName;
+    private String departmentName;
     private List<MentorDto> mentors;
     private List<CourseDto> courseDtoList;
     private int totalPages;
@@ -17,8 +18,9 @@ public class MentorListDto {
     private boolean lastPageOrNot;
     private int userYearInUni;
 
-    public MentorListDto(String courseName, List<MentorDto> mentors, List<CourseDto> courseDtoList, int totalPages, int currentPageNum, boolean lastPageOrNot, int userYearInUni) {
+    public MentorListDto(String courseName,String departmentName,List<MentorDto> mentors, List<CourseDto> courseDtoList, int totalPages, int currentPageNum, boolean lastPageOrNot, int userYearInUni) {
         this.courseName = courseName;
+        this.departmentName = departmentName;
         this.mentors = mentors;
         this.courseDtoList = courseDtoList;
         this.totalPages = totalPages;

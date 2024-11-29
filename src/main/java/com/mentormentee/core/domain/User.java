@@ -64,7 +64,6 @@ User implements UserDetails {
 
     //선호하는 수업 방식
     //해시태그로 여러개 있을 수 있음
-    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserPreferredTeachingMethod> userPreferredTeachingMethodList = new ArrayList<>();
 
@@ -151,11 +150,12 @@ User implements UserDetails {
     }
 
     public static boolean isUserInRoom(User user, String roomId){
-        if(user.getUserCurrentAccessedChatRoom()==null){
+        String otherUserCurrentRoom = user.getUserCurrentAccessedChatRoom();
+        if(otherUserCurrentRoom==null){
             return false;
         }
 
-        if(!user.getUserCurrentAccessedChatRoom().equals(roomId)){
+        if(!otherUserCurrentRoom.equals(roomId)){
             return false;
         }else {
             return true;

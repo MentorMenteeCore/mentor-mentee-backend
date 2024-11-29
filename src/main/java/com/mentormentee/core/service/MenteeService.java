@@ -2,11 +2,11 @@ package com.mentormentee.core.service;
 
 import com.mentormentee.core.domain.*;
 import com.mentormentee.core.dto.*;
+import com.mentormentee.core.exception.exceptionCollection.EmailNotFoundException;
+import com.mentormentee.core.exception.exceptionCollection.IllegalArgumentException;
 import com.mentormentee.core.exception.exceptionCollection.JWTClaimException;
 import com.mentormentee.core.repository.*;
 import com.mentormentee.core.utils.JwtUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +23,7 @@ public class MenteeService {
     private final UserRepository userRepository;
     private final MenteeCoursesRepository menteeCoursesRepository;
     private final CourseRepository courseRepository;
-    private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
+    private final TeachingMethodRepository userPreferredTeachingMethodRepository;
 
 
     /**
@@ -80,13 +80,18 @@ public class MenteeService {
 
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new JWTClaimException());
-        ArrayList<UserPreferredTeachingMethod> teachingMethodsByUser = new ArrayList<>();
 
-        //요청에 선호 수업리스트가 존재할때만 db에서 기존 선호수업방식을 가져온다.
-        if (updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList() != null){
-            List<UserPreferredTeachingMethod> ifTeachingMethodsByUser = userPreferredTeachingMethodRepository.findUserPreferredTeachingMethodByUser(user);
-            teachingMethodsByUser.addAll(ifTeachingMethodsByUser);
-            userPreferredTeachingMethodRepository.deleteAll(ifTeachingMethodsByUser);
+
+
+        //수정사항이 있는 경우 -> null인경우 다 없애고 null이 아닌경우 다없애고 그걸 추가한다.
+        if (updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList() != null
+                && updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList().isEmpty()){
+            userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUserId(user.getId());
+        } else if (updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList() != null
+                && !updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList().isEmpty()) {
+            //수정사함 있고 안에 수정내용 있는경우 다 없애고 그걸 추가한다.
+            userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUserId(user.getId());
+            updateTeachingMethod(user, updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList());
         }
 
         // menteeImageUrl 업데이트
@@ -102,15 +107,11 @@ public class MenteeService {
         }
 
         // userCourseList 업데이트
-        if (updateMenteeInformationDto.getUserCourseList() != null &&
-                !updateMenteeInformationDto.getUserCourseList().equals(menteeCoursesRepository.findCourseNameDtoByUser(user))) {
+        if (updateMenteeInformationDto.getUserCourseList() != null) {
             updateUserCourses(user, updateMenteeInformationDto.getUserCourseList());
         }
 
-        // menteePreferredTeachingMethodDtoList 업데이트
-        if (updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList() != null) {
-            updateTeachingMethod(user, updateMenteeInformationDto.getMenteePreferredTeachingMethodDtoList(), teachingMethodsByUser);
-        }
+
 
 //
         // menteeImageUrl 업데이트
@@ -147,21 +148,18 @@ public class MenteeService {
         List<UserCourse> userCourses = new ArrayList<>();
 
         // 새로운 UserCourse 엔티티를 추가
-        for (CourseNameDto courseDto : newCoursesDto) {
-            UserCourse userCourse = new UserCourse();
-            userCourse.connectUserAndUsercourse(user);
-            Course course = courseRepository.findByCourseName(courseDto.getCourseName())
-                    .orElseGet(() -> {
-                        Course newCourse = new Course();
-                        newCourse.setCourseName(courseDto.getCourseName());
-                        return courseRepository.save(newCourse);
-                    });
-            course.setCourseName(courseDto.getCourseName());
-            userCourse.setCourse(course);
-            userCourse.setIsMajor(courseDto.getIsMajor());
+        if (newCoursesDto != null) {
+            for (CourseNameDto courseDto : newCoursesDto) {
+                UserCourse userCourse = new UserCourse();
+                userCourse.connectUserAndUsercourse(user);
+                Course course = courseRepository.findByCourseName(courseDto.getCourseName())
+                        .orElseThrow(() -> IllegalArgumentException.EXCEPTION);
+                userCourse.setCourse(course);
+                userCourse.setGradeStatus(GradeStatus.valueOf(courseDto.getGrade()));
+                userCourse.setIsMajor(IsMajor.MAJOR);
 
-
-            userCourses.add(userCourse);
+                userCourses.add(userCourse);
+            }
         }
 
         menteeCoursesRepository.saveAll(userCourses);
@@ -180,13 +178,11 @@ public class MenteeService {
      *
      * @param user
      * @param preferredTeachingMethods
-     * @param existingPreferredTeachingMethods
      *
      * 2024-09-23 최기연
      */
-    public void updateTeachingMethod(User user, List<PreferredTeachingMethodDto> preferredTeachingMethods, List<UserPreferredTeachingMethod> existingPreferredTeachingMethods) {
+    public void updateTeachingMethod(User user, List<PreferredTeachingMethodDto> preferredTeachingMethods) {
 
-        Set<UserPreferredTeachingMethod> teachingMethods = new HashSet<>(existingPreferredTeachingMethods);
         List<UserPreferredTeachingMethod> userPreferredTeachingMethods = new ArrayList<>();
 
         /**
@@ -194,7 +190,7 @@ public class MenteeService {
          */
         for (PreferredTeachingMethodDto preferredTeachingMethod : preferredTeachingMethods) {
             UserPreferredTeachingMethod userPreferredTeachingMethod = new UserPreferredTeachingMethod();
-            userPreferredTeachingMethod.createUserMethod(user, preferredTeachingMethod.getPreferredTeachingMethod());
+            userPreferredTeachingMethod.createUserMethod(user, preferredTeachingMethod.getMenteePreferredTeaching());
             userPreferredTeachingMethods.add(userPreferredTeachingMethod);
         }
 

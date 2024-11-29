@@ -1,5 +1,6 @@
 package com.mentormentee.core.dto;
 
+import com.mentormentee.core.domain.GradeStatus;
 import com.mentormentee.core.domain.IsMajor;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,10 +11,13 @@ public class CourseNameDto {
 
     private String courseName;
 
-    private IsMajor isMajor;
+    private String grade;
 
-    public CourseNameDto(String courseName, IsMajor isMajor) {
+    private String department;
+
+    public CourseNameDto(String courseName, String grade, String department) {
         this.courseName = courseName;
-        this.isMajor = isMajor;
+        this.grade = grade;
+        this.department = department;
     }
 }

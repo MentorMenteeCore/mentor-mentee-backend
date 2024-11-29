@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class PreferredTeachingMethodDto {
 
-    private String preferredTeachingMethod;
+    private String menteePreferredTeaching;
 
 }

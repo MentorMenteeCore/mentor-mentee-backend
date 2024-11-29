@@ -43,6 +43,7 @@ public class MentorInformatoinService {
                     return new CourseDetailsDto(
                             course.getId(),
                             course.getCourseName(),
+                            course.getDepartment().getDepartmentName(),
                             course.getCredit(),
                             userCourse.getGradeStatus().getDisplayValue()
                     );
@@ -213,6 +214,7 @@ public class MentorInformatoinService {
                 .map(userCourse -> new CourseDetailsDto(
                         userCourse.getId(),
                         userCourse.getCourse().getCourseName(),
+                        userCourse.getCourse().getDepartment().getDepartmentName(),
                         userCourse.getCourse().getCredit(),
                         userCourse.getGradeStatus() != null ? userCourse.getGradeStatus().getDisplayValue() : null // GradeStatus
                 ))

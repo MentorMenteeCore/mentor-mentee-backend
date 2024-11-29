@@ -22,21 +22,22 @@ import java.util.List;
 public interface MenteeCoursesRepository extends JpaRepository<UserCourse, Long>{
 
 
-    @EntityGraph(attributePaths = {"course"})
-    @Query("select uc.id as id, c.courseName as courseName, uc.isMajor as isMajor"
+    @EntityGraph(attributePaths = {"course","course.department"})
+    @Query("select uc.id as id, c.courseName as courseName, uc.isMajor as isMajor, dp.departmentName as departmentName, uc.gradeStatus as grade"
             +" from UserCourse uc"
             +" join uc.course c"
+            +" join c.department dp"
             +" where uc.user = :user" +
             " order by uc.course.courseName")
     Page<CourseNameAndMajorOnly> findCoursesByUser(@Param("user") User user, Pageable pageable);
 
 
-    @EntityGraph(attributePaths = {"user", "course"})
-    @Query("select new com.mentormentee.core.dto.CourseNameDto(cn.course.courseName, cn.isMajor)" +
-            "from UserCourse cn " +
-            "where cn.user= :user " +
-            "order by cn.course.courseName")
-    List<CourseNameDto> findCourseNameDtoByUser(@Param("user") User user);
+//    @EntityGraph(attributePaths = {"user", "course"})
+//    @Query("select new com.mentormentee.core.dto.CourseNameDto(cn.course.courseName, cn.isMajor)" +
+//            "from UserCourse cn " +
+//            "where cn.user= :user " +
+//            "order by cn.course.courseName")
+//    List<CourseNameDto> findCourseNameDtoByUser(@Param("user") User user);
 
     void deleteByUser(User user);
 

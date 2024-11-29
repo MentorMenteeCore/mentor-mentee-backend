@@ -30,6 +30,7 @@ public class MentorDetailsInitialImpl implements MentorDetails {
                     return new CourseDetailsDto(
                             course.getId(),
                             course.getCourseName(),
+                            course.getDepartment().getDepartmentName(),
                             course.getCredit(),
                             UserCourse.getGradeStatus().getDisplayValue()
                     );

@@ -40,6 +40,14 @@ public class SubscribeInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
+        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            List<String> userIds = accessor.getNativeHeader("user-id");
+            if (userIds != null && !userIds.isEmpty()) {
+                Long userId = Long.valueOf(userIds.get(0));
+                accessor.getSessionAttributes().put("user-id", userId); // 세션에 사용자 ID 저장
+            }
+        }
+
         if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
             List<String> userIds = accessor.getNativeHeader("user-id");
 
@@ -61,6 +69,7 @@ public class SubscribeInterceptor implements ChannelInterceptor {
                         String newDestination = "/sub/chat/room/" + smallId + "/" + bigId;
 
                         // 브로커에 구독 요청 보내기
+                        //수정 생각해봐
                         String[] coreRoomId = destination.split("room/");
                         userService.insertCoreRoomIdToUser(coreRoomId[1], userId);
 
@@ -74,13 +83,25 @@ public class SubscribeInterceptor implements ChannelInterceptor {
 
         }
 
+        if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
+            Long userId = (Long) accessor.getSessionAttributes().get("user-id"); // 세션에서 사용자 ID 가져오기
+            if (userId != null) {
+                userService.setNullRoomToUser(userId);
+            }
+        }
+
         return message; // 원래 요청을 그대로 브로커로 전달
     }
 
     private void sendUserJoined(String destination, Long userId) {
         String otherId = getOtherId(destination, String.valueOf(userId));
         User other = userRepository.findById(Long.valueOf(otherId));
-        if (destination.equals("/sub/chat/room/"+other.getUserCurrentAccessedChatRoom())) {
+        String otherUserCurrentAccessedChatRoom = other.getUserCurrentAccessedChatRoom();
+        if (otherUserCurrentAccessedChatRoom==(null)) {
+            return;
+        }
+
+        if (destination.equals("/sub/chat/room/"+otherUserCurrentAccessedChatRoom)) {
             messagingTemplate.convertAndSend(destination,  new SendUserJoinedDto(String.valueOf(userId), userId + "번의 유저가 입장하였습니다"));
         }
     }

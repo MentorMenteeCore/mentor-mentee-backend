@@ -24,7 +24,11 @@ public interface MentorDetailsRepository extends JpaRepository<UserCourse, Long>
     Optional<User> findUserByNickName(@Param("nickName") String nickName);
 
     // UserCourse 페이징 조회
-    @Query("select uc from UserCourse uc join fetch uc.course c where uc.user = :user")
+
+    @Query(value = "select uc from UserCourse uc " +
+            "join fetch uc.course c " +
+            "join fetch c.department m " +
+            "where uc.user = :user")
     Page<UserCourse> findUserCoursesByUser(@Param("user") User user, Pageable pageable);
 
     // User의 AvailableTime 조회
@@ -33,6 +37,5 @@ public interface MentorDetailsRepository extends JpaRepository<UserCourse, Long>
 
     // User의 리뷰 조회
     @Query("select r from Review r where r.user = :user")
-    List<Review> findReviewsByUser(@Param("user") User user);
-}
+    List<Review> findReviewsByUser(@Param("user") User user);}
 

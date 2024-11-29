@@ -4,10 +4,8 @@ import com.mentormentee.core.domain.CollegeName;
 import com.mentormentee.core.dto.DepartmentDto;
 import com.mentormentee.core.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +28,20 @@ public class DepartmentController {
     public List<DepartmentDto> CollegeAndDepartments(@PathVariable CollegeName college) {
         List<DepartmentDto> departmentsOfCollege = departmentService.findDepartmentsByCollege(college);
         return departmentsOfCollege;
+    }
+
+    @GetMapping("/courses")
+    public ResponseEntity<?> getCoursesByDepartment(@RequestParam String departmentName) {
+        List<String> courses = departmentService.getCoursesByDepartmentName(departmentName);
+        if (courses == null) {
+            return ResponseEntity.ok().body("ㅈㅅㅈㅅ 아직 DB에 안채워진듯요");
+        }
+
+        RedisCoursesDto redisCoursesDto = new RedisCoursesDto();
+        for (String course : courses) {
+            redisCoursesDto.getCourse().add(course);
+        }
+        return ResponseEntity.ok().body(redisCoursesDto);
     }
 
 }

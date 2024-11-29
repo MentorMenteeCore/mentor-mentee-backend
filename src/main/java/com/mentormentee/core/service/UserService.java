@@ -36,7 +36,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MenteeCoursesRepository menteeCoursesRepository;
-    private final UserPreferredTeachingMethodRepository userPreferredTeachingMethodRepository;
+    private final TeachingMethodRepository userPreferredTeachingMethodRepository;
     private final RedisUtil redisUtil;
     private final S3Uploader s3Uploader;
     @Value("${spring.defaultProfileImage}")
@@ -319,6 +319,11 @@ public class UserService {
     }
 
 
+    @Transactional
+    public void setNullRoomToUser(Long userId) {
+        User user = userRepository.findById(userId);
+        user.setUserCurrentAccessedChatRoom(null);
+    }
 }
 
 
