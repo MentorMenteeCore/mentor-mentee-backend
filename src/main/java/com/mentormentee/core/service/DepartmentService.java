@@ -79,4 +79,9 @@ public class DepartmentService {
         return searchDto;
 
     }
+
+    public List<String> getDepartmentCourses(String departmentName) {
+        Department departmentByName = departmentRepository.findDepartmentByName(departmentName);
+        return courseRepository.getCourseListByDepartmentId(departmentByName);
+    }
 }

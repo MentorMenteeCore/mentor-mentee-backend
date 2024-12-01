@@ -29,6 +29,7 @@ public class RedisUtil {
     }
 
 
+
     public String get(String key) {
         return (String) defaultRedisTemplate.opsForValue().get(key);
     }
@@ -44,6 +45,7 @@ public class RedisUtil {
     public void setBlackList(String key, String value, long milliseconds) {
         redisBlackListTemplate.opsForValue().set(key, value, milliseconds, TimeUnit.MILLISECONDS);
     }
+
 
     public String getBlackList(String key) {
         return (String) redisBlackListTemplate.opsForValue().get(key);

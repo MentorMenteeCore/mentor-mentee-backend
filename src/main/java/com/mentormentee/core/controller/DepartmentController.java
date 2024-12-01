@@ -32,7 +32,7 @@ public class DepartmentController {
 
     @GetMapping("/courses")
     public ResponseEntity<?> getCoursesByDepartment(@RequestParam String departmentName) {
-        List<String> courses = departmentService.getCoursesByDepartmentName(departmentName);
+        List<String> courses = departmentService.getDepartmentCourses(departmentName);
         if (courses == null) {
             return ResponseEntity.ok().body("ㅈㅅㅈㅅ 아직 DB에 안채워진듯요");
         }

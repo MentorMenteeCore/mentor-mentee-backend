@@ -577,6 +577,16 @@ public class InitDb {
             user7.hashPassword(passwordEncoder);
             em.persist(user7);
 
+            User user8 = new User();
+            user7.createUser(
+                    "최기연연", "최기연연연", ROLE_MENTOR, "cs6@example.com",
+                    "password1212332",
+                    FACETOFACE, 4, defaultProfileImage,
+                    informationCommunicationDepartment, "sampleRefreshToken5","언뇽허새용"
+            );
+            user8.hashPassword(passwordEncoder);
+            em.persist(user8);
+
             ChatRoom chatRoom0 = new ChatRoom(LocalDateTime.now(), ChatRoom.getRoomId(user2.getId().toString(), user5.getId().toString()), user2.getId(), user5.getId());
             em.persist(chatRoom0);
 
@@ -1542,13 +1552,13 @@ public class InitDb {
 
             UserCourse usercourse3 = new UserCourse();
             usercourse3.createUserCourse(
-                    user1, course2, GradeStatus.B, IsMajor.MAJOR
+                    user1, course19, GradeStatus.B, IsMajor.MAJOR
             );
             em.persist(usercourse3);
 
             UserCourse usercourse4 = new UserCourse();
             usercourse4.createUserCourse(
-                    user2, course1, GradeStatus.APLUS, IsMajor.MAJOR
+                    user2, course19, GradeStatus.APLUS, IsMajor.MAJOR
             );
             em.persist(usercourse4);
 
@@ -1560,7 +1570,7 @@ public class InitDb {
 
             UserCourse usercourse6 = new UserCourse();
             usercourse6.createUserCourse(
-                    user3, course4, GradeStatus.APLUS, IsMajor.MAJOR
+                    user3, course19, GradeStatus.APLUS, IsMajor.MAJOR
             );
             em.persist(usercourse6);
 
@@ -1587,6 +1597,12 @@ public class InitDb {
                     user6, course19, GradeStatus.APLUS, IsMajor.MAJOR
             );
             em.persist(usercourse10);
+
+            UserCourse usercourse11 = new UserCourse();
+            usercourse10.createUserCourse(
+                    user7, course19, GradeStatus.C, IsMajor.MAJOR
+            );
+            em.persist(usercourse11);
 
 
 
