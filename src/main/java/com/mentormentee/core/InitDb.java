@@ -561,7 +561,7 @@ public class InitDb {
             user6.createUser(
                     "최조평", "동동이", ROLE_MENTOR, "cs5@example.com",
                     "password111111",
-                    FACETOFACE, 3, defaultProfileImage,
+                    FACETOFACE, 2, defaultProfileImage,
                     informationCommunicationDepartment, "sampleRefreshToken4","안녕"
             );
             user6.hashPassword(passwordEncoder);
@@ -571,7 +571,7 @@ public class InitDb {
             user7.createUser(
                     "타학과생", "난달라달라", ROLE_MENTOR, "cs6@example.com",
                     "password1212",
-                    FACETOFACE, 3, defaultProfileImage,
+                    FACETOFACE, 2, defaultProfileImage,
                     informationCommunicationDepartment, "sampleRefreshToken5","안녕"
             );
             user7.hashPassword(passwordEncoder);
@@ -581,7 +581,7 @@ public class InitDb {
             user7.createUser(
                     "최기연연", "최기연연연", ROLE_MENTOR, "cs6@example.com",
                     "password1212332",
-                    FACETOFACE, 4, defaultProfileImage,
+                    FACETOFACE, 2, defaultProfileImage,
                     informationCommunicationDepartment, "sampleRefreshToken5","언뇽허새용"
             );
             user8.hashPassword(passwordEncoder);
@@ -1603,8 +1603,6 @@ public class InitDb {
                     user7, course19, GradeStatus.C, IsMajor.MAJOR
             );
             em.persist(usercourse11);
-
-
 
         }
     }
