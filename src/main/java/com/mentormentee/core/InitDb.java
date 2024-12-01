@@ -578,8 +578,8 @@ public class InitDb {
             em.persist(user7);
 
             User user8 = new User();
-            user7.createUser(
-                    "최기연연", "최기연연연", ROLE_MENTOR, "cs6@example.com",
+            user8.createUser(
+                    "최기연연", "최기연연연", ROLE_MENTOR, "cs26@example.com",
                     "password1212332",
                     FACETOFACE, 2, defaultProfileImage,
                     informationCommunicationDepartment, "sampleRefreshToken5","언뇽허새용"
@@ -932,611 +932,611 @@ public class InitDb {
             Course course58 = new Course();
             course58.createCourse("공업논리및논술", 1, CourseYear.SENIOR, informationCommunicationDepartment);
             em.persist(course58);
-
-
-            Course course59 = new Course();
-            course59.createCourse("국문학개론", 1, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course59);
-
-            Course course60 = new Course();
-            course60.createCourse("국어학개론", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course60);
-
-            Course course61 = new Course();
-            course61.createCourse("국문학사", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course61);
-
-            Course course62 = new Course();
-            course62.createCourse("고전문학강독", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course62);
-
-            Course course63 = new Course();
-            course63.createCourse("현대소설론 특강", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course63);
-
-            Course course64 = new Course();
-            course64.createCourse("국어학강독", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course64);
-
-            Course course65 = new Course();
-            course65.createCourse("국어음운론", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course65);
-
-            Course course66 = new Course();
-            course66.createCourse("문학연구방법론", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course66);
-
-            Course course67 = new Course();
-            course67.createCourse("한국현대문학사", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course67);
-
-            Course course68 = new Course();
-            course68.createCourse("국어문법론", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course68);
-
-            Course course69 = new Course();
-            course69.createCourse("국어학의 응용", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course69);
-
-            Course course70 = new Course();
-            course70.createCourse("시조가사론", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course70);
-
-            Course course71 = new Course();
-            course71.createCourse("한국 한문학의 이해", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course71);
-
-            Course course72 = new Course();
-            course72.createCourse("현대소설강독", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course72);
-
-            Course course73 = new Course();
-            course73.createCourse("국어사", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course73);
-
-            Course course74 = new Course();
-            course74.createCourse("국어방언학", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course74);
-
-            Course course75 = new Course();
-            course75.createCourse("현대시론", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course75);
-
-            Course course76 = new Course();
-            course76.createCourse("구비문학론", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course76);
-
-            Course course77 = new Course();
-            course77.createCourse("작가작품론", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course77);
-
-            Course course78 = new Course();
-            course78.createCourse("고전수필론", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course78);
-
-            Course course79 = new Course();
-            course79.createCourse("문학교육론", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course79);
-
-            Course course80 = new Course();
-            course80.createCourse("국어통사론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course80);
-
-            Course course81 = new Course();
-            course81.createCourse("한국의서사전통과 고전소설", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course81);
-
-            Course course82 = new Course();
-            course82.createCourse("향가여요론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course82);
-
-            Course course83 = new Course();
-            course83.createCourse("국어의미론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course83);
-
-            Course course84 = new Course();
-            course84.createCourse("문예비평론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course84);
-
-            Course course85 = new Course();
-            course85.createCourse("현대시강독", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course85);
-
-            Course course86 = new Course();
-            course86.createCourse("희곡론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course86);
-
-            Course course87 = new Course();
-            course87.createCourse("의사소통교육론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course87);
-
-            Course course88 = new Course();
-            course88.createCourse("중세국어문법론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course88);
-
-            Course course89 = new Course();
-            course89.createCourse("문학 창작론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course89);
-
-            Course course90 = new Course();
-            course90.createCourse("국어학사", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course90);
-
-            Course course91 = new Course();
-            course91.createCourse("한국한문학사", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course91);
-
-            Course course92 = new Course();
-            course92.createCourse("현대문학특강", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course92);
-
-            Course course93 = new Course();
-            course93.createCourse("국어과 교재연구 및 지도법", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course93);
-
-            Course course94 = new Course();
-            course94.createCourse("고전문학특강", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course94);
-
-            Course course95 = new Course();
-            course95.createCourse("비교문학론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course95);
-
-            Course course96 = new Course();
-            course96.createCourse("국어어원론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course96);
-
-            Course course97 = new Course();
-            course97.createCourse("국어과교육론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course97);
-
-            Course course98 = new Course();
-            course98.createCourse("국어과 논리 및 논술", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course98);
-
-            Course course99 = new Course();
-            course99.createCourse("중국어와 중국문화", 3, CourseYear.FRESHMAN, chineseDepartment);
-            em.persist(course99);
-
-            Course course100 = new Course();
-            course100.createCourse("기초중국어회화1", 3, CourseYear.FRESHMAN, chineseDepartment);
-            em.persist(course100);
-
-            Course course101 = new Course();
-            course101.createCourse("중국어와 중국사회", 3, CourseYear.FRESHMAN, chineseDepartment);
-            em.persist(course101);
-
-            Course course102 = new Course();
-            course102.createCourse("기초중국어회화2", 3, CourseYear.FRESHMAN, chineseDepartment);
-            em.persist(course102);
-
-            Course course103 = new Course();
-            course103.createCourse("현대 한자학의 이해", 3, CourseYear.FRESHMAN, chineseDepartment);
-            em.persist(course103);
-
-            Course course104 = new Course();
-            course104.createCourse("중급중국어1", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course104);
-
-            Course course105 = new Course();
-            course105.createCourse("중국어 회화1", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course105);
-
-            Course course106 = new Course();
-            course106.createCourse("경서제자입문", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course106);
-
-            Course course107 = new Course();
-            course107.createCourse("중국어학의 이해", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course107);
-
-            Course course108 = new Course();
-            course108.createCourse("현대 중국의 이해", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course108);
-
-            Course course109 = new Course();
-            course109.createCourse("중급중국어2", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course109);
-
-            Course course110 = new Course();
-            course110.createCourse("역대산문의감상과이해", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course110);
-
-            Course course111 = new Course();
-            course111.createCourse("중국 언어와 문화의 이해", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course111);
-
-            Course course112 = new Course();
-            course112.createCourse("중국어회화2", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course112);
-
-            Course course113 = new Course();
-            course113.createCourse("중국어문법1", 3, CourseYear.SOPHOMORE, chineseDepartment);
-            em.persist(course113);
-
-            Course course114 = new Course();
-            course114.createCourse("중국의 시와 노래1", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course114);
-
-            Course course115 = new Course();
-            course115.createCourse("중국의 매스미디어와 현대 사회", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course115);
-
-            Course course116 = new Course();
-            course116.createCourse("소설로 보는 중국 사회1", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course116);
-
-            Course course117 = new Course();
-            course117.createCourse("중국의 비즈니스 문화와 커뮤니케이션", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course117);
-
-            Course course118 = new Course();
-            course118.createCourse("중국어문법2", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course118);
-
-            Course course119 = new Course();
-            course119.createCourse("중국 문학과 문화의 이해", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course119);
-
-            Course course120 = new Course();
-            course120.createCourse("중국현대문학 특강", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course120);
-
-            Course course121 = new Course();
-            course121.createCourse("중국의 시와 노래2", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course121);
-
-            Course course122 = new Course();
-            course122.createCourse("통합적 중국어 글쓰기", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course122);
-
-            Course course123 = new Course();
-            course123.createCourse("중국 지역사회와 영화", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course123);
-
-            Course course124 = new Course();
-            course124.createCourse("소설로 보는 중국 사회Ⅱ", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course124);
-
-            Course course125 = new Course();
-            course125.createCourse("중어과교육론", 3, CourseYear.JUNIOR, chineseDepartment);
-            em.persist(course125);
-
-            Course course126 = new Course();
-            course126.createCourse("비즈니스 중국어", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course126);
-
-            Course course127 = new Course();
-            course127.createCourse("중국어통번역연습", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course127);
-
-            Course course128 = new Course();
-            course128.createCourse("중국의 고전 가곡과 연극", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course128);
-
-            Course course129 = new Course();
-            course129.createCourse("중국어 현장실습", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course129);
-
-            Course course130 = new Course();
-            course130.createCourse("중어과교재연구 및 지도법", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course130);
-
-            Course course131 = new Course();
-            course131.createCourse("중국문학특강", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course131);
-
-            Course course132 = new Course();
-            course132.createCourse("중국 지역학 세미나", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course132);
-
-            Course course133 = new Course();
-            course133.createCourse("대중매체로 보는 당대 중국", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course133);
-
-            Course course134 = new Course();
-            course134.createCourse("중국어 논리 및 논술", 3, CourseYear.SENIOR, chineseDepartment);
-            em.persist(course134);
-
-            Course course135 = new Course();
-            course135.createCourse("영미문학 배경", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course135);
-
-            Course course136 = new Course();
-            course136.createCourse("영문법", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course136);
-
-            Course course137 = new Course();
-            course137.createCourse("영작문Ⅰ", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course137);
-
-            Course course138 = new Course();
-            course138.createCourse("영어회화Ⅰ", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course138);
-
-            Course course139 = new Course();
-            course139.createCourse("영어음성학", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course139);
-
-            Course course140 = new Course();
-            course140.createCourse("영미소설의 이해", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course140);
-
-            Course course141 = new Course();
-            course141.createCourse("문학 번역 연습", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course141);
-
-            Course course142 = new Course();
-            course142.createCourse("영문학사", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course142);
-
-            Course course143 = new Course();
-            course143.createCourse("영어듣기", 3, CourseYear.FRESHMAN, koreanDepartment);
-            em.persist(course143);
-
-            Course course144 = new Course();
-            course144.createCourse("영작문Ⅱ", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course144);
-
-            Course course145 = new Course();
-            course145.createCourse("영어회화Ⅱ", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course145);
-
-            Course course146 = new Course();
-            course146.createCourse("현대 영어학의 이해", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course146);
-
-            Course course147 = new Course();
-            course147.createCourse("영어토론연습", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course147);
-
-            Course course148 = new Course();
-            course148.createCourse("영미희곡의 이해", 3, CourseYear.SOPHOMORE, koreanDepartment);
-            em.persist(course148);
-
-            Course course149 = new Course();
-            course149.createCourse("영어 어휘 연습", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course149);
-
-            Course course150 = new Course();
-            course150.createCourse("영미시의 이해", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course150);
-
-            Course course151 = new Course();
-            course151.createCourse("영미문학비평", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course151);
-
-            Course course152 = new Course();
-            course152.createCourse("영어통사론", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course152);
-
-            Course course153 = new Course();
-            course153.createCourse("영어 통사론의 이해", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course153);
-
-            Course course154 = new Course();
-            course154.createCourse("아동 및 청소년 문학", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course154);
-
-            Course course155 = new Course();
-            course155.createCourse("실무영어", 3, CourseYear.JUNIOR, koreanDepartment);
-            em.persist(course155);
-
-            Course course156 = new Course();
-            course156.createCourse("영어사", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course156);
-
-            Course course157 = new Course();
-            course157.createCourse("셰익스피어", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course157);
-
-            Course course158 = new Course();
-            course158.createCourse("현대영미시", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course158);
-
-            Course course159 = new Course();
-            course159.createCourse("영미소설", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course159);
-
-            Course course160 = new Course();
-            course160.createCourse("영어논술 연습", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course160);
-
-            Course course161 = new Course();
-            course161.createCourse("영어회화Ⅲ", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course161);
-
-            Course course162 = new Course();
-            course162.createCourse("시사영어강독", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course162);
-
-            Course course163 = new Course();
-            course163.createCourse("실용영문법 특강", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course163);
-
-            Course course164 = new Course();
-            course164.createCourse("영미 드라마 번역", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course164);
-
-            Course course165 = new Course();
-            course165.createCourse("영미시 세미나", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course165);
-
-            Course course166 = new Course();
-            course166.createCourse("영어과 교재연구 및 지도법", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course166);
-
-            Course course167 = new Course();
-            course167.createCourse("통번역 세미나", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course167);
-
-            Course course168 = new Course();
-            course168.createCourse("미국문학사", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course168);
-
-            Course course169 = new Course();
-            course169.createCourse("영어학세미나", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course169);
-
-            Course course170 = new Course();
-            course170.createCourse("영문학특강", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course170);
-
-            Course course171 = new Course();
-            course171.createCourse("영어과 교육론", 3, CourseYear.SENIOR, koreanDepartment);
-            em.persist(course171);
-
-            Course course172 = new Course();
-            course172.createCourse("독일어 회화Ⅰ", 3, CourseYear.FRESHMAN, germanDepartment);
-            em.persist(course172);
-
-            Course course173 = new Course();
-            course173.createCourse("독일어 연습Ⅰ", 3, CourseYear.FRESHMAN, germanDepartment);
-            em.persist(course173);
-
-            Course course174 = new Course();
-            course174.createCourse("독일문학 산책", 3, CourseYear.FRESHMAN, germanDepartment);
-            em.persist(course174);
-
-            Course course175 = new Course();
-            course175.createCourse("독일어 회화Ⅱ", 3, CourseYear.SOPHOMORE, germanDepartment);
-            em.persist(course175);
-
-            Course course176 = new Course();
-            course176.createCourse("기초 독문법", 3, CourseYear.SOPHOMORE, germanDepartment);
-            em.persist(course176);
-
-            Course course177 = new Course();
-            course177.createCourse("독일어 연습Ⅱ", 3, CourseYear.SOPHOMORE, germanDepartment);
-            em.persist(course177);
-
-            Course course178 = new Course();
-            course178.createCourse("독일어 회화Ⅲ", 3, CourseYear.JUNIOR, germanDepartment);
-            em.persist(course178);
-
-            Course course179 = new Course();
-            course179.createCourse("독일어 연습Ⅲ", 3, CourseYear.JUNIOR, germanDepartment);
-            em.persist(course179);
-
-            Course course180 = new Course();
-            course180.createCourse("중급독문법", 3, CourseYear.JUNIOR, germanDepartment);
-            em.persist(course180);
-
-            Course course181 = new Course();
-            course181.createCourse("독일어 문장 구조", 3, CourseYear.JUNIOR, germanDepartment);
-            em.persist(course181);
-
-            Course course182 = new Course();
-            course182.createCourse("독일문화 탐방", 3, CourseYear.JUNIOR, germanDepartment);
-            em.persist(course182);
-
-            Course course183 = new Course();
-            course183.createCourse("독일의 지리와 역사", 3, CourseYear.JUNIOR, germanDepartment);
-            em.persist(course183);
-
-            Course course184 = new Course();
-            course184.createCourse("독일 아동·청소년 교육과 문학", 3, CourseYear.JUNIOR, germanDepartment);
-            em.persist(course184);
-
-            Course course185 = new Course();
-            course185.createCourse("독일 문예사조의 이해", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course185);
-
-            Course course186 = new Course();
-            course186.createCourse("독일어 회화Ⅳ", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course186);
-
-            Course course187 = new Course();
-            course187.createCourse("독일어 연습Ⅳ", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course187);
-
-            Course course188 = new Course();
-            course188.createCourse("독일시와 음악", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course188);
-
-            Course course189 = new Course();
-            course189.createCourse("B1 텍스트 읽기", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course189);
-
-            Course course190 = new Course();
-            course190.createCourse("독일작가읽기", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course190);
-
-            Course course191 = new Course();
-            course191.createCourse("독일의 정치와 사회", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course191);
-
-            Course course192 = new Course();
-            course192.createCourse("B2 텍스트 읽기", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course192);
-
-            Course course193 = new Course();
-            course193.createCourse("독일드라마와 공연예술", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course193);
-
-            Course course194 = new Course();
-            course194.createCourse("독일문학과 사회 비평", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course194);
-
-            Course course195 = new Course();
-            course195.createCourse("독일의 언어정책과 통상전략", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course195);
-
-            Course course196 = new Course();
-            course196.createCourse("고급 독일어 회화 및 작문", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course196);
-
-            Course course197 = new Course();
-            course197.createCourse("독일어 관용구 표현과 의미", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course197);
-
-            Course course198 = new Course();
-            course198.createCourse("독일영화와 독일사회", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course198);
-
-            Course course199 = new Course();
-            course199.createCourse("독일통일과 유럽", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course199);
-
-            Course course200 = new Course();
-            course200.createCourse("독일 현대문학의 이해", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course200);
-
-            Course course201 = new Course();
-            course201.createCourse("독일어 논술 연습", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course201);
-
-            Course course202 = new Course();
-            course202.createCourse("독일어와 한국어 비교", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course202);
-
-            Course course203 = new Course();
-            course203.createCourse("독일지역학 세미나", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course203);
-
-            Course course204 = new Course();
-            course204.createCourse("독일어 교육론", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course204);
-
-            Course course205 = new Course();
-            course205.createCourse("독일 철학과 현대유럽", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course205);
-
-            Course course206 = new Course();
-            course206.createCourse("독일의 지성사", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course206);
-
-            Course course207 = new Course();
-            course207.createCourse("독일의 기업과 경제", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course207);
-
-            Course course208 = new Course();
-            course208.createCourse("독일소설", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course208);
-
-            Course course209 = new Course();
-            course209.createCourse("독일어 교재연구 및 지도법", 3, CourseYear.SENIOR, germanDepartment);
-            em.persist(course209);
+//
+//
+//            Course course59 = new Course();
+//            course59.createCourse("국문학개론", 1, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course59);
+//
+//            Course course60 = new Course();
+//            course60.createCourse("국어학개론", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course60);
+//
+//            Course course61 = new Course();
+//            course61.createCourse("국문학사", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course61);
+//
+//            Course course62 = new Course();
+//            course62.createCourse("고전문학강독", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course62);
+//
+//            Course course63 = new Course();
+//            course63.createCourse("현대소설론 특강", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course63);
+//
+//            Course course64 = new Course();
+//            course64.createCourse("국어학강독", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course64);
+//
+//            Course course65 = new Course();
+//            course65.createCourse("국어음운론", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course65);
+//
+//            Course course66 = new Course();
+//            course66.createCourse("문학연구방법론", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course66);
+//
+//            Course course67 = new Course();
+//            course67.createCourse("한국현대문학사", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course67);
+//
+//            Course course68 = new Course();
+//            course68.createCourse("국어문법론", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course68);
+//
+//            Course course69 = new Course();
+//            course69.createCourse("국어학의 응용", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course69);
+//
+//            Course course70 = new Course();
+//            course70.createCourse("시조가사론", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course70);
+//
+//            Course course71 = new Course();
+//            course71.createCourse("한국 한문학의 이해", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course71);
+//
+//            Course course72 = new Course();
+//            course72.createCourse("현대소설강독", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course72);
+//
+//            Course course73 = new Course();
+//            course73.createCourse("국어사", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course73);
+//
+//            Course course74 = new Course();
+//            course74.createCourse("국어방언학", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course74);
+//
+//            Course course75 = new Course();
+//            course75.createCourse("현대시론", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course75);
+//
+//            Course course76 = new Course();
+//            course76.createCourse("구비문학론", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course76);
+//
+//            Course course77 = new Course();
+//            course77.createCourse("작가작품론", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course77);
+//
+//            Course course78 = new Course();
+//            course78.createCourse("고전수필론", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course78);
+//
+//            Course course79 = new Course();
+//            course79.createCourse("문학교육론", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course79);
+//
+//            Course course80 = new Course();
+//            course80.createCourse("국어통사론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course80);
+//
+//            Course course81 = new Course();
+//            course81.createCourse("한국의서사전통과 고전소설", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course81);
+//
+//            Course course82 = new Course();
+//            course82.createCourse("향가여요론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course82);
+//
+//            Course course83 = new Course();
+//            course83.createCourse("국어의미론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course83);
+//
+//            Course course84 = new Course();
+//            course84.createCourse("문예비평론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course84);
+//
+//            Course course85 = new Course();
+//            course85.createCourse("현대시강독", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course85);
+//
+//            Course course86 = new Course();
+//            course86.createCourse("희곡론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course86);
+//
+//            Course course87 = new Course();
+//            course87.createCourse("의사소통교육론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course87);
+//
+//            Course course88 = new Course();
+//            course88.createCourse("중세국어문법론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course88);
+//
+//            Course course89 = new Course();
+//            course89.createCourse("문학 창작론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course89);
+//
+//            Course course90 = new Course();
+//            course90.createCourse("국어학사", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course90);
+//
+//            Course course91 = new Course();
+//            course91.createCourse("한국한문학사", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course91);
+//
+//            Course course92 = new Course();
+//            course92.createCourse("현대문학특강", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course92);
+//
+//            Course course93 = new Course();
+//            course93.createCourse("국어과 교재연구 및 지도법", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course93);
+//
+//            Course course94 = new Course();
+//            course94.createCourse("고전문학특강", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course94);
+//
+//            Course course95 = new Course();
+//            course95.createCourse("비교문학론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course95);
+//
+//            Course course96 = new Course();
+//            course96.createCourse("국어어원론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course96);
+//
+//            Course course97 = new Course();
+//            course97.createCourse("국어과교육론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course97);
+//
+//            Course course98 = new Course();
+//            course98.createCourse("국어과 논리 및 논술", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course98);
+//
+//            Course course99 = new Course();
+//            course99.createCourse("중국어와 중국문화", 3, CourseYear.FRESHMAN, chineseDepartment);
+//            em.persist(course99);
+//
+//            Course course100 = new Course();
+//            course100.createCourse("기초중국어회화1", 3, CourseYear.FRESHMAN, chineseDepartment);
+//            em.persist(course100);
+//
+//            Course course101 = new Course();
+//            course101.createCourse("중국어와 중국사회", 3, CourseYear.FRESHMAN, chineseDepartment);
+//            em.persist(course101);
+//
+//            Course course102 = new Course();
+//            course102.createCourse("기초중국어회화2", 3, CourseYear.FRESHMAN, chineseDepartment);
+//            em.persist(course102);
+//
+//            Course course103 = new Course();
+//            course103.createCourse("현대 한자학의 이해", 3, CourseYear.FRESHMAN, chineseDepartment);
+//            em.persist(course103);
+//
+//            Course course104 = new Course();
+//            course104.createCourse("중급중국어1", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course104);
+//
+//            Course course105 = new Course();
+//            course105.createCourse("중국어 회화1", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course105);
+//
+//            Course course106 = new Course();
+//            course106.createCourse("경서제자입문", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course106);
+//
+//            Course course107 = new Course();
+//            course107.createCourse("중국어학의 이해", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course107);
+//
+//            Course course108 = new Course();
+//            course108.createCourse("현대 중국의 이해", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course108);
+//
+//            Course course109 = new Course();
+//            course109.createCourse("중급중국어2", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course109);
+//
+//            Course course110 = new Course();
+//            course110.createCourse("역대산문의감상과이해", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course110);
+//
+//            Course course111 = new Course();
+//            course111.createCourse("중국 언어와 문화의 이해", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course111);
+//
+//            Course course112 = new Course();
+//            course112.createCourse("중국어회화2", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course112);
+//
+//            Course course113 = new Course();
+//            course113.createCourse("중국어문법1", 3, CourseYear.SOPHOMORE, chineseDepartment);
+//            em.persist(course113);
+//
+//            Course course114 = new Course();
+//            course114.createCourse("중국의 시와 노래1", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course114);
+//
+//            Course course115 = new Course();
+//            course115.createCourse("중국의 매스미디어와 현대 사회", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course115);
+//
+//            Course course116 = new Course();
+//            course116.createCourse("소설로 보는 중국 사회1", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course116);
+//
+//            Course course117 = new Course();
+//            course117.createCourse("중국의 비즈니스 문화와 커뮤니케이션", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course117);
+//
+//            Course course118 = new Course();
+//            course118.createCourse("중국어문법2", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course118);
+//
+//            Course course119 = new Course();
+//            course119.createCourse("중국 문학과 문화의 이해", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course119);
+//
+//            Course course120 = new Course();
+//            course120.createCourse("중국현대문학 특강", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course120);
+//
+//            Course course121 = new Course();
+//            course121.createCourse("중국의 시와 노래2", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course121);
+//
+//            Course course122 = new Course();
+//            course122.createCourse("통합적 중국어 글쓰기", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course122);
+//
+//            Course course123 = new Course();
+//            course123.createCourse("중국 지역사회와 영화", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course123);
+//
+//            Course course124 = new Course();
+//            course124.createCourse("소설로 보는 중국 사회Ⅱ", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course124);
+//
+//            Course course125 = new Course();
+//            course125.createCourse("중어과교육론", 3, CourseYear.JUNIOR, chineseDepartment);
+//            em.persist(course125);
+//
+//            Course course126 = new Course();
+//            course126.createCourse("비즈니스 중국어", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course126);
+//
+//            Course course127 = new Course();
+//            course127.createCourse("중국어통번역연습", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course127);
+//
+//            Course course128 = new Course();
+//            course128.createCourse("중국의 고전 가곡과 연극", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course128);
+//
+//            Course course129 = new Course();
+//            course129.createCourse("중국어 현장실습", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course129);
+//
+//            Course course130 = new Course();
+//            course130.createCourse("중어과교재연구 및 지도법", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course130);
+//
+//            Course course131 = new Course();
+//            course131.createCourse("중국문학특강", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course131);
+//
+//            Course course132 = new Course();
+//            course132.createCourse("중국 지역학 세미나", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course132);
+//
+//            Course course133 = new Course();
+//            course133.createCourse("대중매체로 보는 당대 중국", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course133);
+//
+//            Course course134 = new Course();
+//            course134.createCourse("중국어 논리 및 논술", 3, CourseYear.SENIOR, chineseDepartment);
+//            em.persist(course134);
+//
+//            Course course135 = new Course();
+//            course135.createCourse("영미문학 배경", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course135);
+//
+//            Course course136 = new Course();
+//            course136.createCourse("영문법", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course136);
+//
+//            Course course137 = new Course();
+//            course137.createCourse("영작문Ⅰ", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course137);
+//
+//            Course course138 = new Course();
+//            course138.createCourse("영어회화Ⅰ", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course138);
+//
+//            Course course139 = new Course();
+//            course139.createCourse("영어음성학", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course139);
+//
+//            Course course140 = new Course();
+//            course140.createCourse("영미소설의 이해", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course140);
+//
+//            Course course141 = new Course();
+//            course141.createCourse("문학 번역 연습", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course141);
+//
+//            Course course142 = new Course();
+//            course142.createCourse("영문학사", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course142);
+//
+//            Course course143 = new Course();
+//            course143.createCourse("영어듣기", 3, CourseYear.FRESHMAN, koreanDepartment);
+//            em.persist(course143);
+//
+//            Course course144 = new Course();
+//            course144.createCourse("영작문Ⅱ", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course144);
+//
+//            Course course145 = new Course();
+//            course145.createCourse("영어회화Ⅱ", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course145);
+//
+//            Course course146 = new Course();
+//            course146.createCourse("현대 영어학의 이해", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course146);
+//
+//            Course course147 = new Course();
+//            course147.createCourse("영어토론연습", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course147);
+//
+//            Course course148 = new Course();
+//            course148.createCourse("영미희곡의 이해", 3, CourseYear.SOPHOMORE, koreanDepartment);
+//            em.persist(course148);
+//
+//            Course course149 = new Course();
+//            course149.createCourse("영어 어휘 연습", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course149);
+//
+//            Course course150 = new Course();
+//            course150.createCourse("영미시의 이해", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course150);
+//
+//            Course course151 = new Course();
+//            course151.createCourse("영미문학비평", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course151);
+//
+//            Course course152 = new Course();
+//            course152.createCourse("영어통사론", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course152);
+//
+//            Course course153 = new Course();
+//            course153.createCourse("영어 통사론의 이해", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course153);
+//
+//            Course course154 = new Course();
+//            course154.createCourse("아동 및 청소년 문학", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course154);
+//
+//            Course course155 = new Course();
+//            course155.createCourse("실무영어", 3, CourseYear.JUNIOR, koreanDepartment);
+//            em.persist(course155);
+//
+//            Course course156 = new Course();
+//            course156.createCourse("영어사", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course156);
+//
+//            Course course157 = new Course();
+//            course157.createCourse("셰익스피어", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course157);
+//
+//            Course course158 = new Course();
+//            course158.createCourse("현대영미시", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course158);
+//
+//            Course course159 = new Course();
+//            course159.createCourse("영미소설", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course159);
+//
+//            Course course160 = new Course();
+//            course160.createCourse("영어논술 연습", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course160);
+//
+//            Course course161 = new Course();
+//            course161.createCourse("영어회화Ⅲ", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course161);
+//
+//            Course course162 = new Course();
+//            course162.createCourse("시사영어강독", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course162);
+//
+//            Course course163 = new Course();
+//            course163.createCourse("실용영문법 특강", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course163);
+//
+//            Course course164 = new Course();
+//            course164.createCourse("영미 드라마 번역", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course164);
+//
+//            Course course165 = new Course();
+//            course165.createCourse("영미시 세미나", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course165);
+//
+//            Course course166 = new Course();
+//            course166.createCourse("영어과 교재연구 및 지도법", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course166);
+//
+//            Course course167 = new Course();
+//            course167.createCourse("통번역 세미나", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course167);
+//
+//            Course course168 = new Course();
+//            course168.createCourse("미국문학사", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course168);
+//
+//            Course course169 = new Course();
+//            course169.createCourse("영어학세미나", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course169);
+//
+//            Course course170 = new Course();
+//            course170.createCourse("영문학특강", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course170);
+//
+//            Course course171 = new Course();
+//            course171.createCourse("영어과 교육론", 3, CourseYear.SENIOR, koreanDepartment);
+//            em.persist(course171);
+//
+//            Course course172 = new Course();
+//            course172.createCourse("독일어 회화Ⅰ", 3, CourseYear.FRESHMAN, germanDepartment);
+//            em.persist(course172);
+//
+//            Course course173 = new Course();
+//            course173.createCourse("독일어 연습Ⅰ", 3, CourseYear.FRESHMAN, germanDepartment);
+//            em.persist(course173);
+//
+//            Course course174 = new Course();
+//            course174.createCourse("독일문학 산책", 3, CourseYear.FRESHMAN, germanDepartment);
+//            em.persist(course174);
+//
+//            Course course175 = new Course();
+//            course175.createCourse("독일어 회화Ⅱ", 3, CourseYear.SOPHOMORE, germanDepartment);
+//            em.persist(course175);
+//
+//            Course course176 = new Course();
+//            course176.createCourse("기초 독문법", 3, CourseYear.SOPHOMORE, germanDepartment);
+//            em.persist(course176);
+//
+//            Course course177 = new Course();
+//            course177.createCourse("독일어 연습Ⅱ", 3, CourseYear.SOPHOMORE, germanDepartment);
+//            em.persist(course177);
+//
+//            Course course178 = new Course();
+//            course178.createCourse("독일어 회화Ⅲ", 3, CourseYear.JUNIOR, germanDepartment);
+//            em.persist(course178);
+//
+//            Course course179 = new Course();
+//            course179.createCourse("독일어 연습Ⅲ", 3, CourseYear.JUNIOR, germanDepartment);
+//            em.persist(course179);
+//
+//            Course course180 = new Course();
+//            course180.createCourse("중급독문법", 3, CourseYear.JUNIOR, germanDepartment);
+//            em.persist(course180);
+//
+//            Course course181 = new Course();
+//            course181.createCourse("독일어 문장 구조", 3, CourseYear.JUNIOR, germanDepartment);
+//            em.persist(course181);
+//
+//            Course course182 = new Course();
+//            course182.createCourse("독일문화 탐방", 3, CourseYear.JUNIOR, germanDepartment);
+//            em.persist(course182);
+//
+//            Course course183 = new Course();
+//            course183.createCourse("독일의 지리와 역사", 3, CourseYear.JUNIOR, germanDepartment);
+//            em.persist(course183);
+//
+//            Course course184 = new Course();
+//            course184.createCourse("독일 아동·청소년 교육과 문학", 3, CourseYear.JUNIOR, germanDepartment);
+//            em.persist(course184);
+//
+//            Course course185 = new Course();
+//            course185.createCourse("독일 문예사조의 이해", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course185);
+//
+//            Course course186 = new Course();
+//            course186.createCourse("독일어 회화Ⅳ", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course186);
+//
+//            Course course187 = new Course();
+//            course187.createCourse("독일어 연습Ⅳ", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course187);
+//
+//            Course course188 = new Course();
+//            course188.createCourse("독일시와 음악", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course188);
+//
+//            Course course189 = new Course();
+//            course189.createCourse("B1 텍스트 읽기", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course189);
+//
+//            Course course190 = new Course();
+//            course190.createCourse("독일작가읽기", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course190);
+//
+//            Course course191 = new Course();
+//            course191.createCourse("독일의 정치와 사회", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course191);
+//
+//            Course course192 = new Course();
+//            course192.createCourse("B2 텍스트 읽기", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course192);
+//
+//            Course course193 = new Course();
+//            course193.createCourse("독일드라마와 공연예술", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course193);
+//
+//            Course course194 = new Course();
+//            course194.createCourse("독일문학과 사회 비평", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course194);
+//
+//            Course course195 = new Course();
+//            course195.createCourse("독일의 언어정책과 통상전략", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course195);
+//
+//            Course course196 = new Course();
+//            course196.createCourse("고급 독일어 회화 및 작문", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course196);
+//
+//            Course course197 = new Course();
+//            course197.createCourse("독일어 관용구 표현과 의미", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course197);
+//
+//            Course course198 = new Course();
+//            course198.createCourse("독일영화와 독일사회", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course198);
+//
+//            Course course199 = new Course();
+//            course199.createCourse("독일통일과 유럽", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course199);
+//
+//            Course course200 = new Course();
+//            course200.createCourse("독일 현대문학의 이해", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course200);
+//
+//            Course course201 = new Course();
+//            course201.createCourse("독일어 논술 연습", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course201);
+//
+//            Course course202 = new Course();
+//            course202.createCourse("독일어와 한국어 비교", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course202);
+//
+//            Course course203 = new Course();
+//            course203.createCourse("독일지역학 세미나", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course203);
+//
+//            Course course204 = new Course();
+//            course204.createCourse("독일어 교육론", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course204);
+//
+//            Course course205 = new Course();
+//            course205.createCourse("독일 철학과 현대유럽", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course205);
+//
+//            Course course206 = new Course();
+//            course206.createCourse("독일의 지성사", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course206);
+//
+//            Course course207 = new Course();
+//            course207.createCourse("독일의 기업과 경제", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course207);
+//
+//            Course course208 = new Course();
+//            course208.createCourse("독일소설", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course208);
+//
+//            Course course209 = new Course();
+//            course209.createCourse("독일어 교재연구 및 지도법", 3, CourseYear.SENIOR, germanDepartment);
+//            em.persist(course209);
 
             UserCourse usercourse1 = new UserCourse();
             usercourse1.createUserCourse(
@@ -1599,7 +1599,7 @@ public class InitDb {
             em.persist(usercourse10);
 
             UserCourse usercourse11 = new UserCourse();
-            usercourse10.createUserCourse(
+            usercourse11.createUserCourse(
                     user7, course19, GradeStatus.C, IsMajor.MAJOR
             );
             em.persist(usercourse11);
