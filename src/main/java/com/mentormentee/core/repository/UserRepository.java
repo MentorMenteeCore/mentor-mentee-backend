@@ -158,7 +158,7 @@ public class UserRepository {
     // User 엔티티를 사용하여 리뷰 조회
     public List<Review> findReviewsByUser(User user) {
         return em.createQuery(
-                        "select r from Review r where r.reviewee = :user", Review.class)
+                        "select r from Review r where r.user = :user", Review.class)
                 .setParameter("user", user)
                 .getResultList();
     }

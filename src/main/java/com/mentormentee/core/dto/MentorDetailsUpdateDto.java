@@ -19,6 +19,7 @@ public class MentorDetailsUpdateDto {
     private final int currentPageNum;
     private final boolean lastPageOrNot;
 
+
     // 생성자
     public MentorDetailsUpdateDto(List<CourseDetailsDto> courseDetails,
                                   List<AvailableTimeDto> availabilities,

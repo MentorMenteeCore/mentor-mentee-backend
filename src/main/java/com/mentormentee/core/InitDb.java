@@ -819,7 +819,7 @@ public class InitDb {
             em.persist(course55);
 
             Course course56 = new Course();
-            course56.createCourse("창업산학초청세미나Ⅱ", 1, CourseYear.SENIOR, informationCommunicationDepartment);
+            course56.createCourse("창업산학초청세미나2", 1, CourseYear.SENIOR, informationCommunicationDepartment);
             em.persist(course56);
 
             Course course57 = new Course();

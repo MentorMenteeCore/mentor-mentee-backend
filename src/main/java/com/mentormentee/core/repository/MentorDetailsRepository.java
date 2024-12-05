@@ -1,9 +1,6 @@
 package com.mentormentee.core.repository;
 
-import com.mentormentee.core.domain.AvailableTime;
-import com.mentormentee.core.domain.Review;
-import com.mentormentee.core.domain.User;
-import com.mentormentee.core.domain.UserCourse;
+import com.mentormentee.core.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -34,5 +31,14 @@ public interface MentorDetailsRepository extends JpaRepository<UserCourse, Long>
     // User의 리뷰 조회
     @Query("select r from Review r where r.user = :user")
     List<Review> findReviewsByUser(@Param("user") User user);
+
+    @Query("select c from Course c where c.department = :department and trim(c.courseName) = :courseName")
+    Optional<Course> findCourseByDepartmentAndName(@Param("department") Department department, @Param("courseName") String courseName);
+
+
+    // 이름으로 Department 조회
+    @Query("select d from Department d where d.departmentName = :name")
+    Optional<Department> findDepartmentByName(@Param("name") String name);
+
 }
 

@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.mentormentee.core.domain.QDepartment.department;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -41,9 +43,11 @@ public class MentorInformatoinService {
                 .map(userCourse -> {
                     Course course = userCourse.getCourse();
                     return new CourseDetailsDto(
+                            userCourse.getId(), // UserCourse의 ID 추가
+                            course.getDepartment().getDepartmentName(), // department의 이름을 추가
                             course.getCourseName(),
                             course.getCredit(),
-                            userCourse.getGradeStatus().getDisplayValue()
+                            userCourse.getGradeStatus() != null ? userCourse.getGradeStatus().getDisplayValue() : null
                     );
                 })
                 .collect(Collectors.toList());
@@ -52,6 +56,7 @@ public class MentorInformatoinService {
         List<AvailableTime> availableTimes = mentorDetailsRepository.findAvailabilitiesByUser(mentor);
         List<AvailableTimeDto> availabilityDtos = availableTimes.stream()
                 .map(at -> new AvailableTimeDto(
+                        at.getId(),
                         at.getDayOfWeek(),
                         at.getAvailableStartTime(),
                         at.getAvailableEndTime()
@@ -94,7 +99,7 @@ public class MentorInformatoinService {
     
     
     // 멘토 정보 조회
-    public MentorDetailsUpdateDto getMentorDetails(Pageable pageable) {
+    public MentorDetailsDto getMentorDetails(Pageable pageable) {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new JWTClaimException());
@@ -108,19 +113,33 @@ public class MentorInformatoinService {
                 userRepository.findAvailabilitiesByUser(user)
         );
 
-        // MentorDetailsUpdateDto 생성 및 반환
-        return new MentorDetailsUpdateDto(
+        // 멘토에 대한 리뷰 조회
+        List<ReviewDto> reviews = userRepository.findReviewsByUser(user)
+                .stream()
+                .map(review -> new ReviewDto(review.getComment(), review.getRating(), review.getReviewDate()))
+                .collect(Collectors.toList());
+
+        // 리뷰 개수 계산
+        int reviewCount = reviews.size();
+
+        // MentorDetailsDto 생성 및 반환
+        return new MentorDetailsDto(
+                user.getId(),
                 courseDetailsDtos,
                 availabilityDtos,
                 user.getWaysOfCommunication().name(),
                 user.getSelfIntroduction(),
-                user.getUserRole(),
-                user.getUserProfilePicture(),
+                reviews,
                 userCoursesPage.getTotalPages(),
                 userCoursesPage.getNumber(),
-                userCoursesPage.isLast()
+                userCoursesPage.isLast(),
+                user.getNickName(),
+                user.getUserProfilePicture(),
+                reviewCount
         );
     }
+
+
 
     public MentorDetailsUpdateDto updateMentorDetails(MentorDetailsUpdateDto updateDto, Pageable pageable) {
         String userEmail = JwtUtils.getUserEmail();
@@ -185,50 +204,65 @@ public class MentorInformatoinService {
 
         // 새로운 UserCourse 생성 및 저장
         for (CourseDetailsDto courseDetailsDto : courseDetailsDtos) {
-            Course newCourse = userRepository.findCourseByName(courseDetailsDto.getCourseName())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 과목이 존재하지 않습니다."));
+            // department와 courseName을 통해 해당 Course 객체를 찾음
+            Department department = mentorDetailsRepository.findDepartmentByName(courseDetailsDto.getDepartment())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 학과가 존재하지 않습니다."));
 
+            // department와 courseName으로 Course 찾기
+            Course newCourse = mentorDetailsRepository.findCourseByDepartmentAndName(department, courseDetailsDto.getCourseName())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 과목과 학과가 존재하지 않습니다."));
+
+            // 새로운 UserCourse 생성
             UserCourse newUserCourse = new UserCourse();
-            newUserCourse.setCourse(newCourse);
+            newUserCourse.setCourse(newCourse); // 해당 Course 설정
             newUserCourse.setGradeStatus(courseDetailsDto.getGradeStatus() != null ?
                     GradeStatus.valueOf(courseDetailsDto.getGradeStatus()) : null);
             newUserCourse.setUser(user);
 
-            mentorDetailsRepository.save(newUserCourse); // 저장 로직
+            mentorDetailsRepository.save(newUserCourse); // 새로운 UserCourse 저장
         }
     }
+
 
     public void updateAvailability(User user, List<AvailableTimeDto> availableTimeDtos) {
-        // 기존의 Availability를 삭제
-        userRepository.deleteAllAvailableTimes(user); // 모든 Availability 삭제
+        // availableTimeDtos가 null이 아니고, 비어있지 않은 경우에만 기존 Availability를 삭제하고 새로운 Availability 정보를 저장
+        if (availableTimeDtos != null && !availableTimeDtos.isEmpty()) {
+            // 기존의 Availability를 삭제
+            userRepository.deleteAllAvailableTimes(user); // 모든 Availability 삭제
 
-        // 새로운 Availability 정보를 저장
-        for (AvailableTimeDto availableTimeDto : availableTimeDtos) {
-            AvailableTime newAvailability = new AvailableTime();
-            newAvailability.setDayOfWeek(availableTimeDto.getDayOfWeek());
-            newAvailability.setAvailableStartTime(availableTimeDto.getAvailableStartTime());
-            newAvailability.setAvailableEndTime(availableTimeDto.getAvailableEndTime());
-            newAvailability.setUser(user);
+            // 새로운 Availability 정보를 저장
+            for (AvailableTimeDto availableTimeDto : availableTimeDtos) {
+                AvailableTime newAvailability = new AvailableTime();
+                newAvailability.setDayOfWeek(availableTimeDto.getDayOfWeek());
+                newAvailability.setAvailableStartTime(availableTimeDto.getAvailableStartTime());
+                newAvailability.setAvailableEndTime(availableTimeDto.getAvailableEndTime());
+                newAvailability.setUser(user);
 
-            userRepository.save(newAvailability);
+                userRepository.save(newAvailability);
+            }
         }
     }
+
 
     // 변환 메서드
     private List<CourseDetailsDto> convertToCourseDetailsDto(List<UserCourse> userCourses) {
         return userCourses.stream()
                 .map(userCourse -> new CourseDetailsDto(
+                        userCourse.getId(),
+                        userCourse.getCourse().getDepartment().getDepartmentName(), // 학과 이름을 추가
                         userCourse.getCourse().getCourseName(),
                         userCourse.getCourse().getCredit(),
-                        userCourse.getGradeStatus() != null ? userCourse.getGradeStatus().getDisplayValue() : null // GradeStatus
+                        userCourse.getGradeStatus() != null ? userCourse.getGradeStatus().getDisplayValue() : null
                 ))
                 .collect(Collectors.toList());
     }
+
 
     // AvailableTime 변환 메서드
     private List<AvailableTimeDto> convertToAvailableTimeDto(List<AvailableTime> availableTimes) {
         return availableTimes.stream()
                 .map(at -> new AvailableTimeDto(
+                        at.getId(),
                         at.getDayOfWeek(),
                         at.getAvailableStartTime(),
                         at.getAvailableEndTime()
@@ -277,8 +311,8 @@ public class MentorInformatoinService {
             missingInfo.append("과목 이름이 필요합니다. ");
         }
 
-        if (course.getCredit() <= 0) {
-            missingInfo.append("학점이 필요합니다. ");
+        if (course.getDepartment() == null || course.getDepartment().isEmpty()) {
+            missingInfo.append("학과가 필요합니다. ");
         }
 
         if (course.getGradeStatus() == null) {

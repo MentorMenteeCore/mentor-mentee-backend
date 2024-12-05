@@ -28,7 +28,9 @@ public class MentorDetailsInitialImpl implements MentorDetails {
                 .map(courseDetailsDto -> {
                     Course course = courseDetailsDto.getCourse();
                     return new CourseDetailsDto(
+                            courseDetailsDto.getId(),
                             course.getCourseName(),
+                            course.getDepartment().getDepartmentName(),
                             course.getCredit(),
                             courseDetailsDto.getGradeStatus().getDisplayValue()
                     );
@@ -45,6 +47,7 @@ public class MentorDetailsInitialImpl implements MentorDetails {
 
         List<AvailableTimeDto> availabilityDtos = availableTimes.stream()
                 .map(at -> new AvailableTimeDto(
+                        at.getId(),
                         at.getDayOfWeek(),
                         at.getAvailableStartTime(),
                         at.getAvailableEndTime()

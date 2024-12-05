@@ -31,7 +31,7 @@ public class MentorInformationController {
     }
 
     @GetMapping("/mentordetails/update")
-    public MentorDetailsUpdateDto getMentorDetails(
+    public MentorDetailsDto getMentorDetails(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size);
