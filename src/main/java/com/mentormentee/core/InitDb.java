@@ -830,6 +830,18 @@ public class InitDb {
             course58.createCourse("공업논리및논술", 1, CourseYear.SENIOR, informationCommunicationDepartment);
             em.persist(course58);
 
+            Course course59 = new Course();
+            course59.createCourse("미래설계탐색", 1, CourseYear.SENIOR, softwareEngineeringDepartment);
+            em.persist(course59);
+
+            Course course60 = new Course();
+            course60.createCourse("미래설계탐색", 2, CourseYear.SENIOR, computerScienceDepartment);
+            em.persist(course60);
+
+            Course course61 = new Course();
+            course61.createCourse("미래설계탐색", 1, CourseYear.SENIOR, agriculturalEconomicsDepartment);
+            em.persist(course61);
+
 
             UserCourse usercourse1 = new UserCourse();
             usercourse1.createUserCourse(
@@ -849,11 +861,6 @@ public class InitDb {
             );
             em.persist(usercourse3);
 
-            UserCourse usercourse4 = new UserCourse();
-            usercourse4.createUserCourse(
-                    user2, course1, GradeStatus.APLUS, IsMajor.MAJOR
-            );
-            em.persist(usercourse4);
 
             UserCourse usercourse5 = new UserCourse();
             usercourse5.createUserCourse(

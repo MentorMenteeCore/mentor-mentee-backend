@@ -32,13 +32,13 @@ public interface MentorDetailsRepository extends JpaRepository<UserCourse, Long>
     @Query("select r from Review r where r.user = :user")
     List<Review> findReviewsByUser(@Param("user") User user);
 
-    @Query("select c from Course c where c.department = :department and trim(c.courseName) = :courseName")
-    Optional<Course> findCourseByDepartmentAndName(@Param("department") Department department, @Param("courseName") String courseName);
+    //학과-과목으로 조회
+    @Query("select c from Course c where c.department.departmentName = :departmentName and trim(c.courseName) = :courseName")
+    Optional<Course> findCourseByDepartmentNameAndCourseName(
+            @Param("departmentName") String departmentName,
+            @Param("courseName") String courseName
+    );
 
-
-    // 이름으로 Department 조회
-    @Query("select d from Department d where d.departmentName = :name")
-    Optional<Department> findDepartmentByName(@Param("name") String name);
 
 }
 

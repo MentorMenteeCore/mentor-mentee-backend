@@ -204,24 +204,26 @@ public class MentorInformatoinService {
 
         // 새로운 UserCourse 생성 및 저장
         for (CourseDetailsDto courseDetailsDto : courseDetailsDtos) {
-            // department와 courseName을 통해 해당 Course 객체를 찾음
-            Department department = mentorDetailsRepository.findDepartmentByName(courseDetailsDto.getDepartment())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 학과가 존재하지 않습니다."));
-
-            // department와 courseName으로 Course 찾기
-            Course newCourse = mentorDetailsRepository.findCourseByDepartmentAndName(department, courseDetailsDto.getCourseName())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 과목과 학과가 존재하지 않습니다."));
+            // 학과 이름과 과목 이름으로 Course 객체 조회
+            Course course = mentorDetailsRepository.findCourseByDepartmentNameAndCourseName(
+                    courseDetailsDto.getDepartment(),
+                    courseDetailsDto.getCourseName()
+            ).orElseThrow(() -> new IllegalArgumentException(
+                    "해당 학과와 과목이 존재하지 않습니다")
+            );
 
             // 새로운 UserCourse 생성
             UserCourse newUserCourse = new UserCourse();
-            newUserCourse.setCourse(newCourse); // 해당 Course 설정
-            newUserCourse.setGradeStatus(courseDetailsDto.getGradeStatus() != null ?
-                    GradeStatus.valueOf(courseDetailsDto.getGradeStatus()) : null);
+            newUserCourse.setCourse(course);
+            newUserCourse.setGradeStatus(courseDetailsDto.getGradeStatus() != null
+                    ? GradeStatus.valueOf(courseDetailsDto.getGradeStatus())
+                    : null);
             newUserCourse.setUser(user);
 
             mentorDetailsRepository.save(newUserCourse); // 새로운 UserCourse 저장
         }
     }
+
 
 
     public void updateAvailability(User user, List<AvailableTimeDto> availableTimeDtos) {
