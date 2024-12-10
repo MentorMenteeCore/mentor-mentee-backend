@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum CourseYear {
+
     FRESHMAN(1),
     SOPHOMORE(2),
     JUNIOR(3),

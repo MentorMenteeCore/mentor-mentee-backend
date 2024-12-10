@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +32,12 @@ public class ChatRoomRepository {
     }
 
     public ChatRoom findRoomByRoomId(String id) {
-       return em.createQuery("SELECT r FROM ChatRoom r WHERE r.roomId = :id", ChatRoom.class)
-                .setParameter("id", id)
-                .getSingleResult();
+        try {
+            return em.createQuery("SELECT r FROM ChatRoom r WHERE r.roomId = :id", ChatRoom.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

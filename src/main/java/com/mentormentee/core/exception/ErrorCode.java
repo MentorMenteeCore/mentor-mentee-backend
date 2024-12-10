@@ -18,7 +18,8 @@ public enum ErrorCode implements BaseErrorCode {
     NICKNAME_EXIST(400,"유저의 닉네임이 이미 존재합니다"),
     LOGOUT_USER(400, "로그아웃한 유저입니다."),
     NICKNAME_NOT_EXISTED(400,"존재하지 않는 닉네임입니다."),
-    EMAIL_NOT_FOUND(404,"존재하지 않는 이메일 입니다.");
+    EMAIL_NOT_FOUND(404,"존재하지 않는 이메일 입니다."),
+    ROOM_DOES_NOT_EXIST(404,"상대방과의 방이 없습니다. 방 생성 POST요청을 먼저 해주세요." );
 
 
     private final Integer status;

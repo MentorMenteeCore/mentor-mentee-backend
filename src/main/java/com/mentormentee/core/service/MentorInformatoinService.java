@@ -160,8 +160,6 @@ public class MentorInformatoinService {
             updateCourseDetails(user, updateDto.getCourseDetails());
         }
 
-
-
         // AvailableTime 수정 및 추가
         if (updateDto.getAvailabilities().isEmpty()) {
         }
@@ -272,10 +270,6 @@ public class MentorInformatoinService {
 
         if (course.getCourseName() == null) {
             missingInfo.append("과목 이름이 필요합니다. ");
-        }
-
-        if (course.getCredit() <= 0) {
-            missingInfo.append("학점이 필요합니다. ");
         }
 
         if (course.getGradeStatus() == null) {

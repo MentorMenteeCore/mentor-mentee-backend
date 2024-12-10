@@ -516,26 +516,6 @@ public class InitDb {
             em.persist(availableTime4);
             em.persist(review1);
             em.persist(review);
-//
-//            PreferredTeachingMethod preferredTeachingMethod1 = new PreferredTeachingMethod();
-//            preferredTeachingMethod1.createTeachingMethod("자기주도_학습_야자_싫어");
-//            em.persist(preferredTeachingMethod1);
-//
-//            PreferredTeachingMethod preferredTeachingMethod2 = new PreferredTeachingMethod();
-//            preferredTeachingMethod2.createTeachingMethod("교수님과_함께하는_수업");
-//            em.persist(preferredTeachingMethod2);
-//
-//            PreferredTeachingMethod preferredTeachingMethod3 = new PreferredTeachingMethod();
-//            preferredTeachingMethod3.createTeachingMethod("멘토와 줌으로");
-//            em.persist(preferredTeachingMethod3);
-//
-//            PreferredTeachingMethod preferredTeachingMethod4 = new PreferredTeachingMethod();
-//            preferredTeachingMethod4.createTeachingMethod("커뮤니케이션 중요");
-//            em.persist(preferredTeachingMethod4);
-//
-//            PreferredTeachingMethod preferredTeachingMethod5 = new PreferredTeachingMethod();
-//            preferredTeachingMethod5.createTeachingMethod("카톡 중요");
-//            em.persist(preferredTeachingMethod5);
 
             User user4 = new User();
             user4.createUser(

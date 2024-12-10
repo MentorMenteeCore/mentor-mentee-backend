@@ -29,6 +29,10 @@ public class MessagesController {
         }else{
             String roomId = ChatRoom.getRoomId(opponentId, thisUserId);
             Long currentUserId = Long.valueOf(thisUserId);
+            CreateChatRoomDto createChatRoomDto = new CreateChatRoomDto(thisUserId,opponentId);
+
+            RoomDto roomInfo = RoomDto.createRoomDto(createChatRoomDto);
+            chatRoomService.checkIfRoomExist(roomInfo);
             List<MessageDetailsDTO> messagesInChatRoom = chatRoomService.getMessagesInChatRoom(roomId, currentUserId);
             List<ChatRoomDetailsDTO> chatRoomsListWithNoMainRoom = chatRoomService.getChatRoomsListWithNoMainRoom(currentUserId);
             MessagesDto messagesDto = new MessagesDto();

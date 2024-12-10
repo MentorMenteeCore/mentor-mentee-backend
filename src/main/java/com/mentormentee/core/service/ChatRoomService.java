@@ -6,6 +6,7 @@ import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.ChatRoomDetailsDTO;
 import com.mentormentee.core.dto.MessageDetailsDTO;
 import com.mentormentee.core.dto.RoomDto;
+import com.mentormentee.core.exception.exceptionCollection.RoomDoesNotExistException;
 import com.mentormentee.core.repository.ChatRepository;
 import com.mentormentee.core.repository.ChatRoomRepository;
 import com.mentormentee.core.repository.MessageRepository;
@@ -58,8 +59,18 @@ public class ChatRoomService {
 
     @Transactional
     public void createRoom(RoomDto roomInfo) {
-        ChatRoom chatRoom = new ChatRoom(LocalDateTime.now(), roomInfo.getRoomId(), roomInfo.getUserId(), roomInfo.getOtherId());
-        chatRoomRepository.createNewChatRoom(chatRoom);
+        String roomId = roomInfo.getRoomId();
+        if(chatRoomRepository.findRoomByRoomId(roomId)==null){
+            ChatRoom chatRoom = new ChatRoom(LocalDateTime.now(), roomInfo.getRoomId(), roomInfo.getUserId(), roomInfo.getOtherId());
+            chatRoomRepository.createNewChatRoom(chatRoom);
+        }
+    }
+
+    public void checkIfRoomExist(RoomDto roomInfo) {
+        String roomId = roomInfo.getRoomId();
+        if(chatRoomRepository.findRoomByRoomId(roomId)==null){
+            throw new RoomDoesNotExistException();
+        }
     }
 
     @Transactional
