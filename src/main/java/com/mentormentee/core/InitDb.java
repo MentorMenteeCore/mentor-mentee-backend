@@ -843,23 +843,7 @@ public class InitDb {
             em.persist(course61);
 
 
-            UserCourse usercourse1 = new UserCourse();
-            usercourse1.createUserCourse(
-                    user2, course2, GradeStatus.APLUS, IsMajor.MAJOR
-            );
-            em.persist(usercourse1);
 
-            UserCourse usercourse2 = new UserCourse();
-            usercourse2.createUserCourse(
-                    user3, course2, GradeStatus.A, IsMajor.MAJOR
-            );
-            em.persist(usercourse2);
-
-            UserCourse usercourse3 = new UserCourse();
-            usercourse3.createUserCourse(
-                    user1, course2, GradeStatus.B, IsMajor.MAJOR
-            );
-            em.persist(usercourse3);
 
 
             UserCourse usercourse5 = new UserCourse();
