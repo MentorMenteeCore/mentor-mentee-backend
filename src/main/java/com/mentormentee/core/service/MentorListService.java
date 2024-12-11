@@ -26,7 +26,6 @@ public class MentorListService {
     private final UserRepository userRepository;
     private final MentorListRepository mentorListRepository;
 
-
     // MentorListDto를 반환하는 서비스 메서드
     public MentorListDto getMentorList(Long departmentId, String selectedYear, Long courseId, String sortBy, Pageable pageable) {
         // 사용자 정보 가져오기
@@ -38,6 +37,13 @@ public class MentorListService {
 
         // 학과 및 연도에 해당하는 강좌 목록 가져오기
         List<Course> courses = mentorListRepository.findCoursesByDepartmentAndYear(departmentId, courseYear);
+
+        // 강좌 데이터가 없는 경우 1학년으로 기본 설정
+        if (courses.isEmpty() && courseYear != CourseYear.FRESHMAN) {
+            courseYear = CourseYear.FRESHMAN;
+            courses = mentorListRepository.findCoursesByDepartmentAndYear(departmentId, courseYear);
+        }
+
         List<MentorListDto.CourseDto> courseDtoList = courses.stream()
                 .map(MentorListDto.CourseDto::new)
                 .collect(Collectors.toList());
@@ -67,16 +73,24 @@ public class MentorListService {
         );
     }
 
-
-
     private UserInformDto getUserInformDto() {
         String userEmail = JwtUtils.getUserEmail();
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(JWTClaimException::new);
-        return new UserInformDto(user.getNickName(), user.getEmail(),
+
+        // 학년 값이 0인 경우 기본값 1로 설정
+        int yearInUni = (user.getYearInUni() == 0) ? 1 : user.getYearInUni();
+
+        return new UserInformDto(
+                user.getNickName(),
+                user.getEmail(),
                 user.getDepartment() != null ? user.getDepartment().getDepartmentName() : null,
-                user.getYearInUni(), user.getUserProfilePicture());
+                yearInUni,
+                user.getUserProfilePicture()
+        );
     }
+
+
 
     private CourseYear determineCourseYear(String selectedYear, int userYearInUni) {
         if (selectedYear == null || selectedYear.isEmpty()) {

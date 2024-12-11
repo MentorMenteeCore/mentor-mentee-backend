@@ -23,7 +23,10 @@ public class MentorListController {
             @RequestParam(required = false, defaultValue = "nickname") String sortBy,
             @PageableDefault(size = 3) Pageable pageable) {
 
-        MentorListDto mentorListDto = mentorListService.getMentorList(departmentId, selectedYear, courseId, sortBy, pageable);
+        // 학년 선택 값이 없으면 기본값 "1"으로 설정
+        String year = selectedYear != null ? selectedYear : "1";
+
+        MentorListDto mentorListDto = mentorListService.getMentorList(departmentId, year, courseId, sortBy, pageable);
         return ResponseEntity.ok(mentorListDto);
     }
 }

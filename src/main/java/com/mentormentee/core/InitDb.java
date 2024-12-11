@@ -480,7 +480,7 @@ public class InitDb {
             user2.createUser(
                     "박상현", "나는야박상", ROLE_MENTOR, "cs1@example.com",
                     "password1234",
-                    FACETOFACE, 2, "www.exampleProfilePicture2.com",
+                    FACETOFACE, 0, "www.exampleProfilePicture2.com",
                     informationCommunicationDepartment, "sampleRefreshToken2","선배 탕후루도 같이"
             );
             user2.hashPassword(passwordEncoder);
