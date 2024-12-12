@@ -33,7 +33,7 @@ public class MessagesController {
 
             RoomDto roomInfo = RoomDto.createRoomDto(createChatRoomDto);
             chatRoomService.checkIfRoomExist(roomInfo);
-            List<MessageDetailsDTO> messagesInChatRoom = chatRoomService.getMessagesInChatRoom(roomId, currentUserId);
+            List<MessageReturnDetailsDTO> messagesInChatRoom = chatRoomService.getMessagesInChatRoom(roomId, currentUserId);
             List<ChatRoomDetailsDTO> chatRoomsListWithNoMainRoom = chatRoomService.getChatRoomsListWithNoMainRoom(currentUserId);
             MessagesDto messagesDto = new MessagesDto();
             messagesDto.setChatRooms(chatRoomsListWithNoMainRoom);

@@ -8,5 +8,5 @@ import java.util.List;
 public class MessagesDto {
 
     List<ChatRoomDetailsDTO> chatRooms;
-    List<MessageDetailsDTO> chatMessages;
+    List<MessageReturnDetailsDTO> chatMessages;
 }

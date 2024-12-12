@@ -10,11 +10,11 @@ public interface MessageDetailsDTO {
 
     LocalDateTime getTime();
 
-    Boolean getReadOrNot();
+    Integer getReadOrNot();
 
     String getSenderNickname();
 
     String getSenderProfilePicture();
 
-    Boolean getIsCurrentUser();
+    Integer getIsCurrentUser();
 }

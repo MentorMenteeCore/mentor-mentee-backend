@@ -5,6 +5,7 @@ import com.mentormentee.core.domain.Message;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.ChatRoomDetailsDTO;
 import com.mentormentee.core.dto.MessageDetailsDTO;
+import com.mentormentee.core.dto.MessageReturnDetailsDTO;
 import com.mentormentee.core.dto.RoomDto;
 import com.mentormentee.core.exception.exceptionCollection.RoomDoesNotExistException;
 import com.mentormentee.core.repository.ChatRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,18 +45,35 @@ public class ChatRoomService {
 
 
     @Transactional
-    public List<MessageDetailsDTO> getMessagesInChatRoom(String roomId, Long currentUserId) {
+    public List<MessageReturnDetailsDTO> getMessagesInChatRoom(String roomId, Long currentUserId) {
 
         // 상대방이 보낸 메시지의 readOrNot 필드를 true로 업데이트
         messageRepository.markMessagesAsRead(roomId, currentUserId);
 
         // 메시지 조회
+        System.out.println("읽음으로 표시하는 부분까지 문제 없음 ");
         List<MessageDetailsDTO> messages = chatRepository.findMessagesByRoomId(roomId, currentUserId);
+        System.out.println("인터페이스로 가져오는 부분까지 문제 없음");
+        List<MessageReturnDetailsDTO> mrDtoList = new ArrayList<>();
+        for (MessageDetailsDTO message : messages) {
+            MessageReturnDetailsDTO mrDto
+            = new MessageReturnDetailsDTO(
+                    message.getMessageId()
+                    , message.getContent()
+                    , message.getTime()
+                    , message.getReadOrNot()
+                    , message.getSenderNickname()
+                    , message.getSenderProfilePicture()
+                    , message.getIsCurrentUser());
+
+            mrDtoList.add(mrDto);
+        }
+        System.out.println("변환 로직 문제 없음");
 
         User user = userRepository.findById(currentUserId);
         user.setUserCurrentAccessedChatRoom(roomId);
 
-        return messages;
+        return mrDtoList;
     }
 
     @Transactional
