@@ -1,9 +1,6 @@
 package com.mentormentee.core.repository;
 
-import com.mentormentee.core.domain.AvailableTime;
-import com.mentormentee.core.domain.Review;
-import com.mentormentee.core.domain.User;
-import com.mentormentee.core.domain.UserCourse;
+import com.mentormentee.core.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -22,6 +19,13 @@ public interface MentorDetailsRepository extends JpaRepository<UserCourse, Long>
     // 닉네임으로 User 엔티티 조회
     @Query("select u from User u where u.nickName = :nickName")
     Optional<User> findUserByNickName(@Param("nickName") String nickName);
+
+    @Query("select c from Course c where c.department.departmentName = :departmentName and c.courseName = :courseName")
+    Optional<Course> findCourseByDepartmentNameAndCourseName(
+            @Param("departmentName") String departmentName,
+            @Param("courseName") String courseName
+    );
+
 
     // UserCourse 페이징 조회
 

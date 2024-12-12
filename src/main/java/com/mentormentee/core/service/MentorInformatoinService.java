@@ -177,16 +177,24 @@ public class MentorInformatoinService {
 
         // 새로운 UserCourse 생성 및 저장
         for (CourseDetailsDto courseDetailsDto : courseDetailsDtos) {
-            Course newCourse = userRepository.findCourseByName(courseDetailsDto.getCourseName())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 과목이 존재하지 않습니다."));
+            // 학과 이름과 과목 이름으로 Course 객체 조회
+            Course course = mentorDetailsRepository.findCourseByDepartmentNameAndCourseName(
+                    courseDetailsDto.getDepartment(),
+                    courseDetailsDto.getCourseName()
+            ).orElseThrow(() -> new IllegalArgumentException(
+                    "해당 학과와 과목이 존재하지 않습니다.")
+            );
 
+            // 새로운 UserCourse 생성
             UserCourse newUserCourse = new UserCourse();
-            newUserCourse.setCourse(newCourse);
-            newUserCourse.setGradeStatus(courseDetailsDto.getGradeStatus() != null ?
-                    GradeStatus.valueOf(courseDetailsDto.getGradeStatus()) : null);
+            newUserCourse.setCourse(course);
+            newUserCourse.setGradeStatus(courseDetailsDto.getGradeStatus() != null
+                    ? GradeStatus.valueOf(courseDetailsDto.getGradeStatus())
+                    : null);
             newUserCourse.setUser(user);
+            newUserCourse.setIsMajor(IsMajor.MAJOR);
 
-            mentorDetailsRepository.save(newUserCourse); // 저장 로직
+            mentorDetailsRepository.save(newUserCourse); // 새로운 UserCourse 저장
         }
     }
 

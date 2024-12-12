@@ -35,10 +35,15 @@ public class AllMentorListDto {
         public MentorDto(User user, Department department) {
             this.nickName = user.getNickName();
             this.yearInUni = user.getYearInUni();
-            this.departmentName = department.getDepartmentName();
-            this.profileUrl = user.getUserProfilePicture();
+            // department가 null이면 기본값 설정
+            this.departmentName = (department != null && department.getId() != null)
+                    ? department.getDepartmentName()
+                    : null;  // department_id가 null이면 departmentName을 null로 설정
 
+            this.profileUrl = user.getUserProfilePicture();
         }
+
+
     }
 }
 

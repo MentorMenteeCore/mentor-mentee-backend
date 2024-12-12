@@ -1,4 +1,5 @@
 package com.mentormentee.core.repository;
+
 import com.mentormentee.core.domain.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -162,6 +163,17 @@ public class UserRepository {
                 .setParameter("user", user)
                 .getResultList();
     }
+
+    public Optional<Course> findCourseByDepartmentNameAndCourseName(String departmentName, String courseName) {
+        return Optional.ofNullable(em.createQuery("select c" +
+                        " from Course c" +
+                        " join fetch c.department cd" +
+                        " where cd.departmentName = :departmentName" +
+                        " and c.courseName =:courseName", Course.class)
+                .setParameter("departmentName", departmentName)
+                .setParameter("courseName", courseName).getSingleResult());
+    }
+
 
     // UserCourse 삭제 메서드 (사용자에 대한 모든 UserCourse 삭제)
     public void deleteUserCoursesByUser(User user) {

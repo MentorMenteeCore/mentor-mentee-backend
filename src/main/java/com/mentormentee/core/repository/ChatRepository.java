@@ -69,7 +69,7 @@ public interface ChatRepository extends JpaRepository<ChatRoom,Long> {
             m.message_id AS messageId,
             m.content AS content,
             m.time AS time,
-            m.read_or_not AS readOrNot,
+            CASE WHEN m.read_or_not = 1 THEN TRUE ELSE FALSE END AS readOrNot,
             u.nick_name AS senderNickname,
             u.user_profile_picture AS senderProfilePicture,
             CASE WHEN m.sender_id = :currentUserId THEN TRUE ELSE FALSE END AS isCurrentUser

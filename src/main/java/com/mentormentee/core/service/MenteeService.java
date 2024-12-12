@@ -152,9 +152,11 @@ public class MenteeService {
             for (CourseNameDto courseDto : newCoursesDto) {
                 UserCourse userCourse = new UserCourse();
                 userCourse.connectUserAndUsercourse(user);
-                Course course = courseRepository.findByCourseName(courseDto.getCourseName())
+
+                Course course = userRepository.findCourseByDepartmentNameAndCourseName(courseDto.getDepartment(),courseDto.getCourseName())
                         .orElseThrow(() -> IllegalArgumentException.EXCEPTION);
                 userCourse.setCourse(course);
+
                 userCourse.setGradeStatus(GradeStatus.valueOf(courseDto.getGrade()));
                 userCourse.setIsMajor(IsMajor.MAJOR);
 

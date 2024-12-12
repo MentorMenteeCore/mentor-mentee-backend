@@ -914,9 +914,9 @@ public class InitDb {
             em.persist(course58);
 //
 //
-//            Course course59 = new Course();
-//            course59.createCourse("국문학개론", 1, CourseYear.FRESHMAN, koreanDepartment);
-//            em.persist(course59);
+            Course course59 = new Course();
+            course59.createCourse("미래설계탐색", 1, CourseYear.FRESHMAN, koreanDepartment);
+            em.persist(course59);
 //
 //            Course course60 = new Course();
 //            course60.createCourse("국어학개론", 3, CourseYear.FRESHMAN, koreanDepartment);
