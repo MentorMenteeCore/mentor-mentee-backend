@@ -19,4 +19,5 @@ public class ChatMessageDto {
             return Long.valueOf(splitRoomId[0]);
         }
     }
+
 }

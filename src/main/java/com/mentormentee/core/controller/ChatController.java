@@ -38,12 +38,18 @@ public class ChatController {
         LocalDateTime now = LocalDateTime.now();
         boolean isUserInRoom = User.isUserInRoom(otherUserObject, message.getRoomId());
 
+        //보낸사람 객체 찾기
+        Long senderId = Long.valueOf(message.getSenderId());
+        String userPicUrl = userService.getUserObject(senderId).getUserProfilePicture();
+
+
         messagingTemplate.convertAndSend("/sub/chat/room/"+message.getRoomId()
                 , new SendResponseDto(message.getRoomId()
                                       ,message.getSenderId()
                                       ,now
                                       ,isUserInRoom
-                                      ,otherUserObject.getUserProfilePicture(),message.getMessage()));
+                                      ,userPicUrl
+                                      ,message.getMessage()));
 
         chatRoomService.saveMessage(message.getMessage(),message.getRoomId(),now,isUserInRoom,Long.valueOf(message.getSenderId()));
 

@@ -318,6 +318,10 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
+    public User getUserObject(Long userId) {
+        return userRepository.findById(userId);
+    }
+
 
     @Transactional
     public void setNullRoomToUser(Long userId) {
