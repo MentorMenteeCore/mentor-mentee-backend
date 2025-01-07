@@ -1,10 +1,14 @@
 package com.mentormentee.core.repository;
 
+import com.mentormentee.core.domain.ChatRoom;
 import com.mentormentee.core.domain.Message;
+import com.mentormentee.core.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
@@ -24,4 +28,10 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Modifying
     @Query("DELETE FROM Message m WHERE m.chatRoom.roomId = :deleteRoomId")
     void deleteMessageByRoomId(String deleteRoomId);
+
+    void deleteMessageByUser(User user);
+
+    @Modifying
+    @Query("DELETE FROM Message m WHERE m.chatRoom IN :rooms")
+    void deleteByChatRoomIn(@Param("rooms") List<ChatRoom> rooms);
 }

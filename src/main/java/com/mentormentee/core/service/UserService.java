@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,9 @@ public class UserService {
     private final TeachingMethodRepository userPreferredTeachingMethodRepository;
     private final RedisUtil redisUtil;
     private final S3Uploader s3Uploader;
+    private final MessageRepository messageRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomService chatRoomService;
     @Value("${spring.defaultProfileImage}")
     private String defaultProfileImage;
     private final ReviewRepository reviewRepository;
@@ -183,6 +187,13 @@ public class UserService {
         menteeCoursesRepository.deleteByUserId(user.getId());
         reviewRepository.deleteReviewsByUser(user);
         availableTimeRepository.deleteByUser(user);
+
+        List<ChatRoom> userJoinedRooms = chatRoomRepository.findUserJoinedRoomsByUserId(user.getId());
+        if (!userJoinedRooms.isEmpty()) {
+            messageRepository.deleteByChatRoomIn(userJoinedRooms);
+            chatRoomRepository.deleteAll(userJoinedRooms);
+        }
+
         userRepository.deleteUser(user.getId());
     }
 

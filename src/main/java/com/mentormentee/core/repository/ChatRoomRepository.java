@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,5 +40,20 @@ public class ChatRoomRepository {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public List<ChatRoom> findUserJoinedRoomsByUserId(Long id) {
+         List<ChatRoom> chatRooms = em.createQuery("SELECT r FROM ChatRoom r WHERE r.firstUserId = :id or r.secondUserId = :id", ChatRoom.class)
+                                        .setParameter("id", id)
+                                        .getResultList();
+        return chatRooms;
+    }
+
+    public void deleteAll(List<ChatRoom> userJoinedRooms) {
+        List<Long> roomIds = userJoinedRooms.stream().map(ChatRoom::getId).toList();
+
+        em.createQuery("DELETE FROM ChatRoom r WHERE r.id IN :roomIds")
+                .setParameter("roomIds", roomIds)
+                .executeUpdate();
     }
 }
