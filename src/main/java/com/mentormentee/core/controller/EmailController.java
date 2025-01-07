@@ -21,9 +21,10 @@ public class EmailController {
     private final EmailService emailService;
 
     @PostMapping("/email/send")
-    private ResponseEntity<EmailSendResponseDto> sendEmail(@RequestBody EmailSendRequestDto emailSendRequestDto){
+    private ResponseEntity<?> sendEmail(@RequestBody EmailSendRequestDto emailSendRequestDto){
         String email = emailSendRequestDto.getEmail();
-        return ResponseEntity.ok(emailService.sendEmail(email));
+        emailService.sendEmail(email);
+        return ResponseEntity.ok(new ResponseCode(200));
     }
 
     @PostMapping("/email/verify")

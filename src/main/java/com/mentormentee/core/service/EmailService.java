@@ -14,6 +14,7 @@ import com.mentormentee.core.utils.EmailSendUtil;
 import com.mentormentee.core.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,9 @@ public class EmailService {
     private final Long AUTH_CODE_EXPIRATION_TIME = 3 * 60 * 1000L;
     private final UserRepository userRepository;
 
-    public EmailSendResponseDto sendEmail(String email){
+    @Async
+    public void sendEmail(String email){
+
         String code = createCode();
         Optional<EmailSession> emailSessionOptional = emailRepository.findByUserEmail(email);
         LocalDateTime now = LocalDateTime.now();
@@ -70,13 +73,6 @@ public class EmailService {
                     .build();
             emailRepository.save(emailSession);
         }
-
-
-        return EmailSendResponseDto.builder()
-                .code(code)
-                .email(email)
-                .createdAt(now)
-                .build();
     }
 
 
