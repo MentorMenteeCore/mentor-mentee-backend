@@ -6,11 +6,13 @@ import com.mentormentee.core.dto.ChatSummaryDto;
 import com.mentormentee.core.dto.OtherChatRoomsDto;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Repository
@@ -42,11 +44,12 @@ public class ChatRoomRepository {
         }
     }
 
-    public List<ChatRoom> findUserJoinedRoomsByUserId(Long id) {
+    @Async
+    public CompletableFuture<List<ChatRoom>> findUserJoinedRoomsByUserId(Long id) {
          List<ChatRoom> chatRooms = em.createQuery("SELECT r FROM ChatRoom r WHERE r.firstUserId = :id or r.secondUserId = :id", ChatRoom.class)
                                         .setParameter("id", id)
                                         .getResultList();
-        return chatRooms;
+        return CompletableFuture.completedFuture(chatRooms);
     }
 
     public void deleteAll(List<ChatRoom> userJoinedRooms) {

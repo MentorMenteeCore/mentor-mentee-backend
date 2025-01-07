@@ -181,19 +181,35 @@ public class UserService {
             throw new UserNotMatchedException();
         }
 
+        // 유저 객체를 가져온다.
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new JWTClaimException());
-        userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUserId(user.getId());
-        menteeCoursesRepository.deleteByUserId(user.getId());
-        reviewRepository.deleteReviewsByUser(user);
-        availableTimeRepository.deleteByUser(user);
+        //
 
-        List<ChatRoom> userJoinedRooms = chatRoomRepository.findUserJoinedRoomsByUserId(user.getId());
-        if (!userJoinedRooms.isEmpty()) {
-            messageRepository.deleteByChatRoomIn(userJoinedRooms);
-            chatRoomRepository.deleteAll(userJoinedRooms);
-        }
+        // (동기)작업을 바탕으로 자식 테이블 먼저 삭제(비동기)
+        CompletableFuture<Void> teachingMethodFuture = userPreferredTeachingMethodRepository.deletePreferredTeachingMethodsByUserId(user.getId());
+        CompletableFuture<Void> tookCoursesFuture = menteeCoursesRepository.deleteByUserId(user.getId());
+        CompletableFuture<Void> wroteReviewFuture = reviewRepository.deleteReviewsByUser(user);
+        CompletableFuture<Void> availableTimeFuture = availableTimeRepository.deleteByUser(user);
+        //
 
+        // 그중 채팅방은 추가 자식 테이블이 존재(메세지) 함으로 따로 분리
+        CompletableFuture<List<ChatRoom>> userJoinedRoomsFuture = chatRoomRepository.findUserJoinedRoomsByUserId(user.getId());
+        userJoinedRoomsFuture.join();
+
+        userJoinedRoomsFuture.thenAccept(userJoinedRooms -> {
+            userJoinedRoomsFuture.join();
+            if (!userJoinedRooms.isEmpty()) {
+                messageRepository.deleteByChatRoomIn(userJoinedRooms);
+                chatRoomRepository.deleteAll(userJoinedRooms);
+            }
+        });
+        //
+
+        CompletableFuture.allOf(teachingMethodFuture, tookCoursesFuture, wroteReviewFuture, availableTimeFuture);
+
+
+        //이후 유저(최상위 부모 테이블) 삭제
         userRepository.deleteUser(user.getId());
     }
 

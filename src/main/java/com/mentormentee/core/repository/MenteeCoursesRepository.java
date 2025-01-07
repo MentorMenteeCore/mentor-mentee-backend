@@ -10,10 +10,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 언제사용? : 유저 엔티티를 가지고 유저의 수강 과목을 뽑아오고 싶을때 사용
@@ -46,8 +48,9 @@ public interface MenteeCoursesRepository extends JpaRepository<UserCourse, Long>
      * User를 삭제하기 위해 먼저 호출이 됩니다.
      */
     @Modifying
+    @Async
     @Transactional
     @Query("DELETE FROM UserCourse uc" +
             " where uc.user.id = :userId")
-    void deleteByUserId(@Param("userId") Long userId);
+    CompletableFuture<Void> deleteByUserId(@Param("userId") Long userId);
 }
