@@ -28,12 +28,11 @@ public class SubscribeInterceptor implements ChannelInterceptor {
     private final UserService userService;
     private final UserRepository userRepository;
     private SimpMessageSendingOperations messagingTemplate;
+
     @Autowired
     public void setMessagingTemplate(@Lazy SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
-
-
 
 
     @Override

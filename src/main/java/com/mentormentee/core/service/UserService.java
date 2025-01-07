@@ -11,6 +11,7 @@ import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 
 @Service
@@ -314,12 +316,14 @@ public class UserService {
         user.setUserCurrentAccessedChatRoom(roomId);
     }
 
-    public User getOtherUserObject(Long userId) {
-        return userRepository.findById(userId);
+    @Async
+    public CompletableFuture<User> getOtherUserObject(Long userId) {
+        return CompletableFuture.completedFuture(userRepository.findById(userId));
     }
 
-    public User getUserObject(Long userId) {
-        return userRepository.findById(userId);
+    @Async
+    public CompletableFuture<User> getUserObject(Long userId) {
+        return CompletableFuture.completedFuture(userRepository.findById(userId));
     }
 
 

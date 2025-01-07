@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Controller
@@ -29,29 +30,33 @@ public class ChatController {
      * 메세지를 실시간으로 보낸다.
      *
      * 추가로 대화를 DB에 저장한다.
-     *
      */
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto message) {
         Long otherId = ChatMessageDto.getOtherId(message);
-        User otherUserObject = userService.getOtherUserObject(otherId);
-        LocalDateTime now = LocalDateTime.now();
-        boolean isUserInRoom = User.isUserInRoom(otherUserObject, message.getRoomId());
-
-        //보낸사람 객체 찾기
         Long senderId = Long.valueOf(message.getSenderId());
-        String userPicUrl = userService.getUserObject(senderId).getUserProfilePicture();
 
+        //상대방 그리고 보낸사람 객체 찾기
+        CompletableFuture<User> otherUserFuture = userService.getOtherUserObject(otherId);
+        CompletableFuture<User> senderFuture = userService.getUserObject(senderId);
+        LocalDateTime now = LocalDateTime.now();
 
-        messagingTemplate.convertAndSend("/sub/chat/room/"+message.getRoomId()
-                , new SendResponseDto(message.getRoomId()
-                                      ,message.getSenderId()
-                                      ,now
-                                      ,isUserInRoom
-                                      ,userPicUrl
-                                      ,message.getMessage()));
+        //thenAcceptBoth : 두개 작업 병렬결과 처리 & return 없음
+        otherUserFuture.thenAcceptBoth(senderFuture, (otherUserObject, senderObject) -> {
 
-        chatRoomService.saveMessage(message.getMessage(),message.getRoomId(),now,isUserInRoom,Long.valueOf(message.getSenderId()));
+            String userPicUrl = senderObject.getUserProfilePicture();
+            boolean isUserInRoom = User.isUserInRoom(otherUserObject, message.getRoomId());
 
+            messagingTemplate.convertAndSend("/sub/chat/room/"+message.getRoomId()
+                    , new SendResponseDto(message.getRoomId()
+                            ,message.getSenderId()
+                            ,now
+                            ,isUserInRoom
+                            ,userPicUrl
+                            ,message.getMessage()));
+
+            chatRoomService.saveMessage(message.getMessage(),message.getRoomId(),now,isUserInRoom,Long.valueOf(message.getSenderId()));
+
+        });
     }
 }
