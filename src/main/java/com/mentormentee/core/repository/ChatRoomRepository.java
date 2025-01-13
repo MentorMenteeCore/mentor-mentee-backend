@@ -59,4 +59,12 @@ public class ChatRoomRepository {
                 .setParameter("roomIds", roomIds)
                 .executeUpdate();
     }
+
+    public void saveAll(List<ChatRoom> userJoinedRooms) {
+
+        for (ChatRoom userJoinedRoom : userJoinedRooms) {
+            em.merge(userJoinedRoom);
+        }
+
+    }
 }

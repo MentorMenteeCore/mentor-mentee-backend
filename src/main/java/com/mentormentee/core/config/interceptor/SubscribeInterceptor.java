@@ -18,6 +18,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -92,16 +93,28 @@ public class SubscribeInterceptor implements ChannelInterceptor {
         return message; // 원래 요청을 그대로 브로커로 전달
     }
 
+    /**
+     * 사용자가 특정 채팅방
+     * 구독한 시점에 상대가
+     * 해당 방에 존재한다면
+     * "유저가 입장하였습니다"라는 stomp message 전송
+     */
     private void sendUserJoined(String destination, Long userId) {
         String otherId = getOtherId(destination, String.valueOf(userId));
-        User other = userRepository.findById(Long.valueOf(otherId));
-        String otherUserCurrentAccessedChatRoom = other.getUserCurrentAccessedChatRoom();
-        if (otherUserCurrentAccessedChatRoom==(null)) {
+        List<User> other = userRepository.findByIdWebSocket(Long.valueOf(otherId));
+        if(other.isEmpty()){
             return;
-        }
+        }else{
+            //상대가 있는 방이 내가 접속하려는 방과 같으면 메세지 전송
+            String otherUserCurrentAccessedChatRoom = other.get(0).getUserCurrentAccessedChatRoom();
 
-        if (destination.equals("/sub/chat/room/"+otherUserCurrentAccessedChatRoom)) {
-            messagingTemplate.convertAndSend(destination,  new SendUserJoinedDto(String.valueOf(userId), userId + "번의 유저가 입장하였습니다"));
+            if (otherUserCurrentAccessedChatRoom==(null)) {
+                return;
+            }
+            if (destination.equals("/sub/chat/room/"+otherUserCurrentAccessedChatRoom)) {
+                messagingTemplate.convertAndSend(destination,  new SendUserJoinedDto(String.valueOf(userId), userId + "번의 유저가 입장하였습니다"));
+            }
+
         }
     }
 

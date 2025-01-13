@@ -184,6 +184,7 @@ public class UserService {
         // 유저 객체를 가져온다.
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new JWTClaimException());
+        User byId = userRepository.findById(4L);
         //
 
         // (동기)작업을 바탕으로 자식 테이블 먼저 삭제(비동기)
@@ -191,23 +192,38 @@ public class UserService {
         CompletableFuture<Void> tookCoursesFuture = menteeCoursesRepository.deleteByUserId(user.getId());
         CompletableFuture<Void> wroteReviewFuture = reviewRepository.deleteReviewsByUser(user);
         CompletableFuture<Void> availableTimeFuture = availableTimeRepository.deleteByUser(user);
-        //
-
-        // 그중 채팅방은 추가 자식 테이블이 존재(메세지) 함으로 따로 분리
+        CompletableFuture<List<Message>> allMessagesByUserFuture = messageRepository.getAllByUser(user);
         CompletableFuture<List<ChatRoom>> userJoinedRoomsFuture = chatRoomRepository.findUserJoinedRoomsByUserId(user.getId());
-        userJoinedRoomsFuture.join();
-
-        userJoinedRoomsFuture.thenAccept(userJoinedRooms -> {
-            userJoinedRoomsFuture.join();
-            if (!userJoinedRooms.isEmpty()) {
-                messageRepository.deleteByChatRoomIn(userJoinedRooms);
-                chatRoomRepository.deleteAll(userJoinedRooms);
-            }
-        });
         //
 
-        CompletableFuture.allOf(teachingMethodFuture, tookCoursesFuture, wroteReviewFuture, availableTimeFuture);
+        //유저 회원 탈퇴하면 회원탈퇴 전용 프로필로 대체하여 방 유지
+        userJoinedRoomsFuture.join();
+        userJoinedRoomsFuture.thenAccept(userJoinedRooms -> {
+            userJoinedRooms.stream().forEach(room->{
+                if(room.getFirstUserId().equals(user.getId())){
+                    room.setFirstUserId(4L);
+            }else{
+                    room.setSecondUserId(4L);
+                }
+            });
 
+            chatRoomRepository.saveAll(userJoinedRooms);
+        });
+
+//        userJoinedRoomsFuture.thenAccept(userJoinedRooms -> {
+//            userJoinedRoomsFuture.join();
+//            if (!userJoinedRooms.isEmpty()) {
+//                messageRepository.deleteByChatRoomIn(userJoinedRooms);
+        allMessagesByUserFuture.join();
+        allMessagesByUserFuture.thenAccept(allMessages -> {
+            List<Long> messageIds = new ArrayList<>();
+            allMessages.stream().forEach(a->messageIds.add(a.getId()));
+            messageRepository.updateMessageUserId(messageIds, byId);
+        });
+//                chatRoomRepository.deleteAll(userJoinedRooms);
+
+        CompletableFuture<Void> future = CompletableFuture.allOf(teachingMethodFuture, tookCoursesFuture, wroteReviewFuture, availableTimeFuture, allMessagesByUserFuture);
+        future.join();
 
         //이후 유저(최상위 부모 테이블) 삭제
         userRepository.deleteUser(user.getId());

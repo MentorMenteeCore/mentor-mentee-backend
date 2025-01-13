@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +21,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Modifying
     @Async
+    @Transactional
     @Query("delete from Review r where r.user = :user")
     CompletableFuture<Void> deleteReviewsByUser(User user);
 }

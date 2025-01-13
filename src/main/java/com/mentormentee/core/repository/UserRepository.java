@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -34,6 +35,10 @@ public class UserRepository {
 
     public User findById(Long id) {
         return em.createQuery("select u from User u where u.id = :id", User.class).setParameter("id", id).getSingleResult();
+    }
+
+    public List<User> findByIdWebSocket(Long id) {
+        return em.createQuery("select u from User u where u.id = :id", User.class).setParameter("id", id).getResultList();
     }
 
     /**
