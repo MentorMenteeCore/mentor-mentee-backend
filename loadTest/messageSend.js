@@ -7,7 +7,7 @@ export let options = {
 };
 
 export default function () {
-    const url = 'ws://localhost:8080/ws-stomp?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaG9lZ2lAZXhhbXBsZS5jb20iLCJyb2xlIjpbIlJPTEVfTUVOVEVFIl0sImlhdCI6MTczNjc3MjU4MCwiZXhwIjoxNzM2Nzc0MzgwfQ.3a5uzniCmG_8nISeTBFKHEwruoaGeG9qwFWSnN2RdM2V6GonDQ_NM5QnPYfhyuLW6I2rVm2y7CVWd53W3Xa7dw';
+    const url = 'ws://localhost:8080/ws-stomp?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaG9lZ2lAZXhhbXBsZS5jb20iLCJyb2xlIjpbIlJPTEVfTUVOVEVFIl0sImlhdCI6MTczNjk1NTQwNiwiZXhwIjoxNzM2OTU3MjA2fQ.KFD7IrCcfzu214fjq9l6RjJEP1CGUoh7b9nlvPgR9qgPdQXGHp8GGzIZwT_O-z8ug4iA9U2hweIkRv8DdFDr0Q';
 
     // k6의 ws.connect로 웹소켓 연결 시도
     const res = ws.connect(url, {}, function (socket) {

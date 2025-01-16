@@ -2,6 +2,8 @@ package com.mentormentee.core.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mentormentee.core.dto.UserLookAsideDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.lang.Nullable;
@@ -24,6 +26,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class
 User implements UserDetails {
 
@@ -36,16 +39,19 @@ User implements UserDetails {
     private String nickName;
 
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private Role userRole;
 
     private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<AvailableTime> availabilities = new ArrayList<>();
 
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private WaysOfCommunication waysOfCommunication;
 
     private int yearInUni;
@@ -56,6 +62,7 @@ User implements UserDetails {
 
     //유저가 수강하는 과목들 추가.
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<UserCourse> userCourse = new ArrayList<>();
 
     //자기소개
@@ -65,6 +72,7 @@ User implements UserDetails {
     //선호하는 수업 방식
     //해시태그로 여러개 있을 수 있음
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<UserPreferredTeachingMethod> userPreferredTeachingMethodList = new ArrayList<>();
 
     /**
@@ -73,6 +81,7 @@ User implements UserDetails {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
+    @JsonIgnore
     private Department department;
 
 
@@ -149,7 +158,7 @@ User implements UserDetails {
         this.userProfilePicture = defaultProfileImage;
     }
 
-    public static boolean isUserInRoom(User user, String roomId){
+    public static boolean isUserInRoom(UserLookAsideDto user, String roomId){
         String otherUserCurrentRoom = user.getUserCurrentAccessedChatRoom();
         if(otherUserCurrentRoom==null){
             return false;

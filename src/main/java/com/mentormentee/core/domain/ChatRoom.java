@@ -1,5 +1,6 @@
 package com.mentormentee.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class ChatRoom {
     @Column(name = "chat_rooom_id")
     private Long id;
 
+    @JsonIgnore
     private LocalDateTime createDate;
 
     private String roomId;

@@ -29,13 +29,12 @@ public class Message {
     //상대방이 읽었는지 안읽었는지
     private boolean readOrNot;
 
-    public Message createMessage(String message, ChatRoom room, LocalDateTime now, boolean isUserInRoom, User user) {
+    public void createMessage(String message, ChatRoom room, LocalDateTime now, boolean isUserInRoom, User user) {
         this.content = message;
         this.time = now;
         this.readOrNot = isUserInRoom;
         this.chatRoom = room;
         this.user = user;
-        return this;
     }
 
 }

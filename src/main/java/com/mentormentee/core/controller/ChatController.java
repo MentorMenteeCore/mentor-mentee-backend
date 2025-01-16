@@ -3,6 +3,7 @@ package com.mentormentee.core.controller;
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.ChatMessageDto;
 import com.mentormentee.core.dto.SendResponseDto;
+import com.mentormentee.core.dto.UserLookAsideDto;
 import com.mentormentee.core.service.ChatRoomService;
 import com.mentormentee.core.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,15 @@ public class ChatController {
         Long otherId = ChatMessageDto.getOtherId(message);
         Long senderId = Long.valueOf(message.getSenderId());
 
+        /**
+         *  Redis LookAside -> 조회 성능 향상
+         *
+         * 2025 01-15
+         * 최기연
+         */
         //상대방 그리고 보낸사람 객체 찾기
-        CompletableFuture<User> otherUserFuture = userService.getOtherUserObject(otherId);
-        CompletableFuture<User> senderFuture = userService.getUserObject(senderId);
+        CompletableFuture<UserLookAsideDto> otherUserFuture = userService.getOtherUserObject(otherId);
+        CompletableFuture<UserLookAsideDto> senderFuture = userService.getUserObject(senderId);
         LocalDateTime now = LocalDateTime.now();
 
         //thenAcceptBoth : 두개 작업 병렬결과 처리 & return 없음

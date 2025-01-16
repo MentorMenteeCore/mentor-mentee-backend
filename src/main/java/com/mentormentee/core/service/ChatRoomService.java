@@ -13,6 +13,7 @@ import com.mentormentee.core.repository.ChatRoomRepository;
 import com.mentormentee.core.repository.MessageRepository;
 import com.mentormentee.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class ChatRoomService {
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
+    private final LookAsideService lookAsideService;
 
     public List<String> getUserSubscribedRooms(Long userId) {
         Optional<List<String>> userJoinedRooms = chatRoomRepository.findUserJoinedRooms(userId);
@@ -94,12 +96,12 @@ public class ChatRoomService {
 
     @Transactional
     public void saveMessage(String message, String roomId, LocalDateTime now, boolean isUserInRoom, Long senderId) {
-        ChatRoom room = chatRoomRepository.findRoomByRoomId(roomId);
-        User user = userRepository.findById(senderId);
+        ChatRoom room = lookAsideService.findRoom(roomId);
+        User user = lookAsideService.findSender(senderId);
 
         Message senderMessage = new Message();
         messageRepository.save(senderMessage);
-        Message result = senderMessage.createMessage(message, room, now, isUserInRoom, user);
+        senderMessage.createMessage(message, room, now, isUserInRoom, user);
     }
 
     @Transactional

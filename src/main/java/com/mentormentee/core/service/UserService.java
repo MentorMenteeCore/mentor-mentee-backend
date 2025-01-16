@@ -11,6 +11,7 @@ import com.mentormentee.core.utils.JwtUtils;
 import com.mentormentee.core.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -45,6 +46,7 @@ public class UserService {
     private final MessageRepository messageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomService chatRoomService;
+    private final LookAsideService lookAsideService;
     @Value("${spring.defaultProfileImage}")
     private String defaultProfileImage;
     private final ReviewRepository reviewRepository;
@@ -360,13 +362,13 @@ public class UserService {
     }
 
     @Async
-    public CompletableFuture<User> getOtherUserObject(Long userId) {
-        return CompletableFuture.completedFuture(userRepository.findById(userId));
+    public CompletableFuture<UserLookAsideDto> getOtherUserObject(Long userId) {
+        return CompletableFuture.completedFuture(lookAsideService.getUser(userId));
     }
 
     @Async
-    public CompletableFuture<User> getUserObject(Long userId) {
-        return CompletableFuture.completedFuture(userRepository.findById(userId));
+    public CompletableFuture<UserLookAsideDto> getUserObject(Long userId) {
+        return CompletableFuture.completedFuture(lookAsideService.getUser(userId));
     }
 
 
