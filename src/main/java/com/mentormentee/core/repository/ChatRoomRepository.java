@@ -2,6 +2,7 @@ package com.mentormentee.core.repository;
 
 import com.mentormentee.core.domain.ChatRoom;
 import com.mentormentee.core.domain.Message;
+import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.ChatSummaryDto;
 import com.mentormentee.core.dto.OtherChatRoomsDto;
 import jakarta.persistence.EntityManager;
@@ -32,6 +33,10 @@ public class ChatRoomRepository {
 
     public void createNewChatRoom(ChatRoom chatRoom){
         em.persist(chatRoom);
+    }
+
+    public ChatRoom findProxyChatRoom(Long chatRoomId){
+        return em.getReference(ChatRoom.class, chatRoomId);
     }
 
     public ChatRoom findRoomByRoomId(String id) {

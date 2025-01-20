@@ -361,14 +361,12 @@ public class UserService {
         user.setUserCurrentAccessedChatRoom(roomId);
     }
 
-    @Async
-    public CompletableFuture<UserLookAsideDto> getOtherUserObject(Long userId) {
-        return CompletableFuture.completedFuture(lookAsideService.getUser(userId));
+    public UserLookAsideDto getOtherUserObject(Long userId) {
+        return lookAsideService.getUser(userId);
     }
 
-    @Async
-    public CompletableFuture<UserLookAsideDto> getUserObject(Long userId) {
-        return CompletableFuture.completedFuture(lookAsideService.getUser(userId));
+    public UserLookAsideDto getUserObject(Long userId) {
+        return lookAsideService.getUser(userId);
     }
 
 

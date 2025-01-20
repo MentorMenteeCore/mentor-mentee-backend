@@ -93,16 +93,16 @@ public class ChatRoomService {
             throw new RoomDoesNotExistException();
         }
     }
-
-    @Transactional
-    public void saveMessage(String message, String roomId, LocalDateTime now, boolean isUserInRoom, Long senderId) {
-        ChatRoom room = lookAsideService.findRoom(roomId);
-        User user = lookAsideService.findSender(senderId);
-
-        Message senderMessage = new Message();
-        messageRepository.save(senderMessage);
-        senderMessage.createMessage(message, room, now, isUserInRoom, user);
-    }
+//
+//    @Transactional
+//    public void saveMessage(String message, String roomId, LocalDateTime now, boolean isUserInRoom, Long senderId) {
+//        ChatRoom room = lookAsideService.findRoom(roomId);
+//        User user = lookAsideService.findSender(senderId);
+//
+//        Message senderMessage = new Message();
+//        messageRepository.save(senderMessage);
+//        senderMessage.createMessage(message, room, now, isUserInRoom, user);
+//    }
 
     @Transactional
     public void deleteRoom(String deleteRoomId) {

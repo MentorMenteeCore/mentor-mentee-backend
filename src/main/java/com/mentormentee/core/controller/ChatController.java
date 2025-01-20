@@ -2,9 +2,11 @@ package com.mentormentee.core.controller;
 
 import com.mentormentee.core.domain.User;
 import com.mentormentee.core.dto.ChatMessageDto;
+import com.mentormentee.core.dto.MessageSaveDto;
 import com.mentormentee.core.dto.SendResponseDto;
 import com.mentormentee.core.dto.UserLookAsideDto;
 import com.mentormentee.core.service.ChatRoomService;
+import com.mentormentee.core.service.RunTimeThreadService;
 import com.mentormentee.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -22,6 +24,7 @@ public class ChatController {
     private final SimpMessageSendingOperations messagingTemplate;
     private final UserService userService;
     private final ChatRoomService chatRoomService;
+    private final RunTimeThreadService runTimeThreadService;
 
     /**
      * 채팅 방 열고
@@ -38,32 +41,29 @@ public class ChatController {
         Long senderId = Long.valueOf(message.getSenderId());
 
         /**
+         *  V2
          *  Redis LookAside -> 조회 성능 향상
-         *
-         * 2025 01-15
-         * 최기연
+         *  2025 01-15
+         * =======
+         *  V3
+         *  Redis LookAside & 스레드가 런타임동안 계속 돌아가면서 배치 작업 담당
+         *  2025-01-18
          */
         //상대방 그리고 보낸사람 객체 찾기
-        CompletableFuture<UserLookAsideDto> otherUserFuture = userService.getOtherUserObject(otherId);
-        CompletableFuture<UserLookAsideDto> senderFuture = userService.getUserObject(senderId);
+        UserLookAsideDto other = userService.getOtherUserObject(otherId);
+        UserLookAsideDto sender = userService.getUserObject(senderId);
         LocalDateTime now = LocalDateTime.now();
 
-        //thenAcceptBoth : 두개 작업 병렬결과 처리 & return 없음
-        otherUserFuture.thenAcceptBoth(senderFuture, (otherUserObject, senderObject) -> {
-
-            String userPicUrl = senderObject.getUserProfilePicture();
-            boolean isUserInRoom = User.isUserInRoom(otherUserObject, message.getRoomId());
-
-            messagingTemplate.convertAndSend("/sub/chat/room/"+message.getRoomId()
+        String picUrl = sender.getUserProfilePicture();
+        boolean userInRoom = User.isUserInRoom(other, message.getRoomId());
+        runTimeThreadService.addMessage(message.getMessage(),message.getRoomId(),now,userInRoom,Long.valueOf(message.getSenderId()));
+        messagingTemplate.convertAndSend("/sub/chat/room/"+message.getRoomId()
                     , new SendResponseDto(message.getRoomId()
                             ,message.getSenderId()
                             ,now
-                            ,isUserInRoom
-                            ,userPicUrl
+                            ,userInRoom
+                            ,picUrl
                             ,message.getMessage()));
 
-            chatRoomService.saveMessage(message.getMessage(),message.getRoomId(),now,isUserInRoom,Long.valueOf(message.getSenderId()));
-
-        });
     }
 }

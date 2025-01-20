@@ -1,13 +1,20 @@
 import ws from 'k6/ws';
 import { check, sleep } from 'k6';
 
-export let options = {
-    vus: 1,           // 동시 사용자 수
-    duration: '30s',  // 테스트 진행 시간
+
+export const options = {
+    scenarios: {
+        default: {
+            executor: 'constant-vus',
+            vus: 1,
+            duration: '30s',
+            gracefulStop: '60s', // 여기서 더 길게 준다. ex) '60s'
+        },
+    },
 };
 
 export default function () {
-    const url = 'ws://localhost:8080/ws-stomp?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaG9lZ2lAZXhhbXBsZS5jb20iLCJyb2xlIjpbIlJPTEVfTUVOVEVFIl0sImlhdCI6MTczNjk1NTQwNiwiZXhwIjoxNzM2OTU3MjA2fQ.KFD7IrCcfzu214fjq9l6RjJEP1CGUoh7b9nlvPgR9qgPdQXGHp8GGzIZwT_O-z8ug4iA9U2hweIkRv8DdFDr0Q';
+    const url = 'ws://localhost:8080/ws-stomp?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaG9lZ2lAZXhhbXBsZS5jb20iLCJyb2xlIjpbIlJPTEVfTUVOVEVFIl0sImlhdCI6MTczNzI2MjQ5MiwiZXhwIjoxNzM3MjY0MjkyfQ.uslrp8foAe6H7jRxCpkDrGajpCQkJLkkYbtFFj6HWkP-WnBtQWqgYHqo2sBM19jmUNN7RJdWzDd3n30FVYYkiA';
 
     // k6의 ws.connect로 웹소켓 연결 시도
     const res = ws.connect(url, {}, function (socket) {

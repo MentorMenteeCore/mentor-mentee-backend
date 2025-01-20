@@ -20,7 +20,6 @@ public class ChatRoom {
     @Column(name = "chat_rooom_id")
     private Long id;
 
-    @JsonIgnore
     private LocalDateTime createDate;
 
     private String roomId;

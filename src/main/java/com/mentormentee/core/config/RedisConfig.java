@@ -6,6 +6,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -59,11 +60,28 @@ public class RedisConfig {
     }
 
     @Bean
+    @Primary
     public CacheManager defaultCacheManager(RedisCacheConfiguration redisConfig, LettuceConnectionFactory redisConnection) {
         return RedisCacheManager
                 .RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnection)
                 .cacheDefaults(redisConfig)
+                .build();
+    }
+
+    @Bean
+    public CacheManager longCacheManager(LettuceConnectionFactory redisConnection) {
+        Jackson2JsonRedisSerializer<Long> longSerializer = new Jackson2JsonRedisSerializer<>(Long.class);
+
+        RedisCacheConfiguration longCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(longSerializer))
+                .entryTtl(Duration.ofSeconds(60));
+
+        return RedisCacheManager
+                .RedisCacheManagerBuilder
+                .fromConnectionFactory(redisConnection)
+                .cacheDefaults(longCacheConfig)
                 .build();
     }
 

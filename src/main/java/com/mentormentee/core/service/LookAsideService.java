@@ -24,15 +24,10 @@ public class LookAsideService {
                 .userProfilePicture(byId.getUserProfilePicture()).build();
     }
 
-    @Cacheable(cacheNames = "getChatUserRoom", key="'room:'+#roomId",cacheManager = "defaultCacheManager")
-    public ChatRoom findRoom(String roomId) {
-        return chatRoomRepository.findRoomByRoomId(roomId);
+    @Cacheable(cacheNames = "getChatRoomId", key="'Chatroom:room:'+#roomId",cacheManager = "longCacheManager")
+    public Long findRoomId(String roomId) {
+        ChatRoom cr = chatRoomRepository.findRoomByRoomId(roomId);
+        return cr.getId();
     }
-
-    @Cacheable(cacheNames = "getChatUserObj", key="'user:'+#senderId",cacheManager = "defaultCacheManager")
-    public User findSender(Long senderId) {
-        return userRepository.findById(senderId);
-    }
-
 
 }

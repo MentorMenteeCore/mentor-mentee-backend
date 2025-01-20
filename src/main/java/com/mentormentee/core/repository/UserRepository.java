@@ -41,6 +41,12 @@ public class UserRepository {
         return em.createQuery("select u from User u where u.id = :id", User.class).setParameter("id", id).getResultList();
     }
 
+    public User findProxyUserByUserId(Long userId) {
+       return em.getReference(User.class, userId);
+    }
+
+
+
     /**
      * Join fetch를 함으로써 쿼리 두방 날릴꺼 한방으로 줄임.
      */
